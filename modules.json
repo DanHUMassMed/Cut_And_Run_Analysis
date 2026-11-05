@@ -1,0 +1,15 @@
+{
+  "name": "cutandrun",
+  "homePage": "https://github.com/DanHUMassMed/Cut_And_Run_Analysis",
+  "repos": {
+    "https://github.com/nf-core/modules.git": {
+      "modules": {
+        "nf-core": {}
+      },
+      "subworkflows": {
+        "nf-core": {}
+      }
+    }
+  }
+}
+
