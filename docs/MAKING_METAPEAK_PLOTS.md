@@ -6,23 +6,25 @@ This guide explains how the CUT&RUN pipeline generates metapeak plots (also know
 
 ## 1. How Metapeak Plots Work in This Pipeline
 
-- Metapeak plotting is implemented in [modules/local/deeptools_metapeak/main.nf] 
-- and configured via [conf/modules.config] and [Analysis_Run/config/experiment.config].
+- Metapeak plotting is implemented in [`nf-cutandrun/modules/local/deeptools_metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf)
+- and configured via [`nf-cutandrun/conf/modules.config`](../nf-cutandrun/conf/modules.config) and [`Analysis_Run/config/experiment.config`](../Analysis_Run/config/experiment.config).
 
 ### Input Files
 
-The metapeak step takes two sets of inputs (generated upstream during the run or loaded from disk when upstream toggles are `false`) plus the sample metadata in [Analysis_Run/config/samplesheet.csv]:
+The metapeak step takes two sets of inputs (loaded directly from Dropbox and `Analysis_Run/results/`) plus the sample metadata in [`Analysis_Run/config/samplesheet.csv`](../Analysis_Run/config/samplesheet.csv):
 
 ```text
-1. BigWig Signal Tracks (input_bigwig = "${params.input_dir}/08_bigwig/*.bw" or generated in 08_bigwig/)
-   08_bigwig/
+1. BigWig Signal Tracks (controlled by params.bigwig_source: "06_index_bam" or "08_bigwig")
+   ${params.input_dir}/${params.bigwig_source}/
    ├── *.bw
-   │   ├── L9254-0001-0001_S141_L004*.bw   (EV_INT_H3K4me3)
-   │   ├── L9254-0001-0002_S142_L004*.bw   (EV_INT_H3K27me3)
-   │   ├── L9254-0001-0003_S143_L004*.bw   (EV_INT_IgG — automatically excluded)
-   │   ├── L9254-0001-0004_S66_L008*.bw    (N2_H3K4me3)
-   │   ├── L9254-0001-0005_S67_L008*.bw    (N2_H3K27me3)
-   │   └── L9254-0001-0006_S68_L008*.bw    (EV_INT_MC_H3K4me3)
+   │   ├── L9254-0001-0001_S141_L004.bw     (EV_INT_H3K4me3)
+   │   ├── L9254-0001-0002_S142_L004.bw     (EV_INT_H3K27me3)
+   │   ├── L9254-0001-0003_S143_L004.bw     (EV_INT_IgG — automatically excluded)
+   │   ├── L9254-0001-0004_S66_L008.bw      (N2_H3K4me3)
+   │   ├── L9254-0001-0005_S67_L008.bw      (N2_H3K27me3)
+   │   └── L9254-0001-0006_S68_L008.bw      (EV_INT_MC_H3K4me3)
+   - "06_index_bam": BigWigs generated with `bamCoverage -b SAMPLE.bam --normalizeUsing RPKM -o SAMPLE.bw`
+   - "08_bigwig":    BigWigs generated with `bedGraphToBigWig "$UNZIPPED_BG" "$CHROM_SIZES" "$BIGWIG_OUT"`
 
 2. Master Peak Regions per Target (input_peaks_bed = "${params.outdir}/10_merged_peaks/master/*_master_peaks.bed")
    Analysis_Run/results/<experiment>/10_merged_peaks/master/
@@ -44,12 +46,12 @@ flowchart LR
 ```
 
 ### Automatic Grouping by Histone Mark / Target
-Based on [Analysis_Run/config/samplesheet.csv]:
+Based on [`Analysis_Run/config/samplesheet.csv`](../Analysis_Run/config/samplesheet.csv):
 - **`H3K4me3` Tornado Plot (`H3K4me3_metapeak_heatmap.pdf`):** Plots signal from `EV_INT_H3K4me3`, `N2_H3K4me3`, and `EV_INT_MC_H3K4me3` centered on the regions in `H3K4me3_master_peaks.bed`.
 - **`H3K27me3` Tornado Plot (`H3K27me3_metapeak_heatmap.pdf`):** Plots signal from `EV_INT_H3K27me3` and `N2_H3K27me3` centered on the regions in `H3K27me3_master_peaks.bed`.
 
 ### Two-Stage `deepTools` Execution
-Inside [modules/local/deeptools_metapeak/main.nf], two commands run sequentially:
+Inside [`nf-cutandrun/modules/local/deeptools_metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf), two commands run sequentially:
 1. **`computeMatrix reference-point`** (`ext.args`): Calculates coverage scores per genomic bin across a window (`-b` upstream, `-a` downstream) around each peak's reference point (`center`, `TSS`, or `TES`) and saves a compressed matrix (`<target>_matrix.mat.gz`).
 2. **`plotHeatmap`** (`ext.args2`): Renders the top metapeak summary line plot and the bottom per-peak heatmap (`<target>_metapeak_heatmap.pdf`) from the compressed matrix.
 
@@ -70,15 +72,13 @@ Analysis_Run/results/<experiment>/13_metapeak_plots/
 
 ## 3. Running Only the Metapeak Plot Step
 
-If you have already generated your master peak files (`10_merged_peaks/master/*_master_peaks.bed`) and BigWig tracks (`08_bigwig/*.bw`), you can run **only** the metapeak step in seconds/minutes by turning off the other toggles in [Analysis_Run/config/experiment.config]:
+If you have already generated your master peak files (`10_merged_peaks/master/*_master_peaks.bed`), you can run **only** the metapeak step in seconds/minutes by turning off the other toggles in [`Analysis_Run/config/experiment.config`](../Analysis_Run/config/experiment.config):
 
 ```groovy
-// Turn off upstream and other downstream steps
-run_fragment_filter_120bp      = false
-run_homer_maketagdirectory     = false
-run_homer_makeucscfile         = false
-run_sam_to_bam                 = false
-run_deeptools_bamcoverage      = false
+// Choose which Dropbox BigWig directory to plot ('06_index_bam' or '08_bigwig')
+bigwig_source                  = "06_index_bam"
+
+// Turn off other peak analysis steps
 run_macs2_callpeak             = false
 run_homer_findpeaks            = false
 run_merge_replicate_peaks      = false
@@ -92,7 +92,7 @@ run_meme_streme                = false
 run_deeptools_metapeak         = true
 
 // Pre-existing inputs used automatically when upstream toggles are false:
-input_bigwig                   = "${params.input_dir}/08_bigwig/*.bw"
+input_bigwig                   = "${params.input_dir}/${params.bigwig_source}/*.bw"
 input_peaks_bed                = "${params.outdir}/10_merged_peaks/master/*_master_peaks.bed"
 ```
 
@@ -105,7 +105,7 @@ Then run from `Analysis_Run/`:
 
 ## 4. Standard Configuration Parameters
 
-In [Analysis_Run/config/experiment.config], the following built-in parameters control `computeMatrix` and `plotHeatmap`:
+In [`Analysis_Run/config/experiment.config`](../Analysis_Run/config/experiment.config), the following built-in parameters control `computeMatrix` and `plotHeatmap`:
 
 | Parameter | Default | `deepTools` Flag | Description |
 | :--- | :--- | :--- | :--- |

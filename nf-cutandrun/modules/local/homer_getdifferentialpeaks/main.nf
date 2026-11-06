@@ -21,12 +21,16 @@ process HOMER_GETDIFFERENTIALPEAKS {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def treat_list = treatment_tagdirs instanceof List ? treatment_tagdirs : [treatment_tagdirs]
+    def bg_list    = background_tagdirs instanceof List ? background_tagdirs : [background_tagdirs]
+    def diff_alg   = (treat_list.size() < 2 && bg_list.size() < 2 && !args.contains('-edgeR') && !args.contains('-DESeq')) ? '-edgeR -balanced' : ''
     """
     getDifferentialPeaksReplicates.pl \\
         -t ${treatment_tagdirs} \\
         -b ${background_tagdirs} \\
         -p ${peaks_bed} \\
         -genome ${genome_name} \\
+        ${diff_alg} \\
         ${args} \\
         > ${prefix}_differential_peaks.txt
 

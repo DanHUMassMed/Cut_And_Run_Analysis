@@ -1,7 +1,7 @@
 #!/usr/bin/env nextflow
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    CUT&RUN Downstream Analysis Pipeline
+    CUT&RUN Downstream Peak Analysis Pipeline
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -16,23 +16,19 @@ include { CUTANDRUN } from './workflows/cutandrun'
 def helpMessage() {
     log.info """
     ========================================================================
-     CUT&RUN Downstream Analysis Pipeline
+     CUT&RUN Downstream Peak Analysis Pipeline
     ========================================================================
     Usage:
       nextflow -c config/experiment.config run ../nf-cutandrun -resume
 
-    Core Paths:
+    Core Paths & Inputs:
       --experiment                  Experiment name (default: ${params.experiment})
-      --input_dir                   Upstream processed directory (default: ${params.input_dir})
+      --input_dir                   Upstream Dropbox directory (default: ${params.input_dir})
+      --bigwig_source               Dropbox BigWig subfolder: '06_index_bam' or '08_bigwig' (default: ${params.bigwig_source})
       --outdir                      Output directory for results (default: ${params.outdir})
       --samplesheet                 Sample metadata CSV (default: ${params.samplesheet})
 
     Step Toggles:
-      --run_fragment_filter_120bp   Filter SAM for <=120bp fragments (default: ${params.run_fragment_filter_120bp})
-      --run_homer_maketagdirectory  Step a: HOMER makeTagDirectory (default: ${params.run_homer_maketagdirectory})
-      --run_homer_makeucscfile      Step b: HOMER makeUCSCfile bedGraph (default: ${params.run_homer_makeucscfile})
-      --run_sam_to_bam              Step b: samtools view + index BAM (default: ${params.run_sam_to_bam})
-      --run_deeptools_bamcoverage   Step b: deepTools bamCoverage BigWig (default: ${params.run_deeptools_bamcoverage})
       --run_macs2_callpeak          Step c: MACS2 callpeak (default: ${params.run_macs2_callpeak})
       --run_homer_findpeaks         Step c: HOMER findPeaks (default: ${params.run_homer_findpeaks})
       --run_merge_replicate_peaks   Step d: Merge replicate peaks (default: ${params.run_merge_replicate_peaks})
@@ -110,21 +106,20 @@ workflow {
         error("params.experiment and params.input_dir do not have defaults and must be set in config/experiment.config.")
     }
 
+    def resolved_bigwig_glob = params.input_bigwig ?: "${params.input_dir}/${params.bigwig_source}/*.bw"
+
     log.info """\
     ========================================================================
-     C U T & R U N   D O W N S T R E A M   P I P E L I N E
+     C U T & R U N   P E A K   A N A L Y S I S   P I P E L I N E
     ========================================================================
      experiment                 : ${params.experiment}
      input_dir                  : ${params.input_dir}
+     bigwig_source              : ${params.bigwig_source}
+     input_bigwig               : ${resolved_bigwig_glob}
      outdir                     : ${params.outdir}
      samplesheet                : ${params.samplesheet}
      ----------------------------------------------------------------------
      Active Step Toggles:
-       fragment_filter_120bp    : ${params.run_fragment_filter_120bp}
-       homer_maketagdirectory   : ${params.run_homer_maketagdirectory}
-       homer_makeucscfile       : ${params.run_homer_makeucscfile}
-       sam_to_bam               : ${params.run_sam_to_bam}
-       deeptools_bamcoverage    : ${params.run_deeptools_bamcoverage}
        macs2_callpeak           : ${params.run_macs2_callpeak}
        homer_findpeaks          : ${params.run_homer_findpeaks}
        merge_replicate_peaks    : ${params.run_merge_replicate_peaks}
@@ -147,40 +142,34 @@ workflow {
     }
 
     //
-    // Resolve SAM input channel when needed by active upstream steps
+    // Resolve indexed BAMs from Dropbox (06_index_bam/*.bam) when MACS2 peak calling is enabled
     //
-    def needs_sam = params.run_fragment_filter_120bp || params.run_homer_maketagdirectory || params.run_sam_to_bam
-    def ch_sam = needs_sam
+    def ch_bam_bai = params.run_macs2_callpeak
         ? channel
-            .fromPath(params.input_sam, checkIfExists: true)
-            .filter { sam_file ->
-                if (sam_file.size() == 0) {
-                    log.warn "Skipping 0-byte SAM file (Dropbox online-only placeholder?): ${sam_file}"
+            .fromPath(params.input_bam, checkIfExists: true)
+            .filter { bam_file ->
+                if (bam_file.size() == 0) {
+                    log.warn "Skipping 0-byte BAM file (Dropbox online-only placeholder?): ${bam_file}"
                     return false
                 }
                 return true
             }
-            .map { sam_file ->
-                def sample_id = extractSampleId(sam_file, [
-                    '_PicardDedup_mapqfilt_1_120.sam',
-                    '_PicardDedup_mapqfilt.sam',
-                    '_1_120.sam',
-                    '.sam'
-                ])
-                [ buildMeta(sample_id, samplesheet_map), sam_file ]
+            .map { bam_file ->
+                def sample_id = extractSampleId(bam_file, ['.bam'])
+                def bai_file = file("${bam_file}.bai", checkIfExists: true)
+                [ buildMeta(sample_id, samplesheet_map), bam_file, bai_file ]
             }
         : channel.empty()
 
     //
-    // Resolve pre-existing HOMER Tag Directories when Step a is toggled off
+    // Resolve HOMER Tag Directories from Dropbox (07_ucsc/*) when HOMER steps are enabled
     //
-    def needs_existing_tagdirs = !params.run_homer_maketagdirectory && (
-        params.run_homer_makeucscfile ||
+    def needs_tagdirs = (
         params.run_homer_findpeaks ||
         params.run_homer_annotatepeaks ||
         params.run_homer_diffpeaks
     )
-    def ch_existing_tagdirs = needs_existing_tagdirs
+    def ch_tagdirs = needs_tagdirs
         ? channel
             .fromPath(params.input_tagdirs, type: 'dir', checkIfExists: true)
             .map { tagdir ->
@@ -190,40 +179,18 @@ workflow {
         : channel.empty()
 
     //
-    // Resolve pre-existing indexed BAMs when run_sam_to_bam is toggled off
+    // Resolve BigWig files from Dropbox (06_index_bam/*.bw or 08_bigwig/*.bw) when metapeak plotting is enabled
     //
-    def needs_existing_bam = !params.run_sam_to_bam && (
-        params.run_deeptools_bamcoverage ||
-        params.run_macs2_callpeak
-    )
-    def ch_existing_bam_bai = needs_existing_bam
+    def ch_bigwig = params.run_deeptools_metapeak
         ? channel
-            .fromPath(params.input_bam, checkIfExists: true)
-            .map { bam_file ->
-                def sample_id = extractSampleId(bam_file, ['.bam'])
-                def bai_file = file("${bam_file}.bai", checkIfExists: true)
-                [ buildMeta(sample_id, samplesheet_map), bam_file, bai_file ]
+            .fromPath(resolved_bigwig_glob, checkIfExists: true)
+            .filter { bw_file ->
+                if (bw_file.size() == 0) {
+                    log.warn "Skipping 0-byte BigWig file (Dropbox online-only placeholder?): ${bw_file}"
+                    return false
+                }
+                return true
             }
-        : channel.empty()
-
-    //
-    // Resolve pre-existing UCSC bedGraph files when run_homer_makeucscfile is toggled off
-    //
-    def ch_existing_ucsc = !params.run_homer_makeucscfile
-        ? channel
-            .fromPath(params.input_ucsc_bedgraph, checkIfExists: false)
-            .map { bg_file ->
-                def sample_id = extractSampleId(bg_file, ['.ucsc.bedGraph.gz', '.bedGraph.gz'])
-                [ buildMeta(sample_id, samplesheet_map), bg_file ]
-            }
-        : channel.empty()
-
-    //
-    // Resolve pre-existing BigWig files when run_deeptools_bamcoverage is toggled off
-    //
-    def ch_existing_bigwig = !params.run_deeptools_bamcoverage
-        ? channel
-            .fromPath(params.input_bigwig, checkIfExists: false)
             .map { bw_file ->
                 def sample_id = extractSampleId(bw_file, ['.bw', '.bigWig'])
                 [ buildMeta(sample_id, samplesheet_map), bw_file ]
@@ -290,11 +257,9 @@ workflow {
     // WORKFLOW: Run CUTANDRUN
     //
     CUTANDRUN(
-        ch_sam,
-        ch_existing_tagdirs,
-        ch_existing_bam_bai,
-        ch_existing_ucsc,
-        ch_existing_bigwig,
+        ch_bam_bai,
+        ch_tagdirs,
+        ch_bigwig,
         ch_existing_sample_peaks,
         ch_existing_replicated_peaks,
         ch_existing_master_peaks

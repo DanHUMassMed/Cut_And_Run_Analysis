@@ -3,11 +3,6 @@
     IMPORT MODULES / SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { SAMTOOLS_FILTER_FRAGS        } from '../modules/local/samtools_filter_frags/main'
-include { SAMTOOLS_VIEW_INDEX          } from '../modules/local/samtools_view_index/main'
-include { HOMER_MAKETAGDIRECTORY       } from '../modules/local/homer_maketagdirectory/main'
-include { HOMER_MAKEUCSCFILE           } from '../modules/local/homer_makeucscfile/main'
-include { DEEPTOOLS_BAMCOVERAGE        } from '../modules/local/deeptools_bamcoverage/main'
 include { MACS2_CALLPEAK               } from '../modules/local/macs2_callpeak/main'
 include { HOMER_FINDPEAKS              } from '../modules/local/homer_findpeaks/main'
 include { BEDTOOLS_MERGE_REPLICATES    } from '../modules/local/bedtools_merge_replicates/main'
@@ -27,61 +22,14 @@ include { MEME_STREME                  } from '../modules/local/meme_streme/main
 workflow CUTANDRUN {
 
     take:
-    ch_sam                       // channel: [ val(meta), path(sam) ]
-    ch_existing_tagdirs          // channel: [ val(meta), path(tagdir) ]
-    ch_existing_bam_bai          // channel: [ val(meta), path(bam), path(bai) ]
-    ch_existing_ucsc             // channel: [ val(meta), path(bedgraph) ]
-    ch_existing_bigwig           // channel: [ val(meta), path(bw) ]
+    ch_bam_bai                   // channel: [ val(meta), path(bam), path(bai) ]
+    ch_tagdirs                   // channel: [ val(meta), path(tagdir) ]
+    ch_bigwig                    // channel: [ val(meta), path(bw) ]
     ch_existing_sample_peaks     // channel: [ val(meta), path(peaks_bed) ]
     ch_existing_replicated_peaks // channel: [ val(meta), path(replicated_peaks_bed) ]
     ch_existing_master_peaks     // channel: [ val(meta), path(master_peaks_bed) ]
 
     main:
-
-    //
-    // Pre-step (Optional): Filter fragments <= 120bp (only necessary for TFs)
-    //
-    def ch_active_sam = ch_sam
-    if (params.run_fragment_filter_120bp) {
-        SAMTOOLS_FILTER_FRAGS(ch_sam)
-        ch_active_sam = SAMTOOLS_FILTER_FRAGS.out.sam
-    }
-
-    //
-    // Step a: Making a tag directory in HOMER
-    //
-    def ch_tagdirs = ch_existing_tagdirs
-    if (params.run_homer_maketagdirectory) {
-        HOMER_MAKETAGDIRECTORY(ch_active_sam)
-        ch_tagdirs = HOMER_MAKETAGDIRECTORY.out.tagdir
-    }
-
-    //
-    // Step b (1): Making UCSC bedGraph browser tracks using HOMER
-    //
-    def ch_ucsc_bedgraph = ch_existing_ucsc
-    if (params.run_homer_makeucscfile) {
-        HOMER_MAKEUCSCFILE(ch_tagdirs)
-        ch_ucsc_bedgraph = HOMER_MAKEUCSCFILE.out.bedgraph
-    }
-
-    //
-    // Step b (2): Convert SAM to indexed BAM using samtools
-    //
-    def ch_bam_bai = ch_existing_bam_bai
-    if (params.run_sam_to_bam) {
-        SAMTOOLS_VIEW_INDEX(ch_active_sam)
-        ch_bam_bai = SAMTOOLS_VIEW_INDEX.out.bam_bai
-    }
-
-    //
-    // Step b (3): Making BigWig browser tracks using deepTools bamCoverage
-    //
-    def ch_bigwig = ch_existing_bigwig
-    if (params.run_deeptools_bamcoverage) {
-        DEEPTOOLS_BAMCOVERAGE(ch_bam_bai)
-        ch_bigwig = DEEPTOOLS_BAMCOVERAGE.out.bigwig
-    }
 
     //
     // Filter out negative control (IgG) samples before peak calling & merging
@@ -333,10 +281,8 @@ workflow CUTANDRUN {
         )
 
     emit:
-    sam              = ch_active_sam
-    tagdirs          = ch_tagdirs
-    ucsc_bedgraph    = ch_ucsc_bedgraph
     bam_bai          = ch_bam_bai
+    tagdirs          = ch_tagdirs
     bigwig           = ch_bigwig
     macs2_peaks      = ch_macs2_peaks
     homer_peaks      = ch_homer_peaks

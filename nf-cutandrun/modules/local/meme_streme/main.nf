@@ -4,8 +4,8 @@ process MEME_STREME {
 
     conda "${moduleDir}/environment.yml"
     container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/meme:5.5.7--pl5321h10d4599_0'
-        : 'quay.io/biocontainers/meme:5.5.7--pl5321h10d4599_0'}"
+        ? 'https://depot.galaxyproject.org/singularity/meme:5.5.7--pl5321h1ca524f_3'
+        : 'quay.io/biocontainers/meme:5.5.7--pl5321h1ca524f_3'}"
 
     input:
     tuple val(meta), path(peaks_bed)
@@ -27,13 +27,37 @@ process MEME_STREME {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     """
-    awk 'BEGIN{FS=OFS="\\t"} !/^#/ && !/^track/ && !/^browser/ && NF>=3 {print \$1, int((\$2 + \$3)/2), int((\$2 + \$3)/2) + 1}' ${peaks_bed} | \\
-        bedtools slop -i stdin -g ${chrom_sizes} -l ${slop_left} -r ${slop_right} > ${prefix}_centers_PlusMinus50bp.bed
+    awk -v left=${slop_left} -v right=${slop_right} 'BEGIN{FS=OFS="\\t"}
+        NR==FNR { chrom_len[\$1] = \$2; next }
+        !/^#/ && !/^track/ && !/^browser/ && NF>=3 && (\$1 in chrom_len) {
+            center = int((\$2 + \$3) / 2)
+            s = center - left
+            e = center + 1 + right
+            if (s < 0) s = 0
+            if (e > chrom_len[\$1]) e = chrom_len[\$1]
+            if (e > s) print \$1, s, e
+        }' ${chrom_sizes} ${peaks_bed} > ${prefix}_centers_PlusMinus50bp.bed
+
+    if [ -d "${genome_fasta}" ]; then
+        cat "${genome_fasta}"/chr*.fa > genome_combined.fa
+        fasta-file-indexer genome_combined.fa genome_combined.fa.fai
+        FASTA_REF="genome_combined.fa"
+    else
+        if [ ! -f "${genome_fasta}.fai" ]; then
+            cp "${genome_fasta}" genome_combined.fa
+            fasta-file-indexer genome_combined.fa genome_combined.fa.fai
+            FASTA_REF="genome_combined.fa"
+        else
+            FASTA_REF="${genome_fasta}"
+        fi
+    fi
 
     bed2fasta \\
         -o ${prefix}_centers_PlusMinus50bp.fa \\
         ${prefix}_centers_PlusMinus50bp.bed \\
-        ${genome_fasta}
+        "\${FASTA_REF}"
+
+    rm -f genome_combined.fa genome_combined.fa.fai
 
     streme \\
         --oc ${prefix}_streme_motifs \\

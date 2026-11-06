@@ -14,7 +14,7 @@ lint: ## Validate Nextflow syntax and configuration
 	cd $(RUN_DIR) && nextflow -c config/experiment.config config ../$(PIPELINE_DIR) >/dev/null && echo "Configuration valid."
 
 dry-run: ## Preview pipeline execution from Analysis_Run without running tasks
-	cd $(RUN_DIR) && nextflow -c config/experiment.config run ../$(PIPELINE_DIR) -preview
+	cd $(RUN_DIR) && nextflow -c config/experiment.config run ../$(PIPELINE_DIR) -preview -resume
 
 run: ## Execute the CUT&RUN downstream pipeline from Analysis_Run
 	./$(RUN_DIR)/run.sh

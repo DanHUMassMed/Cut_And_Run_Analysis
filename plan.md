@@ -2,12 +2,12 @@
 
 ## 1. Overview & Architectural Goals
 
-This plan outlines the design and implementation of an opinionated Nextflow DSL2 pipeline for **CUT&RUN Downstream Analysis** based on [docs/Downstream_analysis_steps.md](file:///Users/dan/Code/NextFlow/Cut_And_Run_Analysis/docs/Downstream_analysis_steps.md).
+This plan outlines the design and implementation of an opinionated Nextflow DSL2 pipeline for **CUT&RUN Downstream Analysis** based on [`docs/Downstream_analysis_steps.md`](docs/Downstream_analysis_steps.md).
 
 ### Core Principles
 - **Dropbox Input + Local Execution & Output:**
-  - **Input Data (`params.input_dir`):** Read directly from the shared Dropbox folder (`/Users/dan/UMass Medical School Dropbox/Daniel Higgins/Walker_lab_shared/Bioinformatics_parent/cut_run103026`). Docker is configured to mount `/Users/dan/UMass Medical School Dropbox` so containerized processes can follow Nextflow symlinks directly without duplicating ~50 GB of data.
-  - **Local `work/` & `results/`:** Executed from `/Users/dan/Code/NextFlow/Cut_And_Run_Analysis/Analysis_Run` so all high-churn Nextflow `work/` directories and published `results/` stay on the local SSD outside of Dropbox sync.
+  - **Input Data (`params.input_dir`):** Read directly from the shared Dropbox folder (`<dropbox_dir>/Bioinformatics_parent/cut_run103026`). Docker is configured to mount the Dropbox directory so containerized processes can follow Nextflow symlinks directly without duplicating ~50 GB of data.
+  - **Local `work/` & `results/`:** Executed from `Analysis_Run/` so all high-churn Nextflow `work/` directories and published `results/` stay on the local SSD outside of Dropbox sync.
 - **Modular & Toggle-Driven Execution:** Every downstream step (`a` through `h` in `Downstream_analysis_steps.md`) is controlled via boolean `run_*` flags in `Analysis_Run/config/experiment.config`.
 - **Dual Input Resolution (Compute or Reuse):** Each downstream stage can either consume the in-memory output channel from the preceding pipeline step **or** load pre-existing outputs directly from `params.input_dir` (`05_mapq_filter/`, `07_ucsc/`, `08_bigwig/`) when earlier steps are toggled off.
 - **Lean `nf-core` Best Practices:** Uses concise local DSL2 modules (`modules/local/`) and `nf-core` conventions configured centrally via `conf/base.config` and `conf/modules.config`.
@@ -16,7 +16,7 @@ This plan outlines the design and implementation of an opinionated Nextflow DSL2
 
 ## 2. Upstream Data Layout & Input Channels
 
-The pipeline reads upstream processed files directly from `params.input_dir` (e.g., `/Users/dan/UMass Medical School Dropbox/Daniel Higgins/Walker_lab_shared/Bioinformatics_parent/cut_run103026`):
+The pipeline reads upstream processed files directly from `params.input_dir` (e.g., `<dropbox_dir>/Bioinformatics_parent/cut_run103026`):
 
 ```text
 cut_run103026/
@@ -128,7 +128,7 @@ params {
     // Experiment & Input / Output Paths
     // =========================================================================
     experiment                     = "cut_run103026"
-    input_dir                      = "/Users/dan/UMass Medical School Dropbox/Daniel Higgins/Walker_lab_shared/Bioinformatics_parent/${params.experiment}"
+    input_dir                      = "<dropbox_dir>/Bioinformatics_parent/${params.experiment}"
     outdir                         = "${launchDir}/results/${params.experiment}"
     samplesheet                    = "${launchDir}/config/samplesheet.csv"
 
