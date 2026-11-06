@@ -20,8 +20,12 @@ process DEEPTOOLS_METAPEAK {
 
     script:
     def args = task.ext.args ?: ''
-    def args2 = task.ext.args2 ?: ''
-    prefix = task.ext.prefix ?: "${meta.id}"
+    def raw_args2 = task.ext.args2 ?: ''
+    def samples_label = (!raw_args2.contains('--samplesLabel') && meta.sample_names)
+        ? "--samplesLabel ${meta.sample_names.join(' ')}"
+        : (!raw_args2.contains('--samplesLabel') && meta.sample_name ? "--samplesLabel ${meta.sample_name}" : '')
+    def args2 = [raw_args2, samples_label].findAll { it }.join(' ')
+    prefix = task.ext.prefix ?: "${meta.sample_name ?: meta.id}"
     """
     computeMatrix reference-point \\
         -S ${bigwigs} \\
@@ -37,7 +41,7 @@ process DEEPTOOLS_METAPEAK {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.id}"
+    prefix = task.ext.prefix ?: "${meta.sample_name ?: meta.id}"
     """
     echo "" | gzip -c > ${prefix}_matrix.mat.gz
     touch ${prefix}_metapeak_heatmap.pdf

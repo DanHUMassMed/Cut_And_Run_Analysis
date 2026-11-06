@@ -246,13 +246,23 @@ workflow CUTANDRUN {
     if (params.run_deeptools_metapeak) {
         def ch_bigwigs_by_target = ch_bigwig
             .filter { meta, _bw -> meta.target?.toLowerCase() != 'igg' }
-            .map { meta, bw -> [ meta.target ?: 'default', bw ] }
+            .map { meta, bw ->
+                [ meta.target ?: 'default', [ meta.sample_name ?: meta.id, bw ] ]
+            }
             .groupTuple(by: 0)
+            .map { target, sample_bw_pairs ->
+                def sorted_pairs = sample_bw_pairs.sort { a, b -> a[1].name <=> b[1].name }
+                [
+                    target,
+                    sorted_pairs.collect { pair -> pair[0] },
+                    sorted_pairs.collect { pair -> pair[1] }
+                ]
+            }
 
         def ch_metapeak_input = ch_master_by_target
             .join(ch_bigwigs_by_target, by: 0)
-            .map { _target, meta, peaks_bed, bigwigs ->
-                [ meta, peaks_bed, bigwigs ]
+            .map { _target, meta, peaks_bed, sample_names, bigwigs ->
+                [ meta + [ sample_names: sample_names ], peaks_bed, bigwigs ]
             }
 
         DEEPTOOLS_METAPEAK(ch_metapeak_input)
