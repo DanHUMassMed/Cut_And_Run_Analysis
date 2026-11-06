@@ -106,6 +106,10 @@ workflow {
         exit 0
     }
 
+    if (!params.experiment || !params.input_dir) {
+        error("params.experiment and params.input_dir do not have defaults and must be set in config/experiment.config.")
+    }
+
     log.info """\
     ========================================================================
      C U T & R U N   D O W N S T R E A M   P I P E L I N E
