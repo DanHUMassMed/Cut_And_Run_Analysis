@@ -38,6 +38,7 @@ def helpMessage() {
       --run_deeptools_metapeak      Step g: deepTools computeMatrix + plotHeatmap (default: ${params.run_deeptools_metapeak})
       --run_homer_findmotifs        Step h: HOMER findMotifsGenome.pl (default: ${params.run_homer_findmotifs})
       --run_meme_streme             Step h: MEME Suite STREME motif discovery (default: ${params.run_meme_streme})
+      --run_summary_plots           Step i: Automated QC & summary plots (default: ${params.run_summary_plots})
     ========================================================================
     """.stripIndent()
 }
@@ -129,6 +130,7 @@ workflow {
        deeptools_metapeak       : ${params.run_deeptools_metapeak}
        homer_findmotifs         : ${params.run_homer_findmotifs}
        meme_streme              : ${params.run_meme_streme}
+       summary_plots            : ${params.run_summary_plots}
     ========================================================================
     """.stripIndent()
 
@@ -202,11 +204,12 @@ workflow {
     //
     def needs_existing_sample_peaks = !params.run_macs2_callpeak && !params.run_homer_findpeaks && (
         params.run_merge_replicate_peaks ||
-        params.run_merge_master_peaks
+        params.run_merge_master_peaks ||
+        params.run_summary_plots
     )
     def ch_existing_sample_peaks = needs_existing_sample_peaks
         ? channel
-            .fromPath(params.input_sample_peaks, checkIfExists: true)
+            .fromPath(params.input_sample_peaks, checkIfExists: params.run_merge_replicate_peaks || params.run_merge_master_peaks)
             .map { peak_file ->
                 def sample_id = extractSampleId(peak_file, [
                     '_peaks.narrowPeak',
@@ -223,10 +226,13 @@ workflow {
     //
     // Resolve pre-existing condition-merged replicate peaks when run_merge_replicate_peaks is toggled off
     //
-    def needs_existing_replicated_peaks = !params.run_merge_replicate_peaks && params.run_merge_master_peaks && !needs_existing_sample_peaks && !params.run_macs2_callpeak && !params.run_homer_findpeaks
+    def needs_existing_replicated_peaks = !params.run_merge_replicate_peaks && (
+        (params.run_merge_master_peaks && !needs_existing_sample_peaks && !params.run_macs2_callpeak && !params.run_homer_findpeaks) ||
+        params.run_summary_plots
+    )
     def ch_existing_replicated_peaks = needs_existing_replicated_peaks
         ? channel
-            .fromPath(params.input_replicated_peaks, checkIfExists: true)
+            .fromPath(params.input_replicated_peaks, checkIfExists: params.run_merge_master_peaks && !params.run_summary_plots)
             .map { rep_bed ->
                 def condition_id = extractSampleId(rep_bed, ['_replicated_peaks.bed', '.bed'])
                 def target_name = condition_to_target[condition_id] ?: 'default'
@@ -242,7 +248,8 @@ workflow {
         params.run_homer_diffpeaks ||
         params.run_deeptools_metapeak ||
         params.run_homer_findmotifs ||
-        params.run_meme_streme
+        params.run_meme_streme ||
+        params.run_summary_plots
     )
     def ch_existing_master_peaks = needs_existing_master_peaks
         ? channel
@@ -250,6 +257,47 @@ workflow {
             .map { master_bed ->
                 def target_name = extractSampleId(master_bed, ['_master_peaks.bed', '.bed'])
                 [ [ id: target_name, target: target_name ], master_bed ]
+            }
+        : channel.empty()
+
+    //
+    // Resolve pre-existing annotated peak tables when run_homer_annotatepeaks is toggled off
+    //
+    def resolved_annotated_glob = params.input_annotated_peaks ?: "${params.outdir}/11_peak_quantification/*_annotated_peaks.txt"
+    def ch_existing_annotated_peaks = (!params.run_homer_annotatepeaks && params.run_summary_plots)
+        ? channel
+            .fromPath(resolved_annotated_glob, checkIfExists: false)
+            .map { annot_txt ->
+                def target_name = extractSampleId(annot_txt, ['_annotated_peaks.txt', '.txt'])
+                [ [ id: target_name, target: target_name ], annot_txt ]
+            }
+        : channel.empty()
+
+    //
+    // Resolve pre-existing differential peak tables when run_homer_diffpeaks is toggled off
+    //
+    def contrast_map = [:]
+    if (params.diff_contrasts) {
+        params.diff_contrasts.each { c ->
+            contrast_map[c.id] = c
+        }
+    }
+    def resolved_diff_glob = params.input_diff_peaks ?: "${params.outdir}/12_differential_peaks/*_differential_peaks.txt"
+    def ch_existing_diff_peaks = (!params.run_homer_diffpeaks && params.run_summary_plots)
+        ? channel
+            .fromPath(resolved_diff_glob, checkIfExists: false)
+            .map { diff_txt ->
+                def contrast_id = extractSampleId(diff_txt, ['_differential_peaks.txt', '.txt'])
+                def c_info = contrast_map[contrast_id] ?: [:]
+                [
+                    [
+                        id        : contrast_id,
+                        treatment : c_info.treatment  ?: 'Treatment',
+                        background: c_info.background ?: 'Background',
+                        target    : c_info.target     ?: ''
+                    ],
+                    diff_txt
+                ]
             }
         : channel.empty()
 
@@ -262,7 +310,9 @@ workflow {
         ch_bigwig,
         ch_existing_sample_peaks,
         ch_existing_replicated_peaks,
-        ch_existing_master_peaks
+        ch_existing_master_peaks,
+        ch_existing_annotated_peaks,
+        ch_existing_diff_peaks
     )
 
     onComplete:

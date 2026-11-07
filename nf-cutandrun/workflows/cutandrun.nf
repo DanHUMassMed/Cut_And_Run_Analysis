@@ -12,6 +12,9 @@ include { HOMER_GETDIFFERENTIALPEAKS   } from '../modules/local/homer_getdiffere
 include { DEEPTOOLS_METAPEAK           } from '../modules/local/deeptools_metapeak/main'
 include { HOMER_FINDMOTIFSGENOME       } from '../modules/local/homer_findmotifsgenome/main'
 include { MEME_STREME                  } from '../modules/local/meme_streme/main'
+include { PLOT_PEAK_COUNTS             } from '../modules/local/plot_peak_counts/main'
+include { PLOT_ANNOTATED_SUMMARY       } from '../modules/local/plot_annotated_summary/main'
+include { PLOT_DIFFERENTIAL_VOLCANO_MA } from '../modules/local/plot_differential_volcano_ma/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -28,6 +31,8 @@ workflow CUTANDRUN {
     ch_existing_sample_peaks     // channel: [ val(meta), path(peaks_bed) ]
     ch_existing_replicated_peaks // channel: [ val(meta), path(replicated_peaks_bed) ]
     ch_existing_master_peaks     // channel: [ val(meta), path(master_peaks_bed) ]
+    ch_existing_annotated_peaks  // channel: [ val(meta), path(annotated_peaks_txt) ]
+    ch_existing_diff_peaks       // channel: [ val(meta), path(diff_peaks_txt) ]
 
     main:
 
@@ -123,7 +128,7 @@ workflow CUTANDRUN {
     //
     // Step e: Peak-by-peak analysis using HOMER (annotatePeaks.pl)
     //
-    def ch_annotated_peaks = channel.empty()
+    def ch_annotated_peaks = ch_existing_annotated_peaks
     if (params.run_homer_annotatepeaks) {
         def ch_tagdirs_by_target = ch_tagdirs
             .filter { meta, _tagdir -> meta.target?.toLowerCase() != 'igg' }
@@ -146,7 +151,7 @@ workflow CUTANDRUN {
     //
     // Step f: Calling differential peaks using HOMER (getDifferentialPeaksReplicates.pl)
     //
-    def ch_diff_peaks = channel.empty()
+    def ch_diff_peaks = ch_existing_diff_peaks
     if (params.run_homer_diffpeaks && params.diff_contrasts) {
         def ch_contrasts = channel.fromList(params.diff_contrasts)
 
@@ -252,6 +257,50 @@ workflow CUTANDRUN {
     }
 
     //
+    // Step i: Automated QC & summary plots (15_summary_plots)
+    //
+    def ch_peak_counts_svg = channel.empty()
+    def ch_features_svg    = channel.empty()
+    def ch_corr_pca_svg    = channel.empty()
+    def ch_signal_svg      = channel.empty()
+    def ch_volcano_ma_svg  = channel.empty()
+
+    if (params.run_summary_plots) {
+        def samplesheet_file = file(params.samplesheet, checkIfExists: true)
+
+        // Plot 1: Peak Count & Replicate Overlap Bar Chart
+        def ch_all_peak_files = ch_macs2_peaks
+            .mix(ch_homer_peaks)
+            .mix(ch_active_sample_peaks)
+            .mix(ch_replicated_peaks)
+            .mix(ch_master_peaks)
+            .map { _meta, bed -> bed }
+            .unique()
+            .collect()
+
+        PLOT_PEAK_COUNTS(
+            samplesheet_file,
+            ch_all_peak_files
+        )
+        ch_peak_counts_svg = PLOT_PEAK_COUNTS.out.svg
+
+        // Plots 2, 3, & 4: Genomic Feature Breakdown, Sample Correlation/PCA, & Signal/Width Distributions
+        PLOT_ANNOTATED_SUMMARY(
+            ch_annotated_peaks,
+            samplesheet_file
+        )
+        ch_features_svg = PLOT_ANNOTATED_SUMMARY.out.features_svg
+        ch_corr_pca_svg = PLOT_ANNOTATED_SUMMARY.out.corr_pca_svg
+        ch_signal_svg   = PLOT_ANNOTATED_SUMMARY.out.signal_svg
+
+        // Plot 5: Volcano & MA Plots for Condition Comparisons
+        PLOT_DIFFERENTIAL_VOLCANO_MA(
+            ch_diff_peaks
+        )
+        ch_volcano_ma_svg = PLOT_DIFFERENTIAL_VOLCANO_MA.out.svg
+    }
+
+    //
     // Collate software versions from Nextflow topic channel
     //
     def topic_versions = channel.topic("versions")
@@ -294,5 +343,10 @@ workflow CUTANDRUN {
     metapeak_pdf     = ch_metapeak_pdf
     homer_motifs     = ch_homer_motifs
     meme_motifs      = ch_meme_motifs
+    peak_counts_svg  = ch_peak_counts_svg
+    features_svg     = ch_features_svg
+    corr_pca_svg     = ch_corr_pca_svg
+    signal_svg       = ch_signal_svg
+    volcano_ma_svg   = ch_volcano_ma_svg
     versions         = ch_collated_versions
 }

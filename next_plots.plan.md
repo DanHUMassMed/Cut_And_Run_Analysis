@@ -34,7 +34,7 @@ Extend the `nf-cutandrun` Nextflow pipeline with **Step i: Automated QC & Summar
   - `numpy 2.5.4`
   - `scipy 1.18.1`
   - `matplotlib 3.11.2`
-- No external internet pulls or new Docker builds are required. Both high-resolution vector **`.pdf`** (for publication) and **`.png`** (300 DPI, for quick viewing/reports) outputs are emitted alongside tidy **`.tsv`** summary tables.
+- No external internet pulls or new Docker builds are required. Both editable vector **`.svg`** (for publication) and **`.png`** (300 DPI, for quick viewing/reports) outputs are emitted alongside tidy **`.tsv`** summary tables.
 
 ### 2.2 Dual Input Resolution (Compute or Reuse)
 Consistent with Steps `c`–`h`, Step `i` (`run_summary_plots = true`) will support:

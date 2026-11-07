@@ -115,6 +115,7 @@ Every major step has an on/off switch in `experiment.config`. If you already ran
 | `run_deeptools_metapeak` | `true` | **Step g:** Generates the Tornado Plot (heatmap + average profile PDF). |
 | `run_homer_findmotifs` | `true` | **Step h1:** Searches peaks for enriched DNA sequence patterns (motifs) using HOMER. |
 | `run_meme_streme` | `false` | **Step h2:** Searches peaks for enriched DNA sequence patterns using MEME STREME. |
+| `run_summary_plots` | `true` | **Step i:** Automatically generates the 5 QC & biological summary plots (`15_summary_plots/`). |
 
 ---
 
@@ -173,6 +174,7 @@ Analysis_Run/results/cut_run103026/
 ├── 12_differential_peaks/     # Step f: Statistical comparison between conditions (if enabled)
 ├── 13_metapeak_plots/         # Step g: Tornado plot PDFs (heatmaps + average curves)
 ├── 14_motifs/                 # Step h: Enriched DNA motif web reports
+├── 15_summary_plots/          # Step i: Automated QC & summary plots (SVG, PNG, TSV)
 └── pipeline_info/             # Execution report, timeline, and software versions
 ```
 
@@ -261,7 +263,31 @@ Open `H3K4me3_metapeak_heatmap.pdf` or `H3K27me3_metapeak_heatmap.pdf` in any PD
 
 ---
 
-### Folder 7: `pipeline_info/` — Run Health & Timing Report
+### Folder 7: `15_summary_plots/` — Automated QC & Summary Figures
+Generated automatically when `run_summary_plots = true`. Every figure is saved as both an editable vector **`.svg`**, a high-resolution **`.png`**, and a companion **`.tsv`** summary table:
+
+1. **`01_peak_counts/peak_counts_summary.svg` — Peak Count & Replicate Overlap Bar Chart:**
+   - Shows how many peaks were called in each individual sample (`MACS2` and `HOMER`), how many survived replicate filtering (`10_merged_peaks/replicates/`), and the total `Master Peaks (Target Union)` count per histone mark/target.
+   - **What to look for:** Spot any unusually weak sample right away, and see how much of the master peak set comes from each condition.
+2. **`02_genomic_features/<target>_genomic_features.svg` — Genomic Feature Breakdown & TSS Proximity:**
+   - **Panel A & B (Bar + Donut Chart):** Shows what percentage of peaks fall in **Promoters (`Promoter-TSS`)**, **Exons**, **Introns**, **TTS**, **UTRs**, **Non-coding**, vs. **Intergenic** DNA.
+   - **Panel C (Distance to TSS Histogram):** Shows how tightly peaks cluster around gene start sites (`TSS = 0 kb`).
+   - **Sanity check:** Active promoter marks like `H3K4me3` should show strong enrichment at `Promoter-TSS` (~50%+) and a sharp spike right at `0 kb` in Panel C.
+3. **`03_correlation_and_pca/<target>_correlation_pca.svg` — Sample Correlation Heatmap & PCA Plot:**
+   - **Panel A (Heatmap):** Pairwise Pearson correlation ($r$) on $\log_2(\text{Tag Count} + 1)$ across all master peaks. Values close to `1.000` mean two samples have very similar genome-wide binding profiles.
+   - **Panel B (PCA Scatter Plot):** Summarizes genome-wide differences into two axes (`PC1` and `PC2`). Replicates of the same condition should cluster together, while distinct biological conditions separate along `PC1`.
+4. **`04_signal_distributions/<target>_signal_and_width_distributions.svg` — Signal & Peak Width Violin/Box Plots:**
+   - **Panel A:** Violin + boxplot comparing raw normalized signal ($\log_2(\text{Tag Count} + 1)$) across conditions.
+   - **Panel B:** Length-normalized signal density ($\log_2(\text{Tags per kb} + 1)$), accounting for differences in peak width.
+   - **Panel C:** Histogram of master peak widths (in base pairs) showing the median and interquartile range (IQR).
+5. **`05_differential_plots/<contrast>_volcano_ma.svg` — Volcano & MA Plots for Condition Comparisons:**
+   - **Panel A (Volcano Plot):** Plots **Log2 Fold Change** (horizontal axis) against **Statistical Significance** ($-\log_{10}\text{FDR}$, vertical axis). Peaks significantly gained in the treatment condition appear in **orange/red** on the upper right; peaks higher in the background/control condition appear in **blue** on the upper left.
+   - **Panel B (MA Plot):** Plots **Average Signal Strength** (horizontal axis) against **Log2 Fold Change** (vertical axis).
+   - **Gene Labels & Table:** The top gained and lost genes are automatically labeled by `Gene Name` on both plots, and the full ranked list is saved in `<contrast>_top_differential_genes.tsv` (ready to open in Excel).
+
+---
+
+### Folder 8: `pipeline_info/` — Run Health & Timing Report
 - Open `execution_report_*.html` in your web browser after a run finishes.
 - **What to look for:** A green **"Workflow execution completed successfully!"** banner at the top, showing how long each step took and how much memory/CPU it used.
 
@@ -274,24 +300,6 @@ Open `H3K4me3_metapeak_heatmap.pdf` or `H3K27me3_metapeak_heatmap.pdf` in any PD
 | Pipeline says `Skipping 0-byte BAM/BigWig file` | Dropbox has not downloaded the files to your Mac yet. | Right-click the experiment folder in Finder -> **"Make available offline"** and wait for sync to finish. |
 | Replicate merged peak file is empty (`0 lines`) | `min_replicate_overlap` is higher than the number of replicates that share peaks. | Lower `min_replicate_overlap = 1` in `experiment.config` or set `run_merge_replicate_peaks = false`. |
 | Tornado plot edges look cut off (curve doesn't reach baseline) | Window size around peak center is too small for a broad histone mark. | Increase `metapeak_upstream = 5000` and `metapeak_downstream = 5000` in `experiment.config`. |
-| Want to re-make only the Tornado Plot without re-running everything else | All toggles are still `true`. | Set `run_deeptools_metapeak = true` and set the other `run_*` toggles to `false` (or just run `make run`—Nextflow's `-resume` cache will automatically skip unchanged steps). |
+| Want to re-make only the Tornado Plot or Summary Plots without re-running everything else | All toggles are still `true`. | Just run `make run` (Nextflow's `-resume` cache automatically skips unchanged steps), or set only `run_summary_plots = true` / `run_deeptools_metapeak = true` and other `run_*` toggles to `false`. |
 
----
-
-## 6. Candidate Plots We Can Add Next
-
-Right now, the pipeline automatically generates **Tornado Plots / Average Profiles (`13_metapeak_plots/`)** and **HTML Motif Reports (`14_motifs/`)**, while outputting rich data tables in `09_peaks/`, `10_merged_peaks/`, `11_peak_quantification/`, and `12_differential_peaks/`.
-
-Based on the questions non-scientists and biologists most often ask when reviewing these tables, here are **five automated QC & summary plots** we could add directly into the pipeline next:
-
-1. **Peak Count & Replicate Overlap Bar Chart (from `09_peaks` & `10_merged_peaks`):**
-   - A clean bar graph showing how many peaks were found in each sample, how many survived replicate filtering, and the total master peak count per target—making it effortless to spot a weak sample at a glance.
-2. **Genomic Feature Breakdown Pie / Stacked Bar Chart (from `11_peak_quantification` `Annotation` column):**
-   - Visualizes what percentage of peaks fall in **Promoters (`promoter-TSS`)**, **Exons**, **Introns**, **TTS**, vs. **Intergenic** regions for each target (e.g., immediately confirming that `H3K4me3` is enriched at promoters).
-3. **Sample Correlation Heatmap & PCA Plot (from `11_peak_quantification` Tag Count columns):**
-   - A clustering heatmap and Principal Component Analysis (PCA) scatter plot showing whether biological replicates cluster tightly together and whether experimental conditions separate cleanly.
-4. **Signal Distribution & Peak Width Box/Violin Plots (from `11_peak_quantification`):**
-   - Compares overall normalized signal intensity (and length-normalized tags per kb) across conditions side-by-side.
-5. **Volcano & MA Plots for Condition Comparisons (from `11_peak_quantification` / `12_differential_peaks`):**
-   - Scatter plots of **Fold Change vs. Statistical Significance (or Signal Strength)** highlighting the top genes that gained or lost peaks between conditions (e.g., `EV_INT` vs. `N2`) with gene names automatically labeled.
 
