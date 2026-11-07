@@ -16,3 +16,7 @@ Analysis_Run/data/
 Analysis_Run/*.tsv
 Analysis_Run/*.html
 Analysis_Run/*.txt
+Pipeline_Run/.nextflow*
+Pipeline_Run/work/
+Pipeline_Run/results/
+Pipeline_Run/data/
