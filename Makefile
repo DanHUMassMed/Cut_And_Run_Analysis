@@ -28,7 +28,7 @@ base-dry-run: ## Preview upstream base pipeline execution from Pipeline_Run with
 	cd $(BASE_RUN_DIR) && nextflow -c config/experiment.config run ../$(BASE_PIPELINE_DIR) -preview -resume
 
 base-stub: ## Run stub test of upstream base pipeline from Pipeline_Run
-	cd $(BASE_RUN_DIR) && nextflow -c config/experiment.config run ../$(BASE_PIPELINE_DIR) -stub-run
+	cd $(BASE_RUN_DIR) && nextflow -c config/experiment.config run ../$(BASE_PIPELINE_DIR) -profile local -stub-run
 
 base-run: ## Execute the CUT&RUN upstream base pipeline from Pipeline_Run
 	./$(BASE_RUN_DIR)/run.sh
