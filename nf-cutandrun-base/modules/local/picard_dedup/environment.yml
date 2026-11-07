@@ -1,8 +1,0 @@
----
-channels:
-  - conda-forge
-  - bioconda
-dependencies:
-  - bioconda::picard=2.27.5
-  - bioconda::samtools=1.16.1
-

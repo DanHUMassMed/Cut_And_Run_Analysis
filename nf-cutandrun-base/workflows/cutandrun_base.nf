@@ -1,19 +1,23 @@
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT MODULES / SUBWORKFLOWS
+    IMPORT NF-CORE MODULES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { FASTQC as FASTQC_RAW         } from '../modules/local/fastqc/main'
-include { MULTIQC as MULTIQC_RAW       } from '../modules/local/multiqc/main'
-include { TRIMMOMATIC                  } from '../modules/local/trimmomatic/main'
-include { FASTQC as FASTQC_TRIMMED     } from '../modules/local/fastqc/main'
-include { MULTIQC as MULTIQC_TRIMMED   } from '../modules/local/multiqc/main'
-include { BOWTIE2_ALIGN                } from '../modules/local/bowtie2_align/main'
-include { PICARD_DEDUP                 } from '../modules/local/picard_dedup/main'
-include { SAMTOOLS_MAPQ_FILTER         } from '../modules/local/samtools_mapq_filter/main'
-include { SAMTOOLS_BAM_BIGWIG          } from '../modules/local/samtools_bam_bigwig/main'
-include { HOMER_UCSC                   } from '../modules/local/homer_ucsc/main'
-include { UCSC_BEDGRAPHTOBIGWIG        } from '../modules/local/ucsc_bedgraphtobigwig/main'
+include { FASTQC as FASTQC_RAW                  } from '../modules/nf-core/fastqc/main'
+include { MULTIQC as MULTIQC_RAW                } from '../modules/nf-core/multiqc/main'
+include { TRIMMOMATIC                           } from '../modules/nf-core/trimmomatic/main'
+include { FASTQC as FASTQC_TRIMMED              } from '../modules/nf-core/fastqc/main'
+include { MULTIQC as MULTIQC_TRIMMED            } from '../modules/nf-core/multiqc/main'
+include { BOWTIE2_ALIGN                         } from '../modules/nf-core/bowtie2/align/main'
+include { PICARD_SORTSAM                        } from '../modules/nf-core/picard/sortsam/main'
+include { PICARD_MARKDUPLICATES                 } from '../modules/nf-core/picard/markduplicates/main'
+include { SAMTOOLS_VIEW as SAMTOOLS_MAPQ_FILTER } from '../modules/nf-core/samtools/view/main'
+include { SAMTOOLS_VIEW as SAMTOOLS_VIEW_BAM    } from '../modules/nf-core/samtools/view/main'
+include { SAMTOOLS_INDEX                        } from '../modules/nf-core/samtools/index/main'
+include { DEEPTOOLS_BAMCOVERAGE                 } from '../modules/nf-core/deeptools/bamcoverage/main'
+include { HOMER_MAKETAGDIRECTORY                } from '../modules/nf-core/homer/maketagdirectory/main'
+include { HOMER_MAKEUCSCFILE                    } from '../modules/nf-core/homer/makeucscfile/main'
+include { UCSC_BEDGRAPHTOBIGWIG                 } from '../modules/nf-core/ucsc/bedgraphtobigwig/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -30,6 +34,8 @@ workflow CUTANDRUN_BASE {
     ch_existing_dedup_bam    // channel: [ val(meta), path(bam) ]
     ch_existing_mapq_sam     // channel: [ val(meta), path(sam) ]
     ch_existing_bedgraph     // channel: [ val(meta), path(bedgraph) ]
+    ch_bowtie2_index         // value:   [ val(meta2), path(index_dir) ]
+    ch_chrom_sizes           // value:   path(chrom_sizes)
 
     main:
 
@@ -45,15 +51,13 @@ workflow CUTANDRUN_BASE {
         ch_raw_fastqc_html = FASTQC_RAW.out.html
         ch_raw_fastqc_zip  = FASTQC_RAW.out.zip
 
-        def ch_raw_zips_collected = ch_raw_fastqc_zip
+        def ch_raw_multiqc_in = ch_raw_fastqc_zip
             .map { _meta, zips -> zips }
             .flatten()
             .collect()
+            .map { files -> [ [ id: 'multiqc_original_report' ], files, [], [], [], [] ] }
 
-        MULTIQC_RAW(
-            ch_raw_zips_collected,
-            'multiqc_original_report'
-        )
+        MULTIQC_RAW(ch_raw_multiqc_in)
         ch_raw_multiqc = MULTIQC_RAW.out.report
     }
 
@@ -64,12 +68,9 @@ workflow CUTANDRUN_BASE {
     def ch_trimmomatic_log = channel.empty()
 
     if (params.run_trimmomatic) {
-        TRIMMOMATIC(
-            ch_raw_reads,
-            params.trimmomatic_adapters
-        )
+        TRIMMOMATIC(ch_raw_reads)
         ch_trimmed_reads   = TRIMMOMATIC.out.trimmed_reads
-        ch_trimmomatic_log = TRIMMOMATIC.out.log
+        ch_trimmomatic_log = TRIMMOMATIC.out.out_log
     }
 
     //
@@ -84,15 +85,13 @@ workflow CUTANDRUN_BASE {
         ch_trimmed_fastqc_html = FASTQC_TRIMMED.out.html
         ch_trimmed_fastqc_zip  = FASTQC_TRIMMED.out.zip
 
-        def ch_trimmed_zips_collected = ch_trimmed_fastqc_zip
+        def ch_trimmed_multiqc_in = ch_trimmed_fastqc_zip
             .map { _meta, zips -> zips }
             .flatten()
             .collect()
+            .map { files -> [ [ id: 'multiqc_trimmed_report' ], files, [], [], [], [] ] }
 
-        MULTIQC_TRIMMED(
-            ch_trimmed_zips_collected,
-            'multiqc_trimmed_report'
-        )
+        MULTIQC_TRIMMED(ch_trimmed_multiqc_in)
         ch_trimmed_multiqc = MULTIQC_TRIMMED.out.report
     }
 
@@ -105,7 +104,10 @@ workflow CUTANDRUN_BASE {
     if (params.run_bowtie2_align) {
         BOWTIE2_ALIGN(
             ch_trimmed_reads,
-            params.bowtie2_index
+            ch_bowtie2_index,
+            [ [ id: 'none' ], [] ],
+            false,
+            false
         )
         ch_align_sam   = BOWTIE2_ALIGN.out.sam
         ch_bowtie2_log = BOWTIE2_ALIGN.out.log
@@ -118,9 +120,16 @@ workflow CUTANDRUN_BASE {
     def ch_dedup_metrics = channel.empty()
 
     if (params.run_picard_dedup) {
-        PICARD_DEDUP(ch_align_sam)
-        ch_dedup_bam     = PICARD_DEDUP.out.dedup_bam
-        ch_dedup_metrics = PICARD_DEDUP.out.metrics
+        PICARD_SORTSAM(
+            ch_align_sam,
+            'coordinate'
+        )
+        PICARD_MARKDUPLICATES(
+            PICARD_SORTSAM.out.bam,
+            [ [ id: 'none' ], [], [] ]
+        )
+        ch_dedup_bam     = PICARD_MARKDUPLICATES.out.bam
+        ch_dedup_metrics = PICARD_MARKDUPLICATES.out.metrics
     }
 
     //
@@ -129,7 +138,13 @@ workflow CUTANDRUN_BASE {
     def ch_mapq_sam = ch_existing_mapq_sam
 
     if (params.run_mapq_filter) {
-        SAMTOOLS_MAPQ_FILTER(ch_dedup_bam)
+        SAMTOOLS_MAPQ_FILTER(
+            ch_dedup_bam.map { meta, bam -> [ meta, bam, [] ] },
+            [ [ id: 'none' ], [], [] ],
+            [ [ id: 'none' ], [] ],
+            [ [ id: 'none' ], [] ],
+            ''
+        )
         ch_mapq_sam = SAMTOOLS_MAPQ_FILTER.out.sam
     }
 
@@ -140,9 +155,23 @@ workflow CUTANDRUN_BASE {
     def ch_rpkm_bw = channel.empty()
 
     if (params.run_index_bam) {
-        SAMTOOLS_BAM_BIGWIG(ch_mapq_sam)
-        ch_bam_bai = SAMTOOLS_BAM_BIGWIG.out.bam_bai
-        ch_rpkm_bw = SAMTOOLS_BAM_BIGWIG.out.bigwig
+        SAMTOOLS_VIEW_BAM(
+            ch_mapq_sam.map { meta, sam -> [ meta, sam, [] ] },
+            [ [ id: 'none' ], [], [] ],
+            [ [ id: 'none' ], [] ],
+            [ [ id: 'none' ], [] ],
+            ''
+        )
+        SAMTOOLS_INDEX(SAMTOOLS_VIEW_BAM.out.bam)
+        ch_bam_bai = SAMTOOLS_VIEW_BAM.out.bam.join(SAMTOOLS_INDEX.out.index)
+
+        DEEPTOOLS_BAMCOVERAGE(
+            ch_bam_bai,
+            [],
+            [],
+            [ [ id: 'none' ], [] ]
+        )
+        ch_rpkm_bw = DEEPTOOLS_BAMCOVERAGE.out.bigwig
     }
 
     //
@@ -152,9 +181,14 @@ workflow CUTANDRUN_BASE {
     def ch_bedgraph = ch_existing_bedgraph
 
     if (params.run_homer_ucsc) {
-        HOMER_UCSC(ch_mapq_sam)
-        ch_tagdir   = HOMER_UCSC.out.tagdir
-        ch_bedgraph = HOMER_UCSC.out.bedgraph
+        HOMER_MAKETAGDIRECTORY(
+            ch_mapq_sam,
+            []
+        )
+        ch_tagdir = HOMER_MAKETAGDIRECTORY.out.tagdir
+
+        HOMER_MAKEUCSCFILE(ch_tagdir)
+        ch_bedgraph = HOMER_MAKEUCSCFILE.out.bedGraph
     }
 
     //
@@ -165,7 +199,7 @@ workflow CUTANDRUN_BASE {
     if (params.run_ucsc_bigwig) {
         UCSC_BEDGRAPHTOBIGWIG(
             ch_bedgraph,
-            params.chrom_sizes
+            ch_chrom_sizes
         )
         ch_ucsc_bw = UCSC_BEDGRAPHTOBIGWIG.out.bigwig
     }
@@ -218,4 +252,3 @@ workflow CUTANDRUN_BASE {
     ucsc_bw             = ch_ucsc_bw
     versions            = ch_collated_versions
 }
-

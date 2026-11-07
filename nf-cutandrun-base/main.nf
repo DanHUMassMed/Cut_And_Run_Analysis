@@ -54,6 +54,7 @@ def loadSamplesheetMap(samplesheet_path) {
         if (row.sample_id) {
             meta_map[row.sample_id] = [
                 id         : row.sample_id,
+                single_end : false,
                 sample_name: row.sample_name ?: row.sample_id,
                 condition  : row.condition ?: (row.sample_name ?: 'default'),
                 target     : row.target ?: 'default',
@@ -85,12 +86,35 @@ def buildMeta(sample_id, samplesheet_map) {
         ? samplesheet_map[sample_id]
         : [
             id         : sample_id,
+            single_end : false,
             sample_name: sample_id,
             condition  : 'default',
             target     : 'default',
             replicate  : 1,
             control_id : null
         ]
+}
+
+def resolveBowtie2Index(index_param) {
+    if (!index_param) {
+        return [ [ id: 'bowtie2_index' ], [] ]
+    }
+    def index_file = file(index_param)
+    if (index_file.exists() && index_file.isDirectory()) {
+        return [ [ id: 'bowtie2_index' ], index_file ]
+    }
+    if (index_file.parent && index_file.parent.exists()) {
+        return [ [ id: 'bowtie2_index' ], index_file.parent ]
+    }
+    return [ [ id: 'bowtie2_index' ], [] ]
+}
+
+def resolveChromSizes(chrom_sizes_param) {
+    if (!chrom_sizes_param) {
+        return []
+    }
+    def cs_file = file(chrom_sizes_param)
+    return cs_file.exists() ? cs_file : []
 }
 
 /*
@@ -147,6 +171,12 @@ workflow {
     // Load optional sample metadata from samplesheet.csv if present
     //
     def samplesheet_map = loadSamplesheetMap(params.samplesheet)
+
+    //
+    // Resolve reference files for nf-core modules
+    //
+    def ch_bowtie2_index = resolveBowtie2Index(params.bowtie2_index)
+    def ch_chrom_sizes   = resolveChromSizes(params.chrom_sizes)
 
     //
     // Resolve raw paired-end FASTQ files when raw FastQC or Trimmomatic is enabled
@@ -248,7 +278,9 @@ workflow {
         ch_existing_align_sam,
         ch_existing_dedup_bam,
         ch_existing_mapq_sam,
-        ch_existing_bedgraph
+        ch_existing_bedgraph,
+        ch_bowtie2_index,
+        ch_chrom_sizes
     )
 
     onComplete:
@@ -258,4 +290,3 @@ workflow {
         log.warn "\nUpstream base pipeline completed with errors. Check the logs for details.\n"
     }
 }
-
