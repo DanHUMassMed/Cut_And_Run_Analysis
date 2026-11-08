@@ -1,2 +1,0 @@
-# Cut_And_Run_Analysis
-Cut_And_Run_Analysis
