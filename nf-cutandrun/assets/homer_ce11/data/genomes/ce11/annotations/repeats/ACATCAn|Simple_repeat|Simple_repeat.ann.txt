@@ -1,0 +1,2 @@
+(ACATCA)n|Simple_repeat|Simple_repeat-HOMER8778	chrI	8216678	8216749	0	Simple_repeat
+(ACATCA)n|Simple_repeat|Simple_repeat-HOMER36509	chrIII	9599498	9599622	0	Simple_repeat

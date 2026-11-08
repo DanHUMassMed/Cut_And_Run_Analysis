@@ -1,0 +1,1 @@
+(TTAGAC)n|Simple_repeat|Simple_repeat-HOMER19089	chrII	4013230	4013276	0	Simple_repeat

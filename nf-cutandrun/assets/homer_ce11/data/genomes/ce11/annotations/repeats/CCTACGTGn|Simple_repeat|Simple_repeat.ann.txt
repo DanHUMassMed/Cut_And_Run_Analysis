@@ -1,0 +1,3 @@
+(CCTACGTG)n|Simple_repeat|Simple_repeat-HOMER15947	chrII	674093	674280	0	Simple_repeat
+(CCTACGTG)n|Simple_repeat|Simple_repeat-HOMER18635	chrII	3440682	3440720	0	Simple_repeat
+(CCTACGTG)n|Simple_repeat|Simple_repeat-HOMER72618	chrV	20445489	20445564	0	Simple_repeat

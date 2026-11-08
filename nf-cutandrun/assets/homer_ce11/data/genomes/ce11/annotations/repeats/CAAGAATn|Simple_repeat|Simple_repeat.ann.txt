@@ -1,0 +1,2 @@
+(CAAGAAT)n|Simple_repeat|Simple_repeat-HOMER1804	chrI	1186537	1186609	0	Simple_repeat
+(CAAGAAT)n|Simple_repeat|Simple_repeat-HOMER15425	chrII	144104	144176	0	Simple_repeat

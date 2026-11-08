@@ -1,0 +1,2 @@
+(ACTTA)n|Simple_repeat|Simple_repeat-HOMER8259	chrI	7243596	7243625	0	Simple_repeat
+(ACTTA)n|Simple_repeat|Simple_repeat-HOMER79080	chrX	8458348	8458386	0	Simple_repeat

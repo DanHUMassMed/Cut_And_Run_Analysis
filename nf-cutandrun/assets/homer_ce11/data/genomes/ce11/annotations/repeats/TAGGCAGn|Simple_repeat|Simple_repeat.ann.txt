@@ -1,0 +1,1 @@
+(TAGGCAG)n|Simple_repeat|Simple_repeat-HOMER35980	chrIII	8693934	8693974	0	Simple_repeat

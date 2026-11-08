@@ -1,0 +1,1 @@
+(TTAATTCA)n|Simple_repeat|Simple_repeat-HOMER80430	chrX	11920989	11921031	0	Simple_repeat

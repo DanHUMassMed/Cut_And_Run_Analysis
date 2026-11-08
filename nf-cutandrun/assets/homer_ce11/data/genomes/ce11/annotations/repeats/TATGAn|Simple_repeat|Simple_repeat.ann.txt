@@ -1,0 +1,2 @@
+(TATGA)n|Simple_repeat|Simple_repeat-HOMER50777	chrIV	8840618	8840655	0	Simple_repeat
+(TATGA)n|Simple_repeat|Simple_repeat-HOMER81139	chrX	13708848	13708874	0	Simple_repeat

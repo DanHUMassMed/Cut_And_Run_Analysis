@@ -1,0 +1,2 @@
+(TAGGCC)n|Simple_repeat|Simple_repeat-HOMER31799	chrIII	2562505	2562545	0	Simple_repeat
+(TAGGCC)n|Simple_repeat|Simple_repeat-HOMER71347	chrV	19513814	19513848	0	Simple_repeat

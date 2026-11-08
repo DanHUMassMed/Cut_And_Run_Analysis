@@ -1,0 +1,1 @@
+(ATGCTTG)n|Simple_repeat|Simple_repeat-HOMER74632	chrX	1604082	1604119	0	Simple_repeat

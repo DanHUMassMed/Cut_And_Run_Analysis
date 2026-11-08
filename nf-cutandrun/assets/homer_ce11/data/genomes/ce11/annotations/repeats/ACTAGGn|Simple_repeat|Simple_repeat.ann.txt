@@ -1,0 +1,1 @@
+(ACTAGG)n|Simple_repeat|Simple_repeat-HOMER12248	chrI	12424050	12424096	0	Simple_repeat

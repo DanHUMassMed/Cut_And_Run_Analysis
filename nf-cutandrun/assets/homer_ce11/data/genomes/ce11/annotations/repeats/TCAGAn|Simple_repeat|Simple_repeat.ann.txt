@@ -1,0 +1,1 @@
+(TCAGA)n|Simple_repeat|Simple_repeat-HOMER9740	chrI	9954729	9954778	0	Simple_repeat

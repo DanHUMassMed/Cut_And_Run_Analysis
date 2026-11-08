@@ -1,0 +1,1 @@
+(TTTATAAGG)n|Simple_repeat|Simple_repeat-HOMER77140	chrX	4424172	4424216	0	Simple_repeat

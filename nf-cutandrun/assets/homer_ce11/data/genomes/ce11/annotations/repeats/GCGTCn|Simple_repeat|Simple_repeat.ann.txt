@@ -1,0 +1,4 @@
+(GCGTC)n|Simple_repeat|Simple_repeat-HOMER17180	chrII	2169550	2169579	0	Simple_repeat
+(GCGTC)n|Simple_repeat|Simple_repeat-HOMER19104	chrII	4027078	4027118	0	Simple_repeat
+(GCGTC)n|Simple_repeat|Simple_repeat-HOMER46171	chrIV	2753134	2753159	0	Simple_repeat
+(GCGTC)n|Simple_repeat|Simple_repeat-HOMER55338	chrIV	16470742	16470771	0	Simple_repeat

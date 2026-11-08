@@ -1,0 +1,1 @@
+(CAGATTT)n|Simple_repeat|Simple_repeat-HOMER64951	chrV	8935848	8935913	0	Simple_repeat

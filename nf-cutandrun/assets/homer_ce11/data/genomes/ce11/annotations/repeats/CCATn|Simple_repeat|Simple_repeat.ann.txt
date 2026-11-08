@@ -1,0 +1,1 @@
+(CCAT)n|Simple_repeat|Simple_repeat-HOMER83722	chrX	16887413	16887505	0	Simple_repeat

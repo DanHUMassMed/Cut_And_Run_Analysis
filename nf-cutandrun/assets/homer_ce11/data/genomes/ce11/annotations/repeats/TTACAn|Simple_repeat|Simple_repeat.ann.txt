@@ -1,0 +1,3 @@
+(TTACA)n|Simple_repeat|Simple_repeat-HOMER20420	chrII	6034135	6034165	0	Simple_repeat
+(TTACA)n|Simple_repeat|Simple_repeat-HOMER36203	chrIII	9051688	9051718	0	Simple_repeat
+(TTACA)n|Simple_repeat|Simple_repeat-HOMER56096	chrIV	17480704	17480733	0	Simple_repeat

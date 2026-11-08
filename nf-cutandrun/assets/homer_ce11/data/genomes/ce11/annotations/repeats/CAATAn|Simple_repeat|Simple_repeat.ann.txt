@@ -1,0 +1,2 @@
+(CAATA)n|Simple_repeat|Simple_repeat-HOMER50647	chrIV	8573456	8573661	0	Simple_repeat
+(CAATA)n|Simple_repeat|Simple_repeat-HOMER50659	chrIV	8576970	8577163	0	Simple_repeat

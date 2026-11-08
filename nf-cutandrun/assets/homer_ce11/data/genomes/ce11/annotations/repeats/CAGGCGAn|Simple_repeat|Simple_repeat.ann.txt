@@ -1,0 +1,1 @@
+(CAGGCGA)n|Simple_repeat|Simple_repeat-HOMER56683	chrV	417891	417932	0	Simple_repeat

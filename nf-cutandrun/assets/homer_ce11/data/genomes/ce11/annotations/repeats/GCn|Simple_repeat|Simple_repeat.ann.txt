@@ -1,0 +1,3 @@
+(GC)n|Simple_repeat|Simple_repeat-HOMER30841	chrIII	1923764	1923800	0	Simple_repeat
+(GC)n|Simple_repeat|Simple_repeat-HOMER82597	chrX	15678680	15678704	0	Simple_repeat
+(GC)n|Simple_repeat|Simple_repeat-HOMER83518	chrX	16591706	16591722	0	Simple_repeat

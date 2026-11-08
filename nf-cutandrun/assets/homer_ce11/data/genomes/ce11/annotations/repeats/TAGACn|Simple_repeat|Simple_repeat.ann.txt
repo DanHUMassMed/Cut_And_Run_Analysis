@@ -1,0 +1,1 @@
+(TAGAC)n|Simple_repeat|Simple_repeat-HOMER74555	chrX	1517421	1517450	0	Simple_repeat

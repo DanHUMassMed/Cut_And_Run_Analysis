@@ -1,0 +1,1 @@
+(CATTTCC)n|Simple_repeat|Simple_repeat-HOMER35618	chrIII	8065228	8065263	0	Simple_repeat

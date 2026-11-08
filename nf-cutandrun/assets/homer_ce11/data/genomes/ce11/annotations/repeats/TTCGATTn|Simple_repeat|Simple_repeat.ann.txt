@@ -1,0 +1,2 @@
+(TTCGATT)n|Simple_repeat|Simple_repeat-HOMER52130	chrIV	11720013	11720051	0	Simple_repeat
+(TTCGATT)n|Simple_repeat|Simple_repeat-HOMER54008	chrIV	14231061	14231098	0	Simple_repeat

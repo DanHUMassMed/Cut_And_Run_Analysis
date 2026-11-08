@@ -1,0 +1,2 @@
+(TGAGCC)n|Simple_repeat|Simple_repeat-HOMER71410	chrV	19545000	19545040	0	Simple_repeat
+(TGAGCC)n|Simple_repeat|Simple_repeat-HOMER72386	chrV	20241472	20241501	0	Simple_repeat

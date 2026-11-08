@@ -1,0 +1,1 @@
+(CGTC)n|Simple_repeat|Simple_repeat-HOMER41324	chrIII	12869269	12869314	0	Simple_repeat

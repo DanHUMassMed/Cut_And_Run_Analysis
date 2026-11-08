@@ -1,0 +1,2 @@
+(TAAC)n|Simple_repeat|Simple_repeat-HOMER10478	chrI	10979254	10979278	0	Simple_repeat
+(TAAC)n|Simple_repeat|Simple_repeat-HOMER60476	chrV	2905368	2905405	0	Simple_repeat

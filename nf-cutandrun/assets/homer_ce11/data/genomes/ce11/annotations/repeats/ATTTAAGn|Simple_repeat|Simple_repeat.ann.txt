@@ -1,0 +1,1 @@
+(ATTTAAG)n|Simple_repeat|Simple_repeat-HOMER20016	chrII	5125943	5125981	0	Simple_repeat

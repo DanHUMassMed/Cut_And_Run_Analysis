@@ -1,0 +1,1 @@
+(AGCTTCA)n|Simple_repeat|Simple_repeat-HOMER16840	chrII	1672462	1672498	0	Simple_repeat

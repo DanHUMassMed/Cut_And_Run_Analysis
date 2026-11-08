@@ -1,0 +1,1 @@
+(ACGATAT)n|Simple_repeat|Simple_repeat-HOMER81419	chrX	14207526	14207568	0	Simple_repeat

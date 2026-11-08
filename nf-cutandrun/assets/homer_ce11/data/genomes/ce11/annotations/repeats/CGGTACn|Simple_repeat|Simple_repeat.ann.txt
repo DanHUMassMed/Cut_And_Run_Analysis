@@ -1,0 +1,1 @@
+(CGGTAC)n|Simple_repeat|Simple_repeat-HOMER76701	chrX	3794317	3794361	0	Simple_repeat

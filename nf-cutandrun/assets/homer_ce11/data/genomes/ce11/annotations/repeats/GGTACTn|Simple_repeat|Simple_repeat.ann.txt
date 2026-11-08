@@ -1,0 +1,1 @@
+(GGTACT)n|Simple_repeat|Simple_repeat-HOMER70829	chrV	19017573	19017647	0	Simple_repeat

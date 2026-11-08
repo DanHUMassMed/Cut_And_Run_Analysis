@@ -1,0 +1,1 @@
+(CATCCG)n|Simple_repeat|Simple_repeat-HOMER19974	chrII	5069308	5069366	0	Simple_repeat

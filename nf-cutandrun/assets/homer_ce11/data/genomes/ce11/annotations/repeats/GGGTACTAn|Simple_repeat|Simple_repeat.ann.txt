@@ -1,0 +1,1 @@
+(GGGTACTA)n|Simple_repeat|Simple_repeat-HOMER72701	chrV	20524563	20524710	0	Simple_repeat

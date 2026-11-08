@@ -1,0 +1,1 @@
+(AATGACT)n|Simple_repeat|Simple_repeat-HOMER77107	chrX	4378085	4378123	0	Simple_repeat

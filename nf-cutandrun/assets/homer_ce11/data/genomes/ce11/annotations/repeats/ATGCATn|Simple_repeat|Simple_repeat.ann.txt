@@ -1,0 +1,2 @@
+(ATGCAT)n|Simple_repeat|Simple_repeat-HOMER70537	chrV	18739338	18739383	0	Simple_repeat
+(ATGCAT)n|Simple_repeat|Simple_repeat-HOMER70548	chrV	18744103	18744191	0	Simple_repeat

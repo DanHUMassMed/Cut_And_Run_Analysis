@@ -1,0 +1,5 @@
+(ATATTA)n|Simple_repeat|Simple_repeat-HOMER47728	chrIV	3892591	3892637	0	Simple_repeat
+(ATATTA)n|Simple_repeat|Simple_repeat-HOMER48508	chrIV	4606518	4606595	0	Simple_repeat
+(ATATTA)n|Simple_repeat|Simple_repeat-HOMER48573	chrIV	4685474	4685516	0	Simple_repeat
+(ATATTA)n|Simple_repeat|Simple_repeat-HOMER52238	chrIV	11912709	11912752	0	Simple_repeat
+(ATATTA)n|Simple_repeat|Simple_repeat-HOMER83627	chrX	16718754	16718812	0	Simple_repeat

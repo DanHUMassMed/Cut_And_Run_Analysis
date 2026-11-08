@@ -1,0 +1,3 @@
+(TGCCTACA)n|Simple_repeat|Simple_repeat-HOMER47427	chrIV	3568015	3568509	0	Simple_repeat
+(TGCCTACA)n|Simple_repeat|Simple_repeat-HOMER48320	chrIV	4430041	4430115	0	Simple_repeat
+(TGCCTACA)n|Simple_repeat|Simple_repeat-HOMER56964	chrV	777314	777414	0	Simple_repeat

@@ -1,0 +1,3 @@
+(AAGTGA)n|Simple_repeat|Simple_repeat-HOMER22638	chrII	10984236	10984273	0	Simple_repeat
+(AAGTGA)n|Simple_repeat|Simple_repeat-HOMER78772	chrX	7793772	7793837	0	Simple_repeat
+(AAGTGA)n|Simple_repeat|Simple_repeat-HOMER79071	chrX	8424418	8424450	0	Simple_repeat

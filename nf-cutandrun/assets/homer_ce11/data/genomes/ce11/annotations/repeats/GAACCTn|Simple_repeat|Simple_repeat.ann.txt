@@ -1,0 +1,1 @@
+(GAACCT)n|Simple_repeat|Simple_repeat-HOMER51475	chrIV	10383348	10383443	0	Simple_repeat

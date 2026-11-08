@@ -1,0 +1,2 @@
+(GAATGA)n|Simple_repeat|Simple_repeat-HOMER80305	chrX	11641938	11641979	0	Simple_repeat
+(GAATGA)n|Simple_repeat|Simple_repeat-HOMER82049	chrX	15151450	15151493	0	Simple_repeat

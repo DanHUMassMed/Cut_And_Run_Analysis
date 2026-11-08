@@ -1,0 +1,1 @@
+(AAGTGAT)n|Simple_repeat|Simple_repeat-HOMER9065	chrI	8707668	8707703	0	Simple_repeat

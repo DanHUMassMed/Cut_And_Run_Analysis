@@ -1,0 +1,1 @@
+(AAGAAGT)n|Simple_repeat|Simple_repeat-HOMER304	chrI	282749	282789	0	Simple_repeat

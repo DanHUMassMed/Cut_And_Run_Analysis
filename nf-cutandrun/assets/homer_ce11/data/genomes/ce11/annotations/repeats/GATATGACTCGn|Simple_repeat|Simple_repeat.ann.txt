@@ -1,0 +1,1 @@
+(GATATGACTCG)n|Simple_repeat|Simple_repeat-HOMER80290	chrX	11602010	11602057	0	Simple_repeat

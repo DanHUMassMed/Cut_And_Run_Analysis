@@ -1,0 +1,4 @@
+(TTTAC)n|Simple_repeat|Simple_repeat-HOMER20181	chrII	5503636	5503664	0	Simple_repeat
+(TTTAC)n|Simple_repeat|Simple_repeat-HOMER21845	chrII	9579339	9579394	0	Simple_repeat
+(TTTAC)n|Simple_repeat|Simple_repeat-HOMER46248	chrIV	2801992	2802016	0	Simple_repeat
+(TTTAC)n|Simple_repeat|Simple_repeat-HOMER74969	chrX	1929654	1929759	0	Simple_repeat

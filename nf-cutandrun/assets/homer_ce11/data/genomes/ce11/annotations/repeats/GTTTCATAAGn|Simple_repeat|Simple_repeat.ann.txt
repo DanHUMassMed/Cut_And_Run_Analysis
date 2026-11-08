@@ -1,0 +1,1 @@
+(GTTTCATAAG)n|Simple_repeat|Simple_repeat-HOMER79066	chrX	8411195	8411245	0	Simple_repeat

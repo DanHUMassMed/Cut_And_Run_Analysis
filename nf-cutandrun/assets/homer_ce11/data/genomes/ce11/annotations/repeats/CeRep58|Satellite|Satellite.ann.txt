@@ -1,0 +1,14 @@
+CeRep58|Satellite|Satellite-HOMER10288	chrI	10726365	10726429	1	Satellite
+CeRep58|Satellite|Satellite-HOMER12111	chrI	12235176	12235231	0	Satellite
+CeRep58|Satellite|Satellite-HOMER48813	chrIV	5055349	5055416	0	Satellite
+CeRep58|Satellite|Satellite-HOMER48942	chrIV	5298874	5298930	0	Satellite
+CeRep58|Satellite|Satellite-HOMER49052	chrIV	5464973	5467162	1	Satellite
+CeRep58|Satellite|Satellite-HOMER49055	chrIV	5469236	5469299	1	Satellite
+CeRep58|Satellite|Satellite-HOMER52875	chrIV	12891365	12891865	0	Satellite
+CeRep58|Satellite|Satellite-HOMER58378	chrV	1637875	1639088	1	Satellite
+CeRep58|Satellite|Satellite-HOMER59206	chrV	2169525	2169659	0	Satellite
+CeRep58|Satellite|Satellite-HOMER67645	chrV	15169676	15169750	0	Satellite
+CeRep58|Satellite|Satellite-HOMER70427	chrV	18636732	18637348	1	Satellite
+CeRep58|Satellite|Satellite-HOMER76248	chrX	2991561	2991973	1	Satellite
+CeRep58|Satellite|Satellite-HOMER81510	chrX	14384640	14384687	1	Satellite
+CeRep58|Satellite|Satellite-HOMER81511	chrX	14384704	14389967	0	Satellite

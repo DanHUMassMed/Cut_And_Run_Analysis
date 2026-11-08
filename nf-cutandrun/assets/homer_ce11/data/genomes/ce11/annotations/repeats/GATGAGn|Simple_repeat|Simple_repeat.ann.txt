@@ -1,0 +1,2 @@
+(GATGAG)n|Simple_repeat|Simple_repeat-HOMER35458	chrIII	7684598	7684640	0	Simple_repeat
+(GATGAG)n|Simple_repeat|Simple_repeat-HOMER39753	chrIII	12154220	12154284	0	Simple_repeat

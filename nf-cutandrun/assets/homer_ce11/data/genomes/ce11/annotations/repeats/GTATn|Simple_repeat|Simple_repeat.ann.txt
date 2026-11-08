@@ -1,0 +1,4 @@
+(GTAT)n|Simple_repeat|Simple_repeat-HOMER7416	chrI	5316225	5316246	0	Simple_repeat
+(GTAT)n|Simple_repeat|Simple_repeat-HOMER70219	chrV	18405990	18406060	0	Simple_repeat
+(GTAT)n|Simple_repeat|Simple_repeat-HOMER74769	chrX	1730222	1730252	0	Simple_repeat
+(GTAT)n|Simple_repeat|Simple_repeat-HOMER81246	chrX	13907049	13907099	0	Simple_repeat

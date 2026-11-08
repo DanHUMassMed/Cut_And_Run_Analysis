@@ -1,0 +1,1 @@
+(CATTTTTCGA)n|Simple_repeat|Simple_repeat-HOMER633	chrI	560940	561003	0	Simple_repeat

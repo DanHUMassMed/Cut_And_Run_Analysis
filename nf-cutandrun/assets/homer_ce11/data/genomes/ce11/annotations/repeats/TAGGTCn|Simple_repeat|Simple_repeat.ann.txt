@@ -1,0 +1,2 @@
+(TAGGTC)n|Simple_repeat|Simple_repeat-HOMER1002	chrI	765666	766005	0	Simple_repeat
+(TAGGTC)n|Simple_repeat|Simple_repeat-HOMER11223	chrI	11484953	11485051	0	Simple_repeat

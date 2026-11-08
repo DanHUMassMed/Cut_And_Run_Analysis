@@ -1,0 +1,1 @@
+(ATATAG)n|Simple_repeat|Simple_repeat-HOMER17807	chrII	2661216	2661266	0	Simple_repeat

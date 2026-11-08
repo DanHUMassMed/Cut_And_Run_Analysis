@@ -1,0 +1,1 @@
+(GATTTAT)n|Simple_repeat|Simple_repeat-HOMER24081	chrII	12524554	12524595	0	Simple_repeat

@@ -1,0 +1,1 @@
+(AGATTC)n|Simple_repeat|Simple_repeat-HOMER23468	chrII	12015011	12015058	0	Simple_repeat

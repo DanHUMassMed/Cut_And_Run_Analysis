@@ -1,0 +1,2 @@
+(GTTTTA)n|Simple_repeat|Simple_repeat-HOMER33214	chrIII	3555007	3555041	0	Simple_repeat
+(GTTTTA)n|Simple_repeat|Simple_repeat-HOMER36690	chrIII	9876561	9876620	0	Simple_repeat

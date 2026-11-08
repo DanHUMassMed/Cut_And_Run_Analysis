@@ -1,0 +1,2 @@
+(ACAACA)n|Simple_repeat|Simple_repeat-HOMER51086	chrIV	9389405	9389468	0	Simple_repeat
+(ACAACA)n|Simple_repeat|Simple_repeat-HOMER56034	chrIV	17356906	17356947	0	Simple_repeat

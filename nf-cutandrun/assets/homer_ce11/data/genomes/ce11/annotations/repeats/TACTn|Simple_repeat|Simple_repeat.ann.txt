@@ -1,0 +1,6 @@
+(TACT)n|Simple_repeat|Simple_repeat-HOMER1958	chrI	1257058	1257085	0	Simple_repeat
+(TACT)n|Simple_repeat|Simple_repeat-HOMER47213	chrIV	3410287	3410308	0	Simple_repeat
+(TACT)n|Simple_repeat|Simple_repeat-HOMER57632	chrV	1167673	1167694	0	Simple_repeat
+(TACT)n|Simple_repeat|Simple_repeat-HOMER65524	chrV	10426306	10426334	0	Simple_repeat
+(TACT)n|Simple_repeat|Simple_repeat-HOMER65866	chrV	11300393	11300427	0	Simple_repeat
+(TACT)n|Simple_repeat|Simple_repeat-HOMER82341	chrX	15440915	15440939	0	Simple_repeat

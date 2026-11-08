@@ -1,0 +1,2 @@
+(AACATC)n|Simple_repeat|Simple_repeat-HOMER10639	chrI	11092929	11092942	0	Simple_repeat
+(AACATC)n|Simple_repeat|Simple_repeat-HOMER10641	chrI	11092971	11092979	0	Simple_repeat

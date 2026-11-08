@@ -1,0 +1,1 @@
+(CTCCAT)n|Simple_repeat|Simple_repeat-HOMER63790	chrV	6131095	6131129	0	Simple_repeat

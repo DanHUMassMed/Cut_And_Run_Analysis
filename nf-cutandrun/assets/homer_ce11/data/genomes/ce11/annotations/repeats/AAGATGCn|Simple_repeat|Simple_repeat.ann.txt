@@ -1,0 +1,1 @@
+(AAGATGC)n|Simple_repeat|Simple_repeat-HOMER79632	chrX	9762318	9762352	0	Simple_repeat

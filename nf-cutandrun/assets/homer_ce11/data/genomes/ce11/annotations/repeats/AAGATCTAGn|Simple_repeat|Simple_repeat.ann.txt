@@ -1,0 +1,1 @@
+(AAGATCTAG)n|Simple_repeat|Simple_repeat-HOMER17253	chrII	2217654	2217722	0	Simple_repeat

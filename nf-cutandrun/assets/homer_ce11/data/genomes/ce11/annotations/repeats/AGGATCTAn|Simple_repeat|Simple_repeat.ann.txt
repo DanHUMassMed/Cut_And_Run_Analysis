@@ -1,0 +1,1 @@
+(AGGATCTA)n|Simple_repeat|Simple_repeat-HOMER13900	chrI	14006296	14006434	0	Simple_repeat

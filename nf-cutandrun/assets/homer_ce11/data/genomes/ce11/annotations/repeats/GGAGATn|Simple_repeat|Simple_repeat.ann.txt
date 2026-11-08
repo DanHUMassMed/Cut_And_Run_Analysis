@@ -1,0 +1,2 @@
+(GGAGAT)n|Simple_repeat|Simple_repeat-HOMER8809	chrI	8260143	8260156	0	Simple_repeat
+(GGAGAT)n|Simple_repeat|Simple_repeat-HOMER8811	chrI	8260179	8260192	0	Simple_repeat

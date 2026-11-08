@@ -1,0 +1,1 @@
+(AAAGTTGGTT)n|Simple_repeat|Simple_repeat-HOMER78872	chrX	7983389	7983441	0	Simple_repeat

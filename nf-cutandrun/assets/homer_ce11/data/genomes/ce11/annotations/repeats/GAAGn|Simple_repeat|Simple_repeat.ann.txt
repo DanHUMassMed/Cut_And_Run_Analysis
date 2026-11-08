@@ -1,0 +1,2 @@
+(GAAG)n|Simple_repeat|Simple_repeat-HOMER76520	chrX	3470933	3470959	0	Simple_repeat
+(GAAG)n|Simple_repeat|Simple_repeat-HOMER80667	chrX	12602902	12602931	0	Simple_repeat

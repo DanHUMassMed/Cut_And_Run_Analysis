@@ -1,0 +1,1 @@
+(CTTAGA)n|Simple_repeat|Simple_repeat-HOMER39856	chrIII	12196245	12196531	0	Simple_repeat

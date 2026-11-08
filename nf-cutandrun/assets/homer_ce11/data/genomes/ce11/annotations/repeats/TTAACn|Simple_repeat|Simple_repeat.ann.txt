@@ -1,0 +1,2 @@
+(TTAAC)n|Simple_repeat|Simple_repeat-HOMER65284	chrV	9859440	9859474	0	Simple_repeat
+(TTAAC)n|Simple_repeat|Simple_repeat-HOMER79592	chrX	9627875	9627900	0	Simple_repeat

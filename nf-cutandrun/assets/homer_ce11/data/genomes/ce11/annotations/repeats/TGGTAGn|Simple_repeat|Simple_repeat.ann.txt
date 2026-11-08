@@ -1,0 +1,2 @@
+(TGGTAG)n|Simple_repeat|Simple_repeat-HOMER63896	chrV	6395146	6395158	0	Simple_repeat
+(TGGTAG)n|Simple_repeat|Simple_repeat-HOMER63899	chrV	6403793	6403805	0	Simple_repeat

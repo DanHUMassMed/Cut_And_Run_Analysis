@@ -1,0 +1,1 @@
+(ATCATGA)n|Simple_repeat|Simple_repeat-HOMER67205	chrV	14401458	14401503	0	Simple_repeat

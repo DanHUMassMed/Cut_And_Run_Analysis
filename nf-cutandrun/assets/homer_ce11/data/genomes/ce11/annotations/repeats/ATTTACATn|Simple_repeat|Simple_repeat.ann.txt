@@ -1,0 +1,1 @@
+(ATTTACAT)n|Simple_repeat|Simple_repeat-HOMER15308	chrII	15923	15963	0	Simple_repeat

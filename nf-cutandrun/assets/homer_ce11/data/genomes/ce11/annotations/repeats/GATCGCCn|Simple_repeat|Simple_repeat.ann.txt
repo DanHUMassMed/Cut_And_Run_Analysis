@@ -1,0 +1,1 @@
+(GATCGCC)n|Simple_repeat|Simple_repeat-HOMER3109	chrI	1875706	1875753	0	Simple_repeat

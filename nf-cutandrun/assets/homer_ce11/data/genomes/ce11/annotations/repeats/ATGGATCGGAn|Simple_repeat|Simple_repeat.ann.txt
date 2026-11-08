@@ -1,0 +1,1 @@
+(ATGGATCGGA)n|Simple_repeat|Simple_repeat-HOMER83705	chrX	16885082	16885125	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TATGCCT)n|Simple_repeat|Simple_repeat-HOMER12966	chrI	13113321	13113359	0	Simple_repeat

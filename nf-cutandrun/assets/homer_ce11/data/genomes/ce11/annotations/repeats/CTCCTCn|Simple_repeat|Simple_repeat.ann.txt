@@ -1,0 +1,2 @@
+(CTCCTC)n|Simple_repeat|Simple_repeat-HOMER78229	chrX	6742359	6742399	0	Simple_repeat
+(CTCCTC)n|Simple_repeat|Simple_repeat-HOMER83668	chrX	16805946	16805981	0	Simple_repeat

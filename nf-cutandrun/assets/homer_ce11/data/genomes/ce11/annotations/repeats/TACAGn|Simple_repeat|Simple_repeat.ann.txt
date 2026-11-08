@@ -1,0 +1,4 @@
+(TACAG)n|Simple_repeat|Simple_repeat-HOMER26610	chrII	14144876	14144903	0	Simple_repeat
+(TACAG)n|Simple_repeat|Simple_repeat-HOMER47116	chrIV	3318296	3318323	0	Simple_repeat
+(TACAG)n|Simple_repeat|Simple_repeat-HOMER64191	chrV	7106058	7106087	0	Simple_repeat
+(TACAG)n|Simple_repeat|Simple_repeat-HOMER68232	chrV	16337175	16337215	0	Simple_repeat

@@ -1,0 +1,2 @@
+(CAGCCGA)n|Simple_repeat|Simple_repeat-HOMER31740	chrIII	2504603	2504632	0	Simple_repeat
+(CAGCCGA)n|Simple_repeat|Simple_repeat-HOMER61647	chrV	4030083	4030138	0	Simple_repeat

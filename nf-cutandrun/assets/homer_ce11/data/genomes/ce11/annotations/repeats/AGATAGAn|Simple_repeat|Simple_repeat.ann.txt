@@ -1,0 +1,1 @@
+(AGATAGA)n|Simple_repeat|Simple_repeat-HOMER76943	chrX	4123111	4123150	0	Simple_repeat

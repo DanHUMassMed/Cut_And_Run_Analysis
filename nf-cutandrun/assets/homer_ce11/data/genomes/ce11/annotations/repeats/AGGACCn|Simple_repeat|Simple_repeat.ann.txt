@@ -1,0 +1,2 @@
+(AGGACC)n|Simple_repeat|Simple_repeat-HOMER13780	chrI	13908139	13908163	0	Simple_repeat
+(AGGACC)n|Simple_repeat|Simple_repeat-HOMER13963	chrI	14048676	14049128	0	Simple_repeat

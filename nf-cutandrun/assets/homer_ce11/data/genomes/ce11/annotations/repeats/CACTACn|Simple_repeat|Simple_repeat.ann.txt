@@ -1,0 +1,1 @@
+(CACTAC)n|Simple_repeat|Simple_repeat-HOMER18942	chrII	3873983	3874039	0	Simple_repeat

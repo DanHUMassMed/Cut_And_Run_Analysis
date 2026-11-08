@@ -1,0 +1,1 @@
+(CAGGTAGG)n|Simple_repeat|Simple_repeat-HOMER38125	chrIII	11289097	11289146	0	Simple_repeat

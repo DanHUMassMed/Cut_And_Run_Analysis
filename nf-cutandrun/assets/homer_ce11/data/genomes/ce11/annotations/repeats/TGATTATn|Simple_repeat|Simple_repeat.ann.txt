@@ -1,0 +1,1 @@
+(TGATTAT)n|Simple_repeat|Simple_repeat-HOMER74699	chrX	1667265	1667311	0	Simple_repeat

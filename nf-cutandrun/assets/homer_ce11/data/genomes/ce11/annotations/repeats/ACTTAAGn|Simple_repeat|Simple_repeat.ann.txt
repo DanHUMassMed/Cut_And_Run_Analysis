@@ -1,0 +1,1 @@
+(ACTTAAG)n|Simple_repeat|Simple_repeat-HOMER1086	chrI	810259	810306	0	Simple_repeat

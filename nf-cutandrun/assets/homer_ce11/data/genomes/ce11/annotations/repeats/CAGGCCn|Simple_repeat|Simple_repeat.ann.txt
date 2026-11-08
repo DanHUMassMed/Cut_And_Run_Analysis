@@ -1,0 +1,1 @@
+(CAGGCC)n|Simple_repeat|Simple_repeat-HOMER30890	chrIII	1939265	1939297	0	Simple_repeat

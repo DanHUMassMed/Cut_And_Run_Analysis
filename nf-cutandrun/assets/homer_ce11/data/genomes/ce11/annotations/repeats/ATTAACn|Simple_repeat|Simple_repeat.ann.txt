@@ -1,0 +1,1 @@
+(ATTAAC)n|Simple_repeat|Simple_repeat-HOMER30648	chrIII	1818781	1818815	0	Simple_repeat

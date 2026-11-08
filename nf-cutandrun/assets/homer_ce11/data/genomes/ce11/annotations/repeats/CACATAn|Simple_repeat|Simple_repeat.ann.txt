@@ -1,0 +1,4 @@
+(CACATA)n|Simple_repeat|Simple_repeat-HOMER7133	chrI	4876031	4876061	0	Simple_repeat
+(CACATA)n|Simple_repeat|Simple_repeat-HOMER35269	chrIII	7302520	7302553	0	Simple_repeat
+(CACATA)n|Simple_repeat|Simple_repeat-HOMER46948	chrIV	3227801	3227842	0	Simple_repeat
+(CACATA)n|Simple_repeat|Simple_repeat-HOMER71247	chrV	19428060	19428097	0	Simple_repeat

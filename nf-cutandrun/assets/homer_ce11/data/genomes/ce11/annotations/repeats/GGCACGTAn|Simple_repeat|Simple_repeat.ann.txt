@@ -1,0 +1,2 @@
+(GGCACGTA)n|Simple_repeat|Simple_repeat-HOMER18407	chrII	3179712	3179878	0	Simple_repeat
+(GGCACGTA)n|Simple_repeat|Simple_repeat-HOMER35752	chrIII	8334767	8335014	0	Simple_repeat

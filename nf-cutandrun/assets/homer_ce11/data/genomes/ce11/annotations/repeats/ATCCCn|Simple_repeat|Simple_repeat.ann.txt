@@ -1,0 +1,1 @@
+(ATCCC)n|Simple_repeat|Simple_repeat-HOMER9959	chrI	10290525	10290551	0	Simple_repeat

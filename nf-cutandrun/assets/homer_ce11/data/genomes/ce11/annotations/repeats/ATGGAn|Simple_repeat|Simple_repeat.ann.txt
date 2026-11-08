@@ -1,0 +1,4 @@
+(ATGGA)n|Simple_repeat|Simple_repeat-HOMER83707	chrX	16885271	16885308	0	Simple_repeat
+(ATGGA)n|Simple_repeat|Simple_repeat-HOMER83710	chrX	16885466	16885503	0	Simple_repeat
+(ATGGA)n|Simple_repeat|Simple_repeat-HOMER83713	chrX	16885646	16885683	0	Simple_repeat
+(ATGGA)n|Simple_repeat|Simple_repeat-HOMER83716	chrX	16885838	16885875	0	Simple_repeat

@@ -1,0 +1,2 @@
+(ATTACC)n|Simple_repeat|Simple_repeat-HOMER77090	chrX	4353163	4353226	0	Simple_repeat
+(ATTACC)n|Simple_repeat|Simple_repeat-HOMER77092	chrX	4353278	4353290	0	Simple_repeat

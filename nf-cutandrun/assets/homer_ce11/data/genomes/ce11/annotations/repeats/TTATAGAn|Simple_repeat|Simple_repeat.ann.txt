@@ -1,0 +1,1 @@
+(TTATAGA)n|Simple_repeat|Simple_repeat-HOMER40314	chrIII	12411765	12411842	0	Simple_repeat

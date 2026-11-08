@@ -1,0 +1,1 @@
+(TAGAT)n|Simple_repeat|Simple_repeat-HOMER41708	chrIII	13049042	13049076	0	Simple_repeat

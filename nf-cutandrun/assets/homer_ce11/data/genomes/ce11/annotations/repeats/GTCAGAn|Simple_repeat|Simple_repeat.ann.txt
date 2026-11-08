@@ -1,0 +1,1 @@
+(GTCAGA)n|Simple_repeat|Simple_repeat-HOMER8135	chrI	6949731	6949769	0	Simple_repeat

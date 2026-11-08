@@ -1,0 +1,2 @@
+(CACACT)n|Simple_repeat|Simple_repeat-HOMER36323	chrIII	9288754	9288785	0	Simple_repeat
+(CACACT)n|Simple_repeat|Simple_repeat-HOMER77453	chrX	5064170	5064225	0	Simple_repeat

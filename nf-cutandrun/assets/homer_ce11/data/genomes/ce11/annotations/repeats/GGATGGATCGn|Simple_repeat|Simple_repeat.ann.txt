@@ -1,0 +1,1 @@
+(GGATGGATCG)n|Simple_repeat|Simple_repeat-HOMER52061	chrIV	11610016	11610148	0	Simple_repeat

@@ -1,0 +1,4 @@
+(TGAAT)n|Simple_repeat|Simple_repeat-HOMER56940	chrV	753163	753200	0	Simple_repeat
+(TGAAT)n|Simple_repeat|Simple_repeat-HOMER64551	chrV	8042084	8042128	0	Simple_repeat
+(TGAAT)n|Simple_repeat|Simple_repeat-HOMER68899	chrV	17220754	17220816	0	Simple_repeat
+(TGAAT)n|Simple_repeat|Simple_repeat-HOMER69076	chrV	17479681	17479743	0	Simple_repeat

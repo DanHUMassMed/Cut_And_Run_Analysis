@@ -1,0 +1,4 @@
+C-rich|Low_complexity|Low_complexity-HOMER26012	chrII	13720306	13720496	0	Low_complexity
+C-rich|Low_complexity|Low_complexity-HOMER26014	chrII	13720649	13721006	0	Low_complexity
+C-rich|Low_complexity|Low_complexity-HOMER26271	chrII	13904358	13904545	0	Low_complexity
+C-rich|Low_complexity|Low_complexity-HOMER26414	chrII	14001416	14001608	0	Low_complexity

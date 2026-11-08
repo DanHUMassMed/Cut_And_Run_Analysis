@@ -1,0 +1,1 @@
+(AGTTTAA)n|Simple_repeat|Simple_repeat-HOMER8587	chrI	7898134	7898180	0	Simple_repeat

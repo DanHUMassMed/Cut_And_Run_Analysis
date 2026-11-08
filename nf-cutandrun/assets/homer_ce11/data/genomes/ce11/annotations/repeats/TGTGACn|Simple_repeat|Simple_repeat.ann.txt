@@ -1,0 +1,1 @@
+(TGTGAC)n|Simple_repeat|Simple_repeat-HOMER78119	chrX	6501839	6501913	0	Simple_repeat

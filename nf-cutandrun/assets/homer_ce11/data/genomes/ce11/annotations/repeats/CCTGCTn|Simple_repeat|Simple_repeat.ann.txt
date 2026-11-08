@@ -1,0 +1,1 @@
+(CCTGCT)n|Simple_repeat|Simple_repeat-HOMER9912	chrI	10201296	10201327	0	Simple_repeat

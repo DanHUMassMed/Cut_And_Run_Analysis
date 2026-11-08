@@ -1,0 +1,1 @@
+(ATCCTAG)n|Simple_repeat|Simple_repeat-HOMER66445	chrV	12737079	12737118	0	Simple_repeat

@@ -1,0 +1,1 @@
+(GGAAGTT)n|Simple_repeat|Simple_repeat-HOMER20069	chrII	5247294	5247342	0	Simple_repeat

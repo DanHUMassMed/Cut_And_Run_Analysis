@@ -1,0 +1,1 @@
+(GATTAC)n|Simple_repeat|Simple_repeat-HOMER7982	chrI	6546352	6546422	0	Simple_repeat

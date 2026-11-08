@@ -1,0 +1,2 @@
+(AGATC)n|Simple_repeat|Simple_repeat-HOMER28844	chrIII	486704	486750	0	Simple_repeat
+(AGATC)n|Simple_repeat|Simple_repeat-HOMER61105	chrV	3572590	3572618	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TTCCAA)n|Simple_repeat|Simple_repeat-HOMER46456	chrIV	2954686	2954730	0	Simple_repeat
+(TTCCAA)n|Simple_repeat|Simple_repeat-HOMER82412	chrX	15516473	15516518	0	Simple_repeat

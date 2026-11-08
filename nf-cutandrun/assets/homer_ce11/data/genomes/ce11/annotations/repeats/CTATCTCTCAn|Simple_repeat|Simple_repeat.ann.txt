@@ -1,0 +1,1 @@
+(CTATCTCTCA)n|Simple_repeat|Simple_repeat-HOMER89	chrI	65815	65854	0	Simple_repeat

@@ -1,0 +1,2 @@
+(GATAT)n|Simple_repeat|Simple_repeat-HOMER40057	chrIII	12301441	12301472	0	Simple_repeat
+(GATAT)n|Simple_repeat|Simple_repeat-HOMER64759	chrV	8504001	8504030	0	Simple_repeat

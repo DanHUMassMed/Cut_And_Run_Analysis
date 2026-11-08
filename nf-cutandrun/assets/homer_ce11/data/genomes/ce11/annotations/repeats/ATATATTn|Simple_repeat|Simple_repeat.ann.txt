@@ -1,0 +1,2 @@
+(ATATATT)n|Simple_repeat|Simple_repeat-HOMER72295	chrV	20150463	20150522	0	Simple_repeat
+(ATATATT)n|Simple_repeat|Simple_repeat-HOMER77226	chrX	4587265	4587312	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TTTACA)n|Simple_repeat|Simple_repeat-HOMER3784	chrI	2197091	2197130	0	Simple_repeat
+(TTTACA)n|Simple_repeat|Simple_repeat-HOMER80466	chrX	12024941	12024991	0	Simple_repeat

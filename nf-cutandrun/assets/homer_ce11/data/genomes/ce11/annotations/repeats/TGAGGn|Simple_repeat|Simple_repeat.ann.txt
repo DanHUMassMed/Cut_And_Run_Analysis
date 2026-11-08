@@ -1,0 +1,1 @@
+(TGAGG)n|Simple_repeat|Simple_repeat-HOMER21635	chrII	9065737	9065763	0	Simple_repeat

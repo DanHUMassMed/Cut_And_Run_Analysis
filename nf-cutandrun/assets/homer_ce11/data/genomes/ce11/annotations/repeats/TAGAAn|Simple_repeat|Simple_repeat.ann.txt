@@ -1,0 +1,2 @@
+(TAGAA)n|Simple_repeat|Simple_repeat-HOMER21315	chrII	8114399	8114447	0	Simple_repeat
+(TAGAA)n|Simple_repeat|Simple_repeat-HOMER66368	chrV	12540636	12540691	0	Simple_repeat

@@ -1,0 +1,1 @@
+(AGAACTAC)n|Simple_repeat|Simple_repeat-HOMER22623	chrII	10954498	10954550	0	Simple_repeat

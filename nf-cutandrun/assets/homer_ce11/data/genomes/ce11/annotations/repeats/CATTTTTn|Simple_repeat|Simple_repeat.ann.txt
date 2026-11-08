@@ -1,0 +1,4 @@
+(CATTTTT)n|Simple_repeat|Simple_repeat-HOMER20593	chrII	6445040	6445099	0	Simple_repeat
+(CATTTTT)n|Simple_repeat|Simple_repeat-HOMER36863	chrIII	10090635	10090684	0	Simple_repeat
+(CATTTTT)n|Simple_repeat|Simple_repeat-HOMER64671	chrV	8363667	8363711	0	Simple_repeat
+(CATTTTT)n|Simple_repeat|Simple_repeat-HOMER81318	chrX	14032713	14032756	0	Simple_repeat

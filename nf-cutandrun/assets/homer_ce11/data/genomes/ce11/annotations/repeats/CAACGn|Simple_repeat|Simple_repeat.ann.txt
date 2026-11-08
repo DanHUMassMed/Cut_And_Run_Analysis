@@ -1,0 +1,2 @@
+(CAACG)n|Simple_repeat|Simple_repeat-HOMER3865	chrI	2254213	2254395	0	Simple_repeat
+(CAACG)n|Simple_repeat|Simple_repeat-HOMER3866	chrI	2255049	2255773	0	Simple_repeat

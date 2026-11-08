@@ -1,0 +1,3 @@
+(GAATTTA)n|Simple_repeat|Simple_repeat-HOMER11087	chrI	11356202	11356273	0	Simple_repeat
+(GAATTTA)n|Simple_repeat|Simple_repeat-HOMER19103	chrII	4026299	4026349	0	Simple_repeat
+(GAATTTA)n|Simple_repeat|Simple_repeat-HOMER33744	chrIII	4143405	4143445	0	Simple_repeat

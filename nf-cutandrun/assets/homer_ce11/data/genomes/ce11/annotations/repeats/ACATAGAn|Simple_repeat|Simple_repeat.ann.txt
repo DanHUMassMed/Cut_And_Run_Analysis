@@ -1,0 +1,1 @@
+(ACATAGA)n|Simple_repeat|Simple_repeat-HOMER75687	chrX	2586829	2586862	0	Simple_repeat

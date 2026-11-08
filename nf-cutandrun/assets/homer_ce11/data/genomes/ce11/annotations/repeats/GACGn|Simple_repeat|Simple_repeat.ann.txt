@@ -1,0 +1,2 @@
+(GACG)n|Simple_repeat|Simple_repeat-HOMER5888	chrI	3514536	3514560	0	Simple_repeat
+(GACG)n|Simple_repeat|Simple_repeat-HOMER75959	chrX	2791389	2791412	0	Simple_repeat

@@ -1,0 +1,1 @@
+(ATGAG)n|Simple_repeat|Simple_repeat-HOMER67203	chrV	14399489	14399518	0	Simple_repeat

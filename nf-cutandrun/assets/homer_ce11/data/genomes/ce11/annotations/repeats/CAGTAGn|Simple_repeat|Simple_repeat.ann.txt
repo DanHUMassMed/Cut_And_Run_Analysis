@@ -1,0 +1,2 @@
+(CAGTAG)n|Simple_repeat|Simple_repeat-HOMER23734	chrII	12222921	12222958	0	Simple_repeat
+(CAGTAG)n|Simple_repeat|Simple_repeat-HOMER66124	chrV	11974117	11974147	0	Simple_repeat

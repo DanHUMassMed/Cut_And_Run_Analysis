@@ -1,0 +1,2 @@
+(CAGCAA)n|Simple_repeat|Simple_repeat-HOMER18817	chrII	3632178	3632211	0	Simple_repeat
+(CAGCAA)n|Simple_repeat|Simple_repeat-HOMER25001	chrII	13108426	13108484	0	Simple_repeat

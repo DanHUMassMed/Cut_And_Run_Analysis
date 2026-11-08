@@ -1,0 +1,1 @@
+(ATCGAGA)n|Simple_repeat|Simple_repeat-HOMER62994	chrV	5052470	5052509	0	Simple_repeat

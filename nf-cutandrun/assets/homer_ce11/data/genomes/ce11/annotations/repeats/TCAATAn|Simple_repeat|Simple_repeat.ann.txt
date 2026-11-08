@@ -1,0 +1,1 @@
+(TCAATA)n|Simple_repeat|Simple_repeat-HOMER76566	chrX	3574080	3574109	0	Simple_repeat

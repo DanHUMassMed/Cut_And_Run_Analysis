@@ -1,0 +1,1 @@
+(CCAC)n|Simple_repeat|Simple_repeat-HOMER16534	chrII	1323144	1323150	0	Simple_repeat

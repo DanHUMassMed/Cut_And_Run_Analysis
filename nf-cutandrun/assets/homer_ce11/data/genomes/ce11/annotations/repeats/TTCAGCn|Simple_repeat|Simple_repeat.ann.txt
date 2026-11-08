@@ -1,0 +1,1 @@
+(TTCAGC)n|Simple_repeat|Simple_repeat-HOMER4215	chrI	2482290	2482339	0	Simple_repeat

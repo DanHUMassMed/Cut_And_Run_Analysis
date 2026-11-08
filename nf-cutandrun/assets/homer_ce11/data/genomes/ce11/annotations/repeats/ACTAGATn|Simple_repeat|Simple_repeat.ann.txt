@@ -1,0 +1,1 @@
+(ACTAGAT)n|Simple_repeat|Simple_repeat-HOMER74499	chrX	1460638	1460704	0	Simple_repeat

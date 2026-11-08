@@ -1,0 +1,1 @@
+(GCAGGTAG)n|Simple_repeat|Simple_repeat-HOMER56185	chrV	25633	25667	0	Simple_repeat

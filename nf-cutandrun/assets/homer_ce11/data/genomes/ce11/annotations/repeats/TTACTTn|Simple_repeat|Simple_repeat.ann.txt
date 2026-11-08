@@ -1,0 +1,3 @@
+(TTACTT)n|Simple_repeat|Simple_repeat-HOMER33225	chrIII	3565300	3565356	0	Simple_repeat
+(TTACTT)n|Simple_repeat|Simple_repeat-HOMER69212	chrV	17627644	17627717	0	Simple_repeat
+(TTACTT)n|Simple_repeat|Simple_repeat-HOMER72793	chrV	20612496	20612535	0	Simple_repeat

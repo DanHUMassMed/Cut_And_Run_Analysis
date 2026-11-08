@@ -1,0 +1,2 @@
+(AAGC)n|Simple_repeat|Simple_repeat-HOMER15466	chrII	180419	180447	0	Simple_repeat
+(AAGC)n|Simple_repeat|Simple_repeat-HOMER63976	chrV	6584434	6584468	0	Simple_repeat

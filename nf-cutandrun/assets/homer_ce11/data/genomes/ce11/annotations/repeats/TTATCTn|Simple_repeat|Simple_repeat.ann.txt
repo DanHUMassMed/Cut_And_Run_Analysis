@@ -1,0 +1,2 @@
+(TTATCT)n|Simple_repeat|Simple_repeat-HOMER64361	chrV	7510122	7510155	0	Simple_repeat
+(TTATCT)n|Simple_repeat|Simple_repeat-HOMER79987	chrX	10729662	10729733	0	Simple_repeat

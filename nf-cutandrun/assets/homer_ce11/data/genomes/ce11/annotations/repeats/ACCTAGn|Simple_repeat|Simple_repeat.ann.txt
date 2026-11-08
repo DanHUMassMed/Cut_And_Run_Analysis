@@ -1,0 +1,2 @@
+(ACCTAG)n|Simple_repeat|Simple_repeat-HOMER37730	chrIII	10976397	10976433	0	Simple_repeat
+(ACCTAG)n|Simple_repeat|Simple_repeat-HOMER67546	chrV	14974996	14975039	0	Simple_repeat

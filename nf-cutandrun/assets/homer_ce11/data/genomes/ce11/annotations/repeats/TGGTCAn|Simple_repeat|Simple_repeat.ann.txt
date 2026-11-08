@@ -1,0 +1,1 @@
+(TGGTCA)n|Simple_repeat|Simple_repeat-HOMER70827	chrV	19008672	19008707	0	Simple_repeat

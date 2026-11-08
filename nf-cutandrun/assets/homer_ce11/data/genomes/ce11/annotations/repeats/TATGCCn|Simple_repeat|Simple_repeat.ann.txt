@@ -1,0 +1,3 @@
+(TATGCC)n|Simple_repeat|Simple_repeat-HOMER16467	chrII	1250433	1251374	0	Simple_repeat
+(TATGCC)n|Simple_repeat|Simple_repeat-HOMER16658	chrII	1421437	1422035	0	Simple_repeat
+(TATGCC)n|Simple_repeat|Simple_repeat-HOMER18138	chrII	2966523	2966615	0	Simple_repeat

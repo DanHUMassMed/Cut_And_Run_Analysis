@@ -1,0 +1,1 @@
+(ACCAGA)n|Simple_repeat|Simple_repeat-HOMER35599	chrIII	8022777	8022807	0	Simple_repeat

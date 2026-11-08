@@ -1,0 +1,1 @@
+(AGGCAT)n|Simple_repeat|Simple_repeat-HOMER60349	chrV	2794614	2794695	0	Simple_repeat

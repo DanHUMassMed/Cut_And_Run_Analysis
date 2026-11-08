@@ -1,0 +1,2 @@
+(ACAGAA)n|Simple_repeat|Simple_repeat-HOMER21648	chrII	9079124	9079216	0	Simple_repeat
+(ACAGAA)n|Simple_repeat|Simple_repeat-HOMER73518	chrX	295287	295315	0	Simple_repeat

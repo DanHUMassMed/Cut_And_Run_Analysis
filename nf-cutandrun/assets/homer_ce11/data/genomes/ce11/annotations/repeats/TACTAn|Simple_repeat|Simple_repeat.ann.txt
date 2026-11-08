@@ -1,0 +1,1 @@
+(TACTA)n|Simple_repeat|Simple_repeat-HOMER25738	chrII	13534263	13534287	0	Simple_repeat

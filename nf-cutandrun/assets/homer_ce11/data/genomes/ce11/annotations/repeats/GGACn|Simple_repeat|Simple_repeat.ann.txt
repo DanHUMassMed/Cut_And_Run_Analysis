@@ -1,0 +1,3 @@
+(GGAC)n|Simple_repeat|Simple_repeat-HOMER8414	chrI	7543479	7543501	0	Simple_repeat
+(GGAC)n|Simple_repeat|Simple_repeat-HOMER38471	chrIII	11472733	11472758	0	Simple_repeat
+(GGAC)n|Simple_repeat|Simple_repeat-HOMER51175	chrIV	9633306	9633333	0	Simple_repeat

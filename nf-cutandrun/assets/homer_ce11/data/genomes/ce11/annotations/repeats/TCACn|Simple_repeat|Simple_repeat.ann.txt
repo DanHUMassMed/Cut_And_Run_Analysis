@@ -1,0 +1,3 @@
+(TCAC)n|Simple_repeat|Simple_repeat-HOMER2026	chrI	1300090	1300122	0	Simple_repeat
+(TCAC)n|Simple_repeat|Simple_repeat-HOMER36522	chrIII	9620380	9620408	0	Simple_repeat
+(TCAC)n|Simple_repeat|Simple_repeat-HOMER54727	chrIV	15542651	15542675	0	Simple_repeat

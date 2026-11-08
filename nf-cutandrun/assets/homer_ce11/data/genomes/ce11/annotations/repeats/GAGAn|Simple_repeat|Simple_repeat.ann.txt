@@ -1,0 +1,3 @@
+(GAGA)n|Simple_repeat|Simple_repeat-HOMER7121	chrI	4862164	4862201	0	Simple_repeat
+(GAGA)n|Simple_repeat|Simple_repeat-HOMER39048	chrIII	11834920	11834953	0	Simple_repeat
+(GAGA)n|Simple_repeat|Simple_repeat-HOMER46521	chrIV	2990586	2990612	0	Simple_repeat

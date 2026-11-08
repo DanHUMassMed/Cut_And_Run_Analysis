@@ -1,0 +1,2 @@
+(TGAATA)n|Simple_repeat|Simple_repeat-HOMER78379	chrX	7065916	7065962	0	Simple_repeat
+(TGAATA)n|Simple_repeat|Simple_repeat-HOMER79546	chrX	9524974	9525010	0	Simple_repeat

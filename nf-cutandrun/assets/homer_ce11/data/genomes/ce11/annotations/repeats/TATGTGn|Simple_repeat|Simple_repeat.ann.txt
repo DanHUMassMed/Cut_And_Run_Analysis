@@ -1,0 +1,1 @@
+(TATGTG)n|Simple_repeat|Simple_repeat-HOMER56948	chrV	761338	761370	0	Simple_repeat

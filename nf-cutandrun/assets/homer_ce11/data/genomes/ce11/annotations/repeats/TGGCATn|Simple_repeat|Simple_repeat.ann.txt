@@ -1,0 +1,1 @@
+(TGGCAT)n|Simple_repeat|Simple_repeat-HOMER20043	chrII	5185830	5185861	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TCTAGAC)n|Simple_repeat|Simple_repeat-HOMER20316	chrII	5783319	5783360	0	Simple_repeat

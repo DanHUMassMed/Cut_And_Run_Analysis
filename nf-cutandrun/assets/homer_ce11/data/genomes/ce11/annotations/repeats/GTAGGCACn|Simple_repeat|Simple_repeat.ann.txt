@@ -1,0 +1,6 @@
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER17961	chrII	2810302	2810357	0	Simple_repeat
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER18408	chrII	3179962	3180067	0	Simple_repeat
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER18409	chrII	3180147	3180204	0	Simple_repeat
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER18707	chrII	3512521	3512688	0	Simple_repeat
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER39831	chrIII	12190437	12190548	0	Simple_repeat
+(GTAGGCAC)n|Simple_repeat|Simple_repeat-HOMER39834	chrIII	12190723	12190865	0	Simple_repeat

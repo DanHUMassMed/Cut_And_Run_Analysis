@@ -1,0 +1,1 @@
+(CAGCAAT)n|Simple_repeat|Simple_repeat-HOMER8708	chrI	8095053	8095090	0	Simple_repeat

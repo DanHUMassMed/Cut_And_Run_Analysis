@@ -1,0 +1,3 @@
+(ACGAAA)n|Simple_repeat|Simple_repeat-HOMER20193	chrII	5550478	5550502	0	Simple_repeat
+(ACGAAA)n|Simple_repeat|Simple_repeat-HOMER42645	chrIV	85549	85573	0	Simple_repeat
+(ACGAAA)n|Simple_repeat|Simple_repeat-HOMER52191	chrIV	11825472	11825496	0	Simple_repeat

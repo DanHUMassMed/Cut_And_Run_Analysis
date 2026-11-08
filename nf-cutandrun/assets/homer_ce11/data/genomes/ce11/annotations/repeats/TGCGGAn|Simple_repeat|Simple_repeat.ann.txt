@@ -1,0 +1,1 @@
+(TGCGGA)n|Simple_repeat|Simple_repeat-HOMER66074	chrV	11839980	11840024	0	Simple_repeat

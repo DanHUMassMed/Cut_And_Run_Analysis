@@ -1,0 +1,2 @@
+(TCGTG)n|Simple_repeat|Simple_repeat-HOMER78387	chrX	7077533	7077963	0	Simple_repeat
+(TCGTG)n|Simple_repeat|Simple_repeat-HOMER78388	chrX	7078109	7079259	0	Simple_repeat

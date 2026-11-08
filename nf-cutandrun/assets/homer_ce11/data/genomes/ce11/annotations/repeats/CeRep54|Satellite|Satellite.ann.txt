@@ -1,0 +1,7 @@
+CeRep54|Satellite|Satellite-HOMER6928	chrI	4660496	4660520	1	Satellite
+CeRep54|Satellite|Satellite-HOMER17117	chrII	2118099	2118117	0	Satellite
+CeRep54|Satellite|Satellite-HOMER17119	chrII	2119618	2119665	0	Satellite
+CeRep54|Satellite|Satellite-HOMER53994	chrIV	14208076	14208186	0	Satellite
+CeRep54|Satellite|Satellite-HOMER53995	chrIV	14208202	14209019	0	Satellite
+CeRep54|Satellite|Satellite-HOMER53997	chrIV	14209912	14210120	1	Satellite
+CeRep54|Satellite|Satellite-HOMER66359	chrV	12510458	12510569	0	Satellite

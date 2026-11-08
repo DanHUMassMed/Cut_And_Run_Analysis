@@ -1,0 +1,1 @@
+(AGGTTACTGT)n|Simple_repeat|Simple_repeat-HOMER4711	chrI	2806035	2806115	0	Simple_repeat

@@ -1,0 +1,1 @@
+(CATATG)n|Simple_repeat|Simple_repeat-HOMER8073	chrI	6797059	6797095	0	Simple_repeat

@@ -1,0 +1,1 @@
+(AATTGCCA)n|Simple_repeat|Simple_repeat-HOMER47687	chrIV	3827286	3827354	0	Simple_repeat

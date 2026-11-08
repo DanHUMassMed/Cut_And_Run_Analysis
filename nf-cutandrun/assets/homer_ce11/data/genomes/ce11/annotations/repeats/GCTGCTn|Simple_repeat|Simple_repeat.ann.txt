@@ -1,0 +1,2 @@
+(GCTGCT)n|Simple_repeat|Simple_repeat-HOMER9251	chrI	9098831	9098863	0	Simple_repeat
+(GCTGCT)n|Simple_repeat|Simple_repeat-HOMER9253	chrI	9098892	9098931	0	Simple_repeat

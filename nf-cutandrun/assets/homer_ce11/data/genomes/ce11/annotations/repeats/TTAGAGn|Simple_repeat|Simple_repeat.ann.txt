@@ -1,0 +1,4 @@
+(TTAGAG)n|Simple_repeat|Simple_repeat-HOMER3497	chrI	2048573	2048611	0	Simple_repeat
+(TTAGAG)n|Simple_repeat|Simple_repeat-HOMER10936	chrI	11231728	11231766	0	Simple_repeat
+(TTAGAG)n|Simple_repeat|Simple_repeat-HOMER13758	chrI	13890097	13890135	0	Simple_repeat
+(TTAGAG)n|Simple_repeat|Simple_repeat-HOMER36386	chrIII	9420081	9420119	0	Simple_repeat

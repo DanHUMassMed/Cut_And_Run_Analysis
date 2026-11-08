@@ -1,0 +1,1 @@
+(TAGACC)n|Simple_repeat|Simple_repeat-HOMER16145	chrII	878137	878396	0	Simple_repeat

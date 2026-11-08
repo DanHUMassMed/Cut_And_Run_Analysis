@@ -1,0 +1,2 @@
+(TATACGC)n|Simple_repeat|Simple_repeat-HOMER21040	chrII	7434923	7434946	0	Simple_repeat
+(TATACGC)n|Simple_repeat|Simple_repeat-HOMER21042	chrII	7434994	7435014	0	Simple_repeat

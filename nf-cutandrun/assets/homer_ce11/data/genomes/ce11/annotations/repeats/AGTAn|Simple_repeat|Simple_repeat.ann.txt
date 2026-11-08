@@ -1,0 +1,4 @@
+(AGTA)n|Simple_repeat|Simple_repeat-HOMER73993	chrX	799068	799094	0	Simple_repeat
+(AGTA)n|Simple_repeat|Simple_repeat-HOMER78913	chrX	8058379	8058404	0	Simple_repeat
+(AGTA)n|Simple_repeat|Simple_repeat-HOMER83836	chrX	17063283	17063321	0	Simple_repeat
+(AGTA)n|Simple_repeat|Simple_repeat-HOMER84154	chrX	17611819	17611850	0	Simple_repeat

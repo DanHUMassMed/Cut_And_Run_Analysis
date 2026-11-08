@@ -1,0 +1,1 @@
+(TACAATA)n|Simple_repeat|Simple_repeat-HOMER68475	chrV	16603160	16603198	0	Simple_repeat

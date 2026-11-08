@@ -1,0 +1,1 @@
+(ACCGC)n|Simple_repeat|Simple_repeat-HOMER14826	chrI	14615732	14615760	0	Simple_repeat

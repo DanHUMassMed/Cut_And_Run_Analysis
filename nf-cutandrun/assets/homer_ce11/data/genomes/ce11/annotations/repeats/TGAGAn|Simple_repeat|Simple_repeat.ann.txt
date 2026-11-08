@@ -1,0 +1,2 @@
+(TGAGA)n|Simple_repeat|Simple_repeat-HOMER50762	chrIV	8799292	8799322	0	Simple_repeat
+(TGAGA)n|Simple_repeat|Simple_repeat-HOMER52339	chrIV	12117689	12117725	0	Simple_repeat

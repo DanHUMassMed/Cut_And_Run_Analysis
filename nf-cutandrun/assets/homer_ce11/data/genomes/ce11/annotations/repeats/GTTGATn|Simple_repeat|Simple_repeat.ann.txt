@@ -1,0 +1,1 @@
+(GTTGAT)n|Simple_repeat|Simple_repeat-HOMER9161	chrI	8896340	8896375	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TAGACT)n|Simple_repeat|Simple_repeat-HOMER53963	chrIV	14163365	14163440	0	Simple_repeat

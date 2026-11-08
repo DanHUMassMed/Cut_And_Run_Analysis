@@ -1,0 +1,1 @@
+(CCTAGA)n|Simple_repeat|Simple_repeat-HOMER15828	chrII	559058	559102	0	Simple_repeat

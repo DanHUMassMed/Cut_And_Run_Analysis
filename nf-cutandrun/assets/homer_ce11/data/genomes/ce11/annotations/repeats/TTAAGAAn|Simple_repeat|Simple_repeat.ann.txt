@@ -1,0 +1,2 @@
+(TTAAGAA)n|Simple_repeat|Simple_repeat-HOMER67079	chrV	14139208	14139246	0	Simple_repeat
+(TTAAGAA)n|Simple_repeat|Simple_repeat-HOMER75177	chrX	2107651	2107688	0	Simple_repeat

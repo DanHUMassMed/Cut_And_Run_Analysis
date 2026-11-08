@@ -1,0 +1,1 @@
+(GCATATAG)n|Simple_repeat|Simple_repeat-HOMER26567	chrII	14108711	14108920	0	Simple_repeat

@@ -1,0 +1,2 @@
+(GATGAT)n|Simple_repeat|Simple_repeat-HOMER5831	chrI	3480659	3480695	0	Simple_repeat
+(GATGAT)n|Simple_repeat|Simple_repeat-HOMER33918	chrIII	4411503	4411561	0	Simple_repeat

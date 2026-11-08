@@ -1,0 +1,3 @@
+(GTAGGCA)n|Simple_repeat|Simple_repeat-HOMER41415	chrIII	12912830	12912881	0	Simple_repeat
+(GTAGGCA)n|Simple_repeat|Simple_repeat-HOMER41418	chrIII	12913142	12913217	0	Simple_repeat
+(GTAGGCA)n|Simple_repeat|Simple_repeat-HOMER52924	chrIV	13005281	13005343	0	Simple_repeat

@@ -1,0 +1,2 @@
+(ATTATTA)n|Simple_repeat|Simple_repeat-HOMER25368	chrII	13304146	13304207	0	Simple_repeat
+(ATTATTA)n|Simple_repeat|Simple_repeat-HOMER79733	chrX	10035832	10035895	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TTAAGACC)n|Simple_repeat|Simple_repeat-HOMER28614	chrIII	300440	300508	0	Simple_repeat

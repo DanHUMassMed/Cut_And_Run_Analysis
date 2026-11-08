@@ -1,0 +1,1 @@
+(ATGTAG)n|Simple_repeat|Simple_repeat-HOMER50992	chrIV	9205164	9205198	0	Simple_repeat

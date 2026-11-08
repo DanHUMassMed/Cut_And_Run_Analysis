@@ -1,0 +1,1 @@
+(CACGAT)n|Simple_repeat|Simple_repeat-HOMER63254	chrV	5307003	5307060	0	Simple_repeat

@@ -1,0 +1,2 @@
+(GAATTAT)n|Simple_repeat|Simple_repeat-HOMER69196	chrV	17607290	17607353	0	Simple_repeat
+(GAATTAT)n|Simple_repeat|Simple_repeat-HOMER81403	chrX	14172104	14172157	0	Simple_repeat

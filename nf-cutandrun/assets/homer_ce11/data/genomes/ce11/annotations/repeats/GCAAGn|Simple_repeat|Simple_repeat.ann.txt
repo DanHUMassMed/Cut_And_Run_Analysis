@@ -1,0 +1,1 @@
+(GCAAG)n|Simple_repeat|Simple_repeat-HOMER63098	chrV	5161846	5161891	0	Simple_repeat

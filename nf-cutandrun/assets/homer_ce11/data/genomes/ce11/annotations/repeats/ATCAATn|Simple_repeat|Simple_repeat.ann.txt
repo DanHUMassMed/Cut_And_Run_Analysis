@@ -1,0 +1,2 @@
+(ATCAAT)n|Simple_repeat|Simple_repeat-HOMER34976	chrIII	6613590	6613627	0	Simple_repeat
+(ATCAAT)n|Simple_repeat|Simple_repeat-HOMER50475	chrIV	8180011	8180045	0	Simple_repeat

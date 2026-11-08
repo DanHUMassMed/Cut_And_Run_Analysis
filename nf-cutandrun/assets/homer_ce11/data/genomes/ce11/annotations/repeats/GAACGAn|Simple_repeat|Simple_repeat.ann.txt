@@ -1,0 +1,2 @@
+(GAACGA)n|Simple_repeat|Simple_repeat-HOMER6566	chrI	4257840	4257908	0	Simple_repeat
+(GAACGA)n|Simple_repeat|Simple_repeat-HOMER40966	chrIII	12687057	12687104	0	Simple_repeat

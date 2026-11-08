@@ -1,0 +1,2 @@
+(GGTTGGA)n|Simple_repeat|Simple_repeat-HOMER47473	chrIV	3607635	3607641	0	Simple_repeat
+(GGTTGGA)n|Simple_repeat|Simple_repeat-HOMER47475	chrIV	3607682	3607735	0	Simple_repeat

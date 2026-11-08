@@ -1,0 +1,3 @@
+non-coding (NR_157061, exon 1 of 1)	chrX	13144830	13144919	0	miscRNA
+non-coding (NR_132550, exon 1 of 1)	chrX	15237169	15237228	1	miscRNA
+non-coding (NR_072698, exon 1 of 1)	chrX	15237206	15237228	1	miscRNA

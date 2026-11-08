@@ -1,0 +1,2 @@
+(CGGCTAA)n|Simple_repeat|Simple_repeat-HOMER73456	chrX	246111	246145	0	Simple_repeat
+(CGGCTAA)n|Simple_repeat|Simple_repeat-HOMER77334	chrX	4831145	4831179	0	Simple_repeat

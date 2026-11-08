@@ -1,0 +1,1 @@
+(GAACAT)n|Simple_repeat|Simple_repeat-HOMER64869	chrV	8757234	8757291	0	Simple_repeat

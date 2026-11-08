@@ -1,0 +1,1 @@
+(AGTAACA)n|Simple_repeat|Simple_repeat-HOMER76079	chrX	2877632	2877675	0	Simple_repeat

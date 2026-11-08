@@ -1,0 +1,5 @@
+(TATGTA)n|Simple_repeat|Simple_repeat-HOMER11573	chrI	11819862	11819891	0	Simple_repeat
+(TATGTA)n|Simple_repeat|Simple_repeat-HOMER16992	chrII	2000880	2001213	0	Simple_repeat
+(TATGTA)n|Simple_repeat|Simple_repeat-HOMER25602	chrII	13446001	13446110	0	Simple_repeat
+(TATGTA)n|Simple_repeat|Simple_repeat-HOMER61595	chrV	3968131	3968205	0	Simple_repeat
+(TATGTA)n|Simple_repeat|Simple_repeat-HOMER72044	chrV	19957568	19957626	0	Simple_repeat

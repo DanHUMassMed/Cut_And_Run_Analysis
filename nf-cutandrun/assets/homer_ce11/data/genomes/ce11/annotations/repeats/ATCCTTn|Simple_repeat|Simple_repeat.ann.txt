@@ -1,0 +1,1 @@
+(ATCCTT)n|Simple_repeat|Simple_repeat-HOMER7677	chrI	5816509	5816553	0	Simple_repeat

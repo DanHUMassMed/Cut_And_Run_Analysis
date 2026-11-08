@@ -1,0 +1,1 @@
+(CATAGG)n|Simple_repeat|Simple_repeat-HOMER44243	chrIV	1429992	1430065	0	Simple_repeat

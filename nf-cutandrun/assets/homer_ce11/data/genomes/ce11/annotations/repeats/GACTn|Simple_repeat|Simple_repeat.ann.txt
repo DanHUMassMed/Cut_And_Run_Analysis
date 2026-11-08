@@ -1,0 +1,2 @@
+(GACT)n|Simple_repeat|Simple_repeat-HOMER22552	chrII	10851364	10851386	0	Simple_repeat
+(GACT)n|Simple_repeat|Simple_repeat-HOMER33517	chrIII	3873508	3873530	0	Simple_repeat

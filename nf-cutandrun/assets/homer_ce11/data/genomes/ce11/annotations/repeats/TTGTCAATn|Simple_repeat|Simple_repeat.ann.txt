@@ -1,0 +1,1 @@
+(TTGTCAAT)n|Simple_repeat|Simple_repeat-HOMER25351	chrII	13293871	13293966	0	Simple_repeat

@@ -1,0 +1,2 @@
+(GATGGA)n|Simple_repeat|Simple_repeat-HOMER6115	chrI	3685493	3685531	0	Simple_repeat
+(GATGGA)n|Simple_repeat|Simple_repeat-HOMER51389	chrIV	10166620	10166655	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TTTGCAG)n|Simple_repeat|Simple_repeat-HOMER20238	chrII	5633645	5633692	0	Simple_repeat
+(TTTGCAG)n|Simple_repeat|Simple_repeat-HOMER44371	chrIV	1535565	1535628	0	Simple_repeat

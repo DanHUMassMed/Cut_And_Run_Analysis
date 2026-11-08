@@ -1,0 +1,1 @@
+(AATGCTC)n|Simple_repeat|Simple_repeat-HOMER1043	chrI	788817	788883	0	Simple_repeat

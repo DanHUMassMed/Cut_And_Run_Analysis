@@ -1,0 +1,1 @@
+(GATGAGT)n|Simple_repeat|Simple_repeat-HOMER21819	chrII	9491184	9491221	0	Simple_repeat

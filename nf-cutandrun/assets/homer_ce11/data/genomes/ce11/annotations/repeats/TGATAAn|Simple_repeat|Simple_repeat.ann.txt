@@ -1,0 +1,2 @@
+(TGATAA)n|Simple_repeat|Simple_repeat-HOMER20967	chrII	7254182	7254263	0	Simple_repeat
+(TGATAA)n|Simple_repeat|Simple_repeat-HOMER22592	chrII	10903360	10903391	0	Simple_repeat

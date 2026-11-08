@@ -1,0 +1,1 @@
+(AATACT)n|Simple_repeat|Simple_repeat-HOMER50056	chrIV	7341249	7341285	0	Simple_repeat

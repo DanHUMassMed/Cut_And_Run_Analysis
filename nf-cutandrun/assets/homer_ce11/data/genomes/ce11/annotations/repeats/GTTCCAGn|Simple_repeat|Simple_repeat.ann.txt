@@ -1,0 +1,1 @@
+(GTTCCAG)n|Simple_repeat|Simple_repeat-HOMER8250	chrI	7215171	7215211	0	Simple_repeat

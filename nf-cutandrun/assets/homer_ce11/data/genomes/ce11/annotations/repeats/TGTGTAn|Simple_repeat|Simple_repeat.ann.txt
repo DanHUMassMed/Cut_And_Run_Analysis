@@ -1,0 +1,2 @@
+(TGTGTA)n|Simple_repeat|Simple_repeat-HOMER7758	chrI	5996832	5996871	0	Simple_repeat
+(TGTGTA)n|Simple_repeat|Simple_repeat-HOMER69741	chrV	18006861	18006919	0	Simple_repeat

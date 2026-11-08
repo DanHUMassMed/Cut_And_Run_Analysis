@@ -1,0 +1,3 @@
+(GATGAC)n|Simple_repeat|Simple_repeat-HOMER20765	chrII	6845672	6845728	0	Simple_repeat
+(GATGAC)n|Simple_repeat|Simple_repeat-HOMER78219	chrX	6714664	6714696	0	Simple_repeat
+(GATGAC)n|Simple_repeat|Simple_repeat-HOMER83117	chrX	16157282	16157317	0	Simple_repeat

@@ -1,0 +1,2 @@
+(ATACTG)n|Simple_repeat|Simple_repeat-HOMER34988	chrIII	6622623	6622674	0	Simple_repeat
+(ATACTG)n|Simple_repeat|Simple_repeat-HOMER37517	chrIII	10782641	10782681	0	Simple_repeat

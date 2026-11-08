@@ -1,0 +1,1 @@
+(GAATCAG)n|Simple_repeat|Simple_repeat-HOMER42954	chrIV	380833	380882	0	Simple_repeat

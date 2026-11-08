@@ -1,0 +1,3 @@
+(TACTG)n|Simple_repeat|Simple_repeat-HOMER26324	chrII	13940180	13940385	0	Simple_repeat
+(TACTG)n|Simple_repeat|Simple_repeat-HOMER27898	chrII	15114059	15114201	0	Simple_repeat
+(TACTG)n|Simple_repeat|Simple_repeat-HOMER38079	chrIII	11235276	11235413	0	Simple_repeat

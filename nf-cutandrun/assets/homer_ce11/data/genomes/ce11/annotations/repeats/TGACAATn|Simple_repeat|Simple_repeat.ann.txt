@@ -1,0 +1,1 @@
+(TGACAAT)n|Simple_repeat|Simple_repeat-HOMER11355	chrI	11597737	11597774	0	Simple_repeat

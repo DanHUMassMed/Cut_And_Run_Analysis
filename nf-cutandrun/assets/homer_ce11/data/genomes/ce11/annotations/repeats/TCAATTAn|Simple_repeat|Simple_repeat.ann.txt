@@ -1,0 +1,3 @@
+(TCAATTA)n|Simple_repeat|Simple_repeat-HOMER59492	chrV	2374551	2374595	0	Simple_repeat
+(TCAATTA)n|Simple_repeat|Simple_repeat-HOMER59743	chrV	2482512	2482556	0	Simple_repeat
+(TCAATTA)n|Simple_repeat|Simple_repeat-HOMER79401	chrX	9177025	9177075	0	Simple_repeat

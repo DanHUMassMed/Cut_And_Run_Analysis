@@ -1,0 +1,2 @@
+(GATTCT)n|Simple_repeat|Simple_repeat-HOMER35299	chrIII	7364619	7364688	0	Simple_repeat
+(GATTCT)n|Simple_repeat|Simple_repeat-HOMER76737	chrX	3865799	3865829	0	Simple_repeat

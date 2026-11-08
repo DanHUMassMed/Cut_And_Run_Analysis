@@ -1,0 +1,1 @@
+(CTAACT)n|Simple_repeat|Simple_repeat-HOMER22703	chrII	11064048	11064114	0	Simple_repeat

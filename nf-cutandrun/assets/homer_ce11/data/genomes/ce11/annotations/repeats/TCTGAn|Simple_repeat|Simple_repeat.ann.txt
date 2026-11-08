@@ -1,0 +1,2 @@
+(TCTGA)n|Simple_repeat|Simple_repeat-HOMER20417	chrII	6027534	6027576	0	Simple_repeat
+(TCTGA)n|Simple_repeat|Simple_repeat-HOMER79702	chrX	9968188	9968215	0	Simple_repeat

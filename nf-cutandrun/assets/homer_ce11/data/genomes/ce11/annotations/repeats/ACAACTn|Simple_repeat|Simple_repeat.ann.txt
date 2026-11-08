@@ -1,0 +1,4 @@
+(ACAACT)n|Simple_repeat|Simple_repeat-HOMER56014	chrIV	17348823	17348866	0	Simple_repeat
+(ACAACT)n|Simple_repeat|Simple_repeat-HOMER65289	chrV	9880609	9880646	0	Simple_repeat
+(ACAACT)n|Simple_repeat|Simple_repeat-HOMER81693	chrX	14667554	14667612	0	Simple_repeat
+(ACAACT)n|Simple_repeat|Simple_repeat-HOMER82859	chrX	15917500	15917562	0	Simple_repeat

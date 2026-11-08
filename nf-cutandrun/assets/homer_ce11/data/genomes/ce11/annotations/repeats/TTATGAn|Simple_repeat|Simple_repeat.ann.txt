@@ -1,0 +1,1 @@
+(TTATGA)n|Simple_repeat|Simple_repeat-HOMER79823	chrX	10306200	10306257	0	Simple_repeat

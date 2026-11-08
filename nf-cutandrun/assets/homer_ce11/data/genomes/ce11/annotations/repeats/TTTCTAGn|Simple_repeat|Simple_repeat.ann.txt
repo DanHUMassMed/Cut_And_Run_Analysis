@@ -1,0 +1,1 @@
+(TTTCTAG)n|Simple_repeat|Simple_repeat-HOMER16435	chrII	1216852	1216890	0	Simple_repeat

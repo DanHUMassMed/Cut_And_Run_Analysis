@@ -1,0 +1,1 @@
+(TGAAGTA)n|Simple_repeat|Simple_repeat-HOMER13368	chrI	13534914	13534952	0	Simple_repeat

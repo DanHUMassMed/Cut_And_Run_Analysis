@@ -1,0 +1,2 @@
+(ACTAT)n|Simple_repeat|Simple_repeat-HOMER45120	chrIV	2044204	2044218	0	Simple_repeat
+(ACTAT)n|Simple_repeat|Simple_repeat-HOMER45122	chrIV	2044293	2044336	0	Simple_repeat

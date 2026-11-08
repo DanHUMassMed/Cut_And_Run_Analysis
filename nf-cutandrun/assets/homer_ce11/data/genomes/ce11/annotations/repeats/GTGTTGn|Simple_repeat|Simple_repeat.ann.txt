@@ -1,0 +1,1 @@
+(GTGTTG)n|Simple_repeat|Simple_repeat-HOMER66188	chrV	12116479	12116510	0	Simple_repeat

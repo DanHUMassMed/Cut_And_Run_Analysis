@@ -1,0 +1,1 @@
+(CTAG)n|Simple_repeat|Simple_repeat-HOMER14830	chrI	14616327	14616398	0	Simple_repeat

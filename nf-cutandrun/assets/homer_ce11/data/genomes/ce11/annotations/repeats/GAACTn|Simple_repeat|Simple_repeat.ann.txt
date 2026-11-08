@@ -1,0 +1,1 @@
+(GAACT)n|Simple_repeat|Simple_repeat-HOMER80261	chrX	11501213	11501282	0	Simple_repeat

@@ -1,0 +1,2 @@
+(CGGACGC)n|Simple_repeat|Simple_repeat-HOMER6460	chrI	4124037	4124092	0	Simple_repeat
+(CGGACGC)n|Simple_repeat|Simple_repeat-HOMER72890	chrV	20705535	20705574	0	Simple_repeat

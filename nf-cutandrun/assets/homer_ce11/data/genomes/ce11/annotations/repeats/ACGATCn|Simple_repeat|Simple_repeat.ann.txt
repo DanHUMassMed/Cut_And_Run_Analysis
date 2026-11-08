@@ -1,0 +1,1 @@
+(ACGATC)n|Simple_repeat|Simple_repeat-HOMER9207	chrI	9011238	9011273	0	Simple_repeat

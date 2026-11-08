@@ -1,0 +1,2 @@
+(CATAA)n|Simple_repeat|Simple_repeat-HOMER8996	chrI	8559341	8559373	0	Simple_repeat
+(CATAA)n|Simple_repeat|Simple_repeat-HOMER16108	chrII	781700	781736	0	Simple_repeat

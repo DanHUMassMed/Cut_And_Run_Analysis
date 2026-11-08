@@ -1,0 +1,2 @@
+(CG)n|Simple_repeat|Simple_repeat-HOMER5219	chrI	3111680	3111733	0	Simple_repeat
+(CG)n|Simple_repeat|Simple_repeat-HOMER46923	chrIV	3212120	3212136	0	Simple_repeat

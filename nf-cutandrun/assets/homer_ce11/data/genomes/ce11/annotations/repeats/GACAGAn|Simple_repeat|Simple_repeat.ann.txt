@@ -1,0 +1,1 @@
+(GACAGA)n|Simple_repeat|Simple_repeat-HOMER19626	chrII	4506676	4506748	0	Simple_repeat

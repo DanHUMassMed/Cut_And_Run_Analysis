@@ -1,0 +1,2 @@
+(TTACAT)n|Simple_repeat|Simple_repeat-HOMER20492	chrII	6186966	6187000	0	Simple_repeat
+(TTACAT)n|Simple_repeat|Simple_repeat-HOMER50030	chrIV	7291605	7291649	0	Simple_repeat

@@ -1,0 +1,1 @@
+(CGGCATT)n|Simple_repeat|Simple_repeat-HOMER30462	chrIII	1727140	1727175	0	Simple_repeat

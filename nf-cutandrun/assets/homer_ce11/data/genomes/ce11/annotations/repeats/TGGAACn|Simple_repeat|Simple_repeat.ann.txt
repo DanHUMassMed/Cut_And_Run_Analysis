@@ -1,0 +1,2 @@
+(TGGAAC)n|Simple_repeat|Simple_repeat-HOMER23002	chrII	11490894	11490924	0	Simple_repeat
+(TGGAAC)n|Simple_repeat|Simple_repeat-HOMER54171	chrIV	14517561	14517602	0	Simple_repeat

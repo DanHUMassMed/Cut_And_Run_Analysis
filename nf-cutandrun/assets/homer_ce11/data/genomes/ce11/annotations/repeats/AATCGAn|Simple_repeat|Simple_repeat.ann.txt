@@ -1,0 +1,1 @@
+(AATCGA)n|Simple_repeat|Simple_repeat-HOMER84176	chrX	17644007	17644043	0	Simple_repeat

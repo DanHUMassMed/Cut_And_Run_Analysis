@@ -1,0 +1,2 @@
+(GAAAATTCGA)n|Simple_repeat|Simple_repeat-HOMER61667	chrV	4050974	4051031	0	Simple_repeat
+(GAAAATTCGA)n|Simple_repeat|Simple_repeat-HOMER61669	chrV	4051174	4051231	0	Simple_repeat

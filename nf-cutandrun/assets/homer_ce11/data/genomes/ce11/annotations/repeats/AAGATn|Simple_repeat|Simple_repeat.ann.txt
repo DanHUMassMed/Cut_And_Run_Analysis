@@ -1,0 +1,1 @@
+(AAGAT)n|Simple_repeat|Simple_repeat-HOMER13192	chrI	13374280	13374305	0	Simple_repeat

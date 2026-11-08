@@ -1,0 +1,1 @@
+(GACTACG)n|Simple_repeat|Simple_repeat-HOMER47805	chrIV	3948149	3948197	0	Simple_repeat

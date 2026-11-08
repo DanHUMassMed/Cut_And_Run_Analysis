@@ -1,0 +1,1 @@
+(GACCAG)n|Simple_repeat|Simple_repeat-HOMER9062	chrI	8705467	8705506	0	Simple_repeat

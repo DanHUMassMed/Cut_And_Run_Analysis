@@ -1,0 +1,1 @@
+(GATATAAGCT)n|Simple_repeat|Simple_repeat-HOMER65763	chrV	11040957	11041024	0	Simple_repeat

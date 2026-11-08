@@ -1,0 +1,2 @@
+(TATTAG)n|Simple_repeat|Simple_repeat-HOMER17879	chrII	2730565	2730623	0	Simple_repeat
+(TATTAG)n|Simple_repeat|Simple_repeat-HOMER81960	chrX	15041984	15042024	0	Simple_repeat

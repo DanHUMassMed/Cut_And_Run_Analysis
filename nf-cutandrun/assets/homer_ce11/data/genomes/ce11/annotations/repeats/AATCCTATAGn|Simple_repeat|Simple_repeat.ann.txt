@@ -1,0 +1,1 @@
+(AATCCTATAG)n|Simple_repeat|Simple_repeat-HOMER50826	chrIV	8951276	8951317	0	Simple_repeat

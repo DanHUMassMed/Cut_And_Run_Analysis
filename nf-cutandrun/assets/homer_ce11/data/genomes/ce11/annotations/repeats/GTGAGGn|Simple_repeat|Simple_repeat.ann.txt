@@ -1,0 +1,1 @@
+(GTGAGG)n|Simple_repeat|Simple_repeat-HOMER656	chrI	574079	574111	0	Simple_repeat

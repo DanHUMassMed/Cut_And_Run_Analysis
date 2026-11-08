@@ -1,0 +1,2 @@
+(TAACTT)n|Simple_repeat|Simple_repeat-HOMER42237	chrIII	13390746	13390776	0	Simple_repeat
+(TAACTT)n|Simple_repeat|Simple_repeat-HOMER49796	chrIV	6817508	6817551	0	Simple_repeat

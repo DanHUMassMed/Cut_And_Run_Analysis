@@ -1,0 +1,2 @@
+(AGTG)n|Simple_repeat|Simple_repeat-HOMER21274	chrII	8028484	8028496	0	Simple_repeat
+(AGTG)n|Simple_repeat|Simple_repeat-HOMER21276	chrII	8028523	8028531	0	Simple_repeat

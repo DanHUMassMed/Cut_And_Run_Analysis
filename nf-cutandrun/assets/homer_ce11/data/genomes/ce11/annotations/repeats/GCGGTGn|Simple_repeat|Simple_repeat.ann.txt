@@ -1,0 +1,1 @@
+(GCGGTG)n|Simple_repeat|Simple_repeat-HOMER82025	chrX	15127483	15127518	0	Simple_repeat

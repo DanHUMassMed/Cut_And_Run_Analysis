@@ -1,0 +1,1 @@
+(GAAGCCTA)n|Simple_repeat|Simple_repeat-HOMER40781	chrIII	12614964	12615001	0	Simple_repeat

@@ -1,0 +1,2 @@
+(CATCCT)n|Simple_repeat|Simple_repeat-HOMER19719	chrII	4592782	4592830	0	Simple_repeat
+(CATCCT)n|Simple_repeat|Simple_repeat-HOMER20722	chrII	6757047	6757083	0	Simple_repeat

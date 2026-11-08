@@ -1,0 +1,5 @@
+(TATTA)n|Simple_repeat|Simple_repeat-HOMER15739	chrII	444989	445021	0	Simple_repeat
+(TATTA)n|Simple_repeat|Simple_repeat-HOMER70217	chrV	18405651	18405706	0	Simple_repeat
+(TATTA)n|Simple_repeat|Simple_repeat-HOMER79774	chrX	10150962	10151003	0	Simple_repeat
+(TATTA)n|Simple_repeat|Simple_repeat-HOMER80122	chrX	11111678	11111713	0	Simple_repeat
+(TATTA)n|Simple_repeat|Simple_repeat-HOMER84061	chrX	17448694	17448734	0	Simple_repeat

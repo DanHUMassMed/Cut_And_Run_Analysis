@@ -1,0 +1,2 @@
+(GAAGTT)n|Simple_repeat|Simple_repeat-HOMER18935	chrII	3849987	3850020	0	Simple_repeat
+(GAAGTT)n|Simple_repeat|Simple_repeat-HOMER50755	chrIV	8792764	8792796	0	Simple_repeat

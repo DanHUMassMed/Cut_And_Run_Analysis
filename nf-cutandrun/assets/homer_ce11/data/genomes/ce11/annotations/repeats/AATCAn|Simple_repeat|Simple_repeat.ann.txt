@@ -1,0 +1,2 @@
+(AATCA)n|Simple_repeat|Simple_repeat-HOMER55405	chrIV	16508381	16508411	0	Simple_repeat
+(AATCA)n|Simple_repeat|Simple_repeat-HOMER79500	chrX	9384234	9384272	0	Simple_repeat

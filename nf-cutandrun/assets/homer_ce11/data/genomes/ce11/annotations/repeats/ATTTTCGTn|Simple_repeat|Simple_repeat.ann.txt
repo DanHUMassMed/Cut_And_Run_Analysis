@@ -1,0 +1,1 @@
+(ATTTTCGT)n|Simple_repeat|Simple_repeat-HOMER20405	chrII	6007427	6007469	0	Simple_repeat

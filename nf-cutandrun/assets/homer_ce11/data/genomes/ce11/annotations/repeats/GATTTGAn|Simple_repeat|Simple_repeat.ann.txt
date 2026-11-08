@@ -1,0 +1,1 @@
+(GATTTGA)n|Simple_repeat|Simple_repeat-HOMER43174	chrIV	559674	559713	0	Simple_repeat

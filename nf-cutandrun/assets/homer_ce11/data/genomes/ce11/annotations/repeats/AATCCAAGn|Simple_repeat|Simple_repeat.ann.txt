@@ -1,0 +1,1 @@
+(AATCCAAG)n|Simple_repeat|Simple_repeat-HOMER29404	chrIII	1016007	1016045	0	Simple_repeat

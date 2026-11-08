@@ -1,0 +1,2 @@
+(GTATA)n|Simple_repeat|Simple_repeat-HOMER13422	chrI	13600080	13600121	0	Simple_repeat
+(GTATA)n|Simple_repeat|Simple_repeat-HOMER78307	chrX	6931506	6931533	0	Simple_repeat

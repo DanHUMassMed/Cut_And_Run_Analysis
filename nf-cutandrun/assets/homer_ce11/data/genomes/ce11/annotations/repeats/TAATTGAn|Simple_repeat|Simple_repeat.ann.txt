@@ -1,0 +1,1 @@
+(TAATTGA)n|Simple_repeat|Simple_repeat-HOMER49310	chrIV	5910768	5910813	0	Simple_repeat

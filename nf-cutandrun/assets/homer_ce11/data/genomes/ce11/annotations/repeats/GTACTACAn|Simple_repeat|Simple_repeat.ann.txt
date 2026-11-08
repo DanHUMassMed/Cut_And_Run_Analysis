@@ -1,0 +1,1 @@
+(GTACTACA)n|Simple_repeat|Simple_repeat-HOMER57368	chrV	1024160	1024194	0	Simple_repeat

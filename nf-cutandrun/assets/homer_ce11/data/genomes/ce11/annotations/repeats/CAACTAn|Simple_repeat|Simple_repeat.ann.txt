@@ -1,0 +1,2 @@
+(CAACTA)n|Simple_repeat|Simple_repeat-HOMER19991	chrII	5094885	5094934	0	Simple_repeat
+(CAACTA)n|Simple_repeat|Simple_repeat-HOMER77990	chrX	6186111	6186187	0	Simple_repeat

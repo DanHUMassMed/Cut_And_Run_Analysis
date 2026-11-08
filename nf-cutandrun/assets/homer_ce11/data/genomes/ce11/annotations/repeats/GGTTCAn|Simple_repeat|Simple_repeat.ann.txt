@@ -1,0 +1,1 @@
+(GGTTCA)n|Simple_repeat|Simple_repeat-HOMER78695	chrX	7636742	7636778	0	Simple_repeat

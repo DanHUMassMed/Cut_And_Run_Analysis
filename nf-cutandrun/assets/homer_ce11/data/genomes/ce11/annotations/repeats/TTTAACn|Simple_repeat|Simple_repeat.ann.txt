@@ -1,0 +1,2 @@
+(TTTAAC)n|Simple_repeat|Simple_repeat-HOMER50959	chrIV	9130380	9130386	0	Simple_repeat
+(TTTAAC)n|Simple_repeat|Simple_repeat-HOMER63621	chrV	5803689	5803749	0	Simple_repeat

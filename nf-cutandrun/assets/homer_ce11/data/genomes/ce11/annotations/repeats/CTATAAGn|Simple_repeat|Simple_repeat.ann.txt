@@ -1,0 +1,1 @@
+(CTATAAG)n|Simple_repeat|Simple_repeat-HOMER9533	chrI	9573423	9573461	0	Simple_repeat

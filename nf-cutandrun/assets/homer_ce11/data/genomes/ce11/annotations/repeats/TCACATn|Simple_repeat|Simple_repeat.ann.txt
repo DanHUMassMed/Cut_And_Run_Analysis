@@ -1,0 +1,2 @@
+(TCACAT)n|Simple_repeat|Simple_repeat-HOMER8892	chrI	8387881	8387919	0	Simple_repeat
+(TCACAT)n|Simple_repeat|Simple_repeat-HOMER21915	chrII	9718383	9718415	0	Simple_repeat

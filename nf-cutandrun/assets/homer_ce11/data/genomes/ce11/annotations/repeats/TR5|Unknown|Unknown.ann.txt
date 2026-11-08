@@ -1,0 +1,3 @@
+TR5|Unknown|Unknown-HOMER47955	chrIV	4081137	4081311	0	Unknown
+TR5|Unknown|Unknown-HOMER47957	chrIV	4082909	4083104	0	Unknown
+TR5|Unknown|Unknown-HOMER48004	chrIV	4114466	4116119	0	Unknown

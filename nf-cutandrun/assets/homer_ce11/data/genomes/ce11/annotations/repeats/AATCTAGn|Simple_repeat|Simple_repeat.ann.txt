@@ -1,0 +1,2 @@
+(AATCTAG)n|Simple_repeat|Simple_repeat-HOMER82338	chrX	15439253	15439314	0	Simple_repeat
+(AATCTAG)n|Simple_repeat|Simple_repeat-HOMER83663	chrX	16785155	16785193	0	Simple_repeat

@@ -1,0 +1,5 @@
+(CCGTA)n|Simple_repeat|Simple_repeat-HOMER43113	chrIV	521426	521598	0	Simple_repeat
+(CCGTA)n|Simple_repeat|Simple_repeat-HOMER76850	chrX	4032241	4032449	0	Simple_repeat
+(CCGTA)n|Simple_repeat|Simple_repeat-HOMER76855	chrX	4035355	4035709	0	Simple_repeat
+(CCGTA)n|Simple_repeat|Simple_repeat-HOMER76857	chrX	4035755	4035969	0	Simple_repeat
+(CCGTA)n|Simple_repeat|Simple_repeat-HOMER76884	chrX	4051015	4051148	0	Simple_repeat

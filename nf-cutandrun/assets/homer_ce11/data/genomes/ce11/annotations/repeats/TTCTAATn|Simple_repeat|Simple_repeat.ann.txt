@@ -1,0 +1,1 @@
+(TTCTAAT)n|Simple_repeat|Simple_repeat-HOMER20159	chrII	5463367	5463408	0	Simple_repeat

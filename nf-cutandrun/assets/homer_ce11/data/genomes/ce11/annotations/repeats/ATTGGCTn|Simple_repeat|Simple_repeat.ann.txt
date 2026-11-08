@@ -1,0 +1,1 @@
+(ATTGGCT)n|Simple_repeat|Simple_repeat-HOMER42538	chrIII	13760260	13760296	0	Simple_repeat

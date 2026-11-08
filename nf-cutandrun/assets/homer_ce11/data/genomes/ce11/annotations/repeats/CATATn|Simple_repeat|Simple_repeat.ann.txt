@@ -1,0 +1,8 @@
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76859	chrX	4036057	4036253	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76864	chrX	4039505	4039697	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76872	chrX	4043159	4043312	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76876	chrX	4044233	4044407	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76879	chrX	4045996	4046192	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76886	chrX	4051217	4051412	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76888	chrX	4052397	4052571	0	Simple_repeat
+(CATAT)n|Simple_repeat|Simple_repeat-HOMER76895	chrX	4055137	4055332	0	Simple_repeat

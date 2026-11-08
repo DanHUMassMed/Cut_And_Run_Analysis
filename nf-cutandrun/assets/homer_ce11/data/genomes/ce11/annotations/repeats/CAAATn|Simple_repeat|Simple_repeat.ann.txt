@@ -1,0 +1,2 @@
+(CAAAT)n|Simple_repeat|Simple_repeat-HOMER60260	chrV	2716652	2716676	0	Simple_repeat
+(CAAAT)n|Simple_repeat|Simple_repeat-HOMER83580	chrX	16663689	16663728	0	Simple_repeat

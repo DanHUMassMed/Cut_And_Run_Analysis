@@ -1,0 +1,2 @@
+(CATATC)n|Simple_repeat|Simple_repeat-HOMER65428	chrV	10221087	10221144	0	Simple_repeat
+(CATATC)n|Simple_repeat|Simple_repeat-HOMER65436	chrV	10239696	10239753	0	Simple_repeat

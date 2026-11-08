@@ -1,0 +1,1 @@
+(ATTTGATA)n|Simple_repeat|Simple_repeat-HOMER22859	chrII	11264457	11264496	0	Simple_repeat

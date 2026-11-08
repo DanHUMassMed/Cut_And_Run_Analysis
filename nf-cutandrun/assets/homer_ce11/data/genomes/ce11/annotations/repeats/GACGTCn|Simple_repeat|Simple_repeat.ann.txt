@@ -1,0 +1,1 @@
+(GACGTC)n|Simple_repeat|Simple_repeat-HOMER36807	chrIII	10016753	10016787	0	Simple_repeat

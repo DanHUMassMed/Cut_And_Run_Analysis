@@ -1,0 +1,4 @@
+(CCCTAG)n|Simple_repeat|Simple_repeat-HOMER14458	chrI	14371767	14371948	0	Simple_repeat
+(CCCTAG)n|Simple_repeat|Simple_repeat-HOMER16481	chrII	1266369	1266548	0	Simple_repeat
+(CCCTAG)n|Simple_repeat|Simple_repeat-HOMER19247	chrII	4157132	4157308	0	Simple_repeat
+(CCCTAG)n|Simple_repeat|Simple_repeat-HOMER72090	chrV	19997023	19997165	0	Simple_repeat

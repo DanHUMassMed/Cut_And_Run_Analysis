@@ -1,0 +1,1 @@
+(TGTACAG)n|Simple_repeat|Simple_repeat-HOMER78331	chrX	6986591	6986624	0	Simple_repeat

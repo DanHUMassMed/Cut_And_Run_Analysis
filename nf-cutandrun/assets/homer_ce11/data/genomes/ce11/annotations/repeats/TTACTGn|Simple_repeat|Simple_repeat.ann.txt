@@ -1,0 +1,2 @@
+(TTACTG)n|Simple_repeat|Simple_repeat-HOMER12471	chrI	12656609	12656643	0	Simple_repeat
+(TTACTG)n|Simple_repeat|Simple_repeat-HOMER63728	chrV	6031179	6031213	0	Simple_repeat

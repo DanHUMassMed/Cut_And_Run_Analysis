@@ -1,0 +1,1 @@
+(GTTAGTA)n|Simple_repeat|Simple_repeat-HOMER16199	chrII	942663	942716	0	Simple_repeat

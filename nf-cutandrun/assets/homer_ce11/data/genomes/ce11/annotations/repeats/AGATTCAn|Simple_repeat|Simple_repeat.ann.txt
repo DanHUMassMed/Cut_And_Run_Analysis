@@ -1,0 +1,1 @@
+(AGATTCA)n|Simple_repeat|Simple_repeat-HOMER19955	chrII	5034173	5034210	0	Simple_repeat

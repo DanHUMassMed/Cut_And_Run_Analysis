@@ -1,0 +1,4 @@
+(GATA)n|Simple_repeat|Simple_repeat-HOMER21533	chrII	8796512	8796555	0	Simple_repeat
+(GATA)n|Simple_repeat|Simple_repeat-HOMER44802	chrIV	1831744	1831777	0	Simple_repeat
+(GATA)n|Simple_repeat|Simple_repeat-HOMER75962	chrX	2792907	2792931	0	Simple_repeat
+(GATA)n|Simple_repeat|Simple_repeat-HOMER83116	chrX	16157151	16157186	0	Simple_repeat

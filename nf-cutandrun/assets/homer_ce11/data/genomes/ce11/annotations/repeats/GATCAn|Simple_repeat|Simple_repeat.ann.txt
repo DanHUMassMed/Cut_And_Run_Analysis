@@ -1,0 +1,1 @@
+(GATCA)n|Simple_repeat|Simple_repeat-HOMER16776	chrII	1587533	1587575	0	Simple_repeat

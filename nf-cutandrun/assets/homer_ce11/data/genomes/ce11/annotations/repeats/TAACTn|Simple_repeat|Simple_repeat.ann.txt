@@ -1,0 +1,2 @@
+(TAACT)n|Simple_repeat|Simple_repeat-HOMER76440	chrX	3323368	3323406	0	Simple_repeat
+(TAACT)n|Simple_repeat|Simple_repeat-HOMER79378	chrX	9128652	9128686	0	Simple_repeat

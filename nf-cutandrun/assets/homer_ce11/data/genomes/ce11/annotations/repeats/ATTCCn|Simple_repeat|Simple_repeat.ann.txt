@@ -1,0 +1,1 @@
+(ATTCC)n|Simple_repeat|Simple_repeat-HOMER23959	chrII	12384100	12384135	0	Simple_repeat

@@ -1,0 +1,2 @@
+(CCAGGA)n|Simple_repeat|Simple_repeat-HOMER13782	chrI	13908243	13908285	0	Simple_repeat
+(CCAGGA)n|Simple_repeat|Simple_repeat-HOMER45958	chrIV	2595560	2595591	0	Simple_repeat

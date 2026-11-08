@@ -1,0 +1,1 @@
+(GATCTA)n|Simple_repeat|Simple_repeat-HOMER35722	chrIII	8287407	8287461	0	Simple_repeat

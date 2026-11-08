@@ -1,0 +1,2 @@
+(CCTTAGT)n|Simple_repeat|Simple_repeat-HOMER43432	chrIV	783438	783472	0	Simple_repeat
+(CCTTAGT)n|Simple_repeat|Simple_repeat-HOMER43434	chrIV	783512	783614	0	Simple_repeat

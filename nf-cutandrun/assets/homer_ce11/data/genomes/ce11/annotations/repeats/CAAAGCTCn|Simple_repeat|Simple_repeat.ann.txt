@@ -1,0 +1,1 @@
+(CAAAGCTC)n|Simple_repeat|Simple_repeat-HOMER31881	chrIII	2618938	2618970	0	Simple_repeat

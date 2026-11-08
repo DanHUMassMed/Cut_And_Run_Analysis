@@ -1,0 +1,2 @@
+(AAGTCTA)n|Simple_repeat|Simple_repeat-HOMER16456	chrII	1241758	1241782	0	Simple_repeat
+(AAGTCTA)n|Simple_repeat|Simple_repeat-HOMER16458	chrII	1241829	1241850	0	Simple_repeat

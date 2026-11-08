@@ -1,0 +1,1 @@
+(CAAATTCGG)n|Simple_repeat|Simple_repeat-HOMER18219	chrII	3021873	3021930	0	Simple_repeat

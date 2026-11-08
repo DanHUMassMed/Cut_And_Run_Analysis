@@ -1,0 +1,2 @@
+(CAGGCT)n|Simple_repeat|Simple_repeat-HOMER11439	chrI	11655696	11656455	0	Simple_repeat
+(CAGGCT)n|Simple_repeat|Simple_repeat-HOMER39412	chrIII	12022453	12022487	0	Simple_repeat

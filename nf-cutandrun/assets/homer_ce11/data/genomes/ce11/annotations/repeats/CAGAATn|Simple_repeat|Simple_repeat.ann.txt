@@ -1,0 +1,2 @@
+(CAGAAT)n|Simple_repeat|Simple_repeat-HOMER35298	chrIII	7363161	7363230	0	Simple_repeat
+(CAGAAT)n|Simple_repeat|Simple_repeat-HOMER52054	chrIV	11598635	11598675	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TACCTACA)n|Simple_repeat|Simple_repeat-HOMER21543	chrII	8833974	8834023	0	Simple_repeat

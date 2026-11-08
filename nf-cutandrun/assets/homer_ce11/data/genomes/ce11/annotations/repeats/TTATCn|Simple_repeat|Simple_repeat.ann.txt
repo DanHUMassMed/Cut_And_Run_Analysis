@@ -1,0 +1,1 @@
+(TTATC)n|Simple_repeat|Simple_repeat-HOMER21414	chrII	8432340	8432389	0	Simple_repeat

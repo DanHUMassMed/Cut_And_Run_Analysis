@@ -1,0 +1,2 @@
+(TGTCAA)n|Simple_repeat|Simple_repeat-HOMER66467	chrV	12834608	12834643	0	Simple_repeat
+(TGTCAA)n|Simple_repeat|Simple_repeat-HOMER67663	chrV	15227324	15227368	0	Simple_repeat

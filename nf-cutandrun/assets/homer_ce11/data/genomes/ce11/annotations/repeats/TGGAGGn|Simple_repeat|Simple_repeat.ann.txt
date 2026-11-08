@@ -1,0 +1,4 @@
+(TGGAGG)n|Simple_repeat|Simple_repeat-HOMER21640	chrII	9069947	9069995	0	Simple_repeat
+(TGGAGG)n|Simple_repeat|Simple_repeat-HOMER35572	chrIII	7982118	7982150	0	Simple_repeat
+(TGGAGG)n|Simple_repeat|Simple_repeat-HOMER71510	chrV	19610696	19610739	0	Simple_repeat
+(TGGAGG)n|Simple_repeat|Simple_repeat-HOMER83587	chrX	16671472	16671543	0	Simple_repeat

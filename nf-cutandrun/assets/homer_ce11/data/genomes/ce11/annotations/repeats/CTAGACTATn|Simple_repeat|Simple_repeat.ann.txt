@@ -1,0 +1,1 @@
+(CTAGACTAT)n|Simple_repeat|Simple_repeat-HOMER58493	chrV	1722042	1722164	0	Simple_repeat

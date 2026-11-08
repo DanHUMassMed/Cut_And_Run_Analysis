@@ -1,0 +1,3 @@
+(TACA)n|Simple_repeat|Simple_repeat-HOMER5421	chrI	3236435	3236479	0	Simple_repeat
+(TACA)n|Simple_repeat|Simple_repeat-HOMER64809	chrV	8637921	8637959	0	Simple_repeat
+(TACA)n|Simple_repeat|Simple_repeat-HOMER80291	chrX	11608644	11608688	0	Simple_repeat

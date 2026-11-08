@@ -1,0 +1,1 @@
+(CAGGCAG)n|Simple_repeat|Simple_repeat-HOMER22812	chrII	11185040	11185086	0	Simple_repeat

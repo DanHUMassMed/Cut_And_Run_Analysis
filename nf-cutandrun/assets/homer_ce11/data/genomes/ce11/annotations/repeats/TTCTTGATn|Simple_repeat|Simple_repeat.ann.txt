@@ -1,0 +1,2 @@
+(TTCTTGAT)n|Simple_repeat|Simple_repeat-HOMER8956	chrI	8496464	8496503	0	Simple_repeat
+(TTCTTGAT)n|Simple_repeat|Simple_repeat-HOMER68605	chrV	16751443	16751482	0	Simple_repeat

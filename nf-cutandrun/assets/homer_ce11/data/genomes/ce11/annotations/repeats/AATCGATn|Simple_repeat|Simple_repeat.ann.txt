@@ -1,0 +1,1 @@
+(AATCGAT)n|Simple_repeat|Simple_repeat-HOMER70858	chrV	19063503	19063550	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TAGGCA)n|Simple_repeat|Simple_repeat-HOMER5119	chrI	3050306	3050400	0	Simple_repeat
+(TAGGCA)n|Simple_repeat|Simple_repeat-HOMER81377	chrX	14126267	14126437	0	Simple_repeat

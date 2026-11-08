@@ -1,0 +1,1 @@
+(ATAGGA)n|Simple_repeat|Simple_repeat-HOMER23931	chrII	12363572	12363613	0	Simple_repeat

@@ -1,0 +1,15 @@
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER9841	chrI	10067317	10067361	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER21191	chrII	7833520	7833587	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER23000	chrII	11487409	11487444	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER27233	chrII	14717469	14717529	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER27245	chrII	14724539	14724599	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER28371	chrIII	109452	109511	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER33949	chrIII	4449041	4449086	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER35892	chrIII	8519349	8519399	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER49152	chrIV	5638594	5638639	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER54400	chrIV	15008732	15008778	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER55010	chrIV	15967162	15967195	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER58701	chrV	1857158	1857197	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER64396	chrV	7617801	7617835	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER73435	chrX	228921	228953	0	Simple_repeat
+(TTTGAA)n|Simple_repeat|Simple_repeat-HOMER73446	chrX	238337	238369	0	Simple_repeat

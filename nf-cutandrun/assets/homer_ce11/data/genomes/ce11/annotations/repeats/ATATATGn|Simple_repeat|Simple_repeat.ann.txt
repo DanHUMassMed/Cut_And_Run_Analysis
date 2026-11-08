@@ -1,0 +1,2 @@
+(ATATATG)n|Simple_repeat|Simple_repeat-HOMER11646	chrI	11869680	11869714	0	Simple_repeat
+(ATATATG)n|Simple_repeat|Simple_repeat-HOMER52550	chrIV	12495384	12495492	0	Simple_repeat

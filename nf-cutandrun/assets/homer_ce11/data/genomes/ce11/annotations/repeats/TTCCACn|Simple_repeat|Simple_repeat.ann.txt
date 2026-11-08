@@ -1,0 +1,2 @@
+(TTCCAC)n|Simple_repeat|Simple_repeat-HOMER62115	chrV	4375672	4375700	0	Simple_repeat
+(TTCCAC)n|Simple_repeat|Simple_repeat-HOMER83288	chrX	16315975	16316015	0	Simple_repeat

@@ -1,0 +1,1 @@
+(GTCC)n|Simple_repeat|Simple_repeat-HOMER3704	chrI	2155566	2155606	0	Simple_repeat

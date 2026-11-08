@@ -1,0 +1,2 @@
+(AGCAGA)n|Simple_repeat|Simple_repeat-HOMER28155	chrII	15244598	15244638	0	Simple_repeat
+(AGCAGA)n|Simple_repeat|Simple_repeat-HOMER66490	chrV	12887612	12887642	0	Simple_repeat

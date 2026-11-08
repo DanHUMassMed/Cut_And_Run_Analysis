@@ -1,0 +1,2 @@
+(ATACAA)n|Simple_repeat|Simple_repeat-HOMER64803	chrV	8625176	8625211	0	Simple_repeat
+(ATACAA)n|Simple_repeat|Simple_repeat-HOMER65218	chrV	9725647	9725695	0	Simple_repeat

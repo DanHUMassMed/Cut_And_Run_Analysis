@@ -1,0 +1,1 @@
+(CAGATG)n|Simple_repeat|Simple_repeat-HOMER21530	chrII	8776693	8776727	0	Simple_repeat

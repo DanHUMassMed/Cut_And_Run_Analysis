@@ -1,0 +1,6 @@
+(CACA)n|Simple_repeat|Simple_repeat-HOMER1947	chrI	1251615	1251642	0	Simple_repeat
+(CACA)n|Simple_repeat|Simple_repeat-HOMER22692	chrII	11043170	11043216	0	Simple_repeat
+(CACA)n|Simple_repeat|Simple_repeat-HOMER65991	chrV	11629524	11629572	0	Simple_repeat
+(CACA)n|Simple_repeat|Simple_repeat-HOMER77477	chrX	5122008	5122044	0	Simple_repeat
+(CACA)n|Simple_repeat|Simple_repeat-HOMER81771	chrX	14775266	14775296	0	Simple_repeat
+(CACA)n|Simple_repeat|Simple_repeat-HOMER82808	chrX	15877130	15877206	0	Simple_repeat

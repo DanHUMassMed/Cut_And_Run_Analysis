@@ -1,0 +1,1 @@
+(ATATACC)n|Simple_repeat|Simple_repeat-HOMER4837	chrI	2889663	2889822	0	Simple_repeat

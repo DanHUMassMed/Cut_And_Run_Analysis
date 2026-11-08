@@ -1,0 +1,1 @@
+(AGCTTGA)n|Simple_repeat|Simple_repeat-HOMER10629	chrI	11084943	11085074	0	Simple_repeat

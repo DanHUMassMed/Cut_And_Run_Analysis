@@ -1,0 +1,1 @@
+(TACGGA)n|Simple_repeat|Simple_repeat-HOMER66290	chrV	12365580	12365643	0	Simple_repeat

@@ -1,0 +1,2 @@
+(ATCCAA)n|Simple_repeat|Simple_repeat-HOMER69842	chrV	18093040	18093073	0	Simple_repeat
+(ATCCAA)n|Simple_repeat|Simple_repeat-HOMER78945	chrX	8120047	8120096	0	Simple_repeat

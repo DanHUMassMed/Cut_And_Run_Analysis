@@ -1,0 +1,1 @@
+(CTGAAT)n|Simple_repeat|Simple_repeat-HOMER20170	chrII	5478108	5478165	0	Simple_repeat

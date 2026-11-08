@@ -1,0 +1,2 @@
+(ATCTG)n|Simple_repeat|Simple_repeat-HOMER61094	chrV	3563014	3563042	0	Simple_repeat
+(ATCTG)n|Simple_repeat|Simple_repeat-HOMER73863	chrX	607041	607117	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TGCGGT)n|Simple_repeat|Simple_repeat-HOMER13958	chrI	14046085	14046123	0	Simple_repeat
+(TGCGGT)n|Simple_repeat|Simple_repeat-HOMER13961	chrI	14047464	14047492	0	Simple_repeat

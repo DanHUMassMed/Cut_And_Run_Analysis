@@ -1,0 +1,2 @@
+(ACATCC)n|Simple_repeat|Simple_repeat-HOMER19973	chrII	5068918	5068944	0	Simple_repeat
+(ACATCC)n|Simple_repeat|Simple_repeat-HOMER22318	chrII	10564265	10564312	0	Simple_repeat

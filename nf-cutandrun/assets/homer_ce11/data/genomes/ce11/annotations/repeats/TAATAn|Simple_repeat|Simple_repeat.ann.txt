@@ -1,0 +1,7 @@
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER7629	chrI	5719825	5719859	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER12326	chrI	12492136	12492183	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER71125	chrV	19327087	19327149	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER77374	chrX	4915801	4915835	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER78049	chrX	6319530	6319603	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER79476	chrX	9312582	9312621	0	Simple_repeat
+(TAATA)n|Simple_repeat|Simple_repeat-HOMER82794	chrX	15861475	15861532	0	Simple_repeat

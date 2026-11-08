@@ -1,0 +1,2 @@
+(AGACT)n|Simple_repeat|Simple_repeat-HOMER14244	chrI	14238136	14238172	0	Simple_repeat
+(AGACT)n|Simple_repeat|Simple_repeat-HOMER17259	chrII	2221612	2221735	0	Simple_repeat

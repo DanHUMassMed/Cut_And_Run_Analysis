@@ -1,0 +1,2 @@
+(TCCACA)n|Simple_repeat|Simple_repeat-HOMER19998	chrII	5101229	5101274	0	Simple_repeat
+(TCCACA)n|Simple_repeat|Simple_repeat-HOMER73790	chrX	530631	530715	0	Simple_repeat

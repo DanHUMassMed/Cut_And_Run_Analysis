@@ -1,0 +1,1 @@
+(GATTAT)n|Simple_repeat|Simple_repeat-HOMER7730	chrI	5935343	5935384	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TAAGCA)n|Simple_repeat|Simple_repeat-HOMER84119	chrX	17560363	17560407	0	Simple_repeat

@@ -1,0 +1,1 @@
+(CTGATT)n|Simple_repeat|Simple_repeat-HOMER28785	chrIII	430201	430246	0	Simple_repeat

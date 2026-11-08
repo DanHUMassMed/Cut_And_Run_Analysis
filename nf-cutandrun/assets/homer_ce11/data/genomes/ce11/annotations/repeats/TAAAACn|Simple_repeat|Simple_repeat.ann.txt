@@ -1,0 +1,2 @@
+(TAAAAC)n|Simple_repeat|Simple_repeat-HOMER74989	chrX	1947980	1948016	0	Simple_repeat
+(TAAAAC)n|Simple_repeat|Simple_repeat-HOMER75002	chrX	1956131	1956167	0	Simple_repeat

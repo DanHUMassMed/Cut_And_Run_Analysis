@@ -1,0 +1,2 @@
+(GTAGGCAG)n|Simple_repeat|Simple_repeat-HOMER994	chrI	762316	762368	0	Simple_repeat
+(GTAGGCAG)n|Simple_repeat|Simple_repeat-HOMER26001	chrII	13715638	13715684	0	Simple_repeat

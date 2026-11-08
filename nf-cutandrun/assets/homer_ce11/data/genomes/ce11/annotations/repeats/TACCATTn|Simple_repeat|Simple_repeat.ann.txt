@@ -1,0 +1,1 @@
+(TACCATT)n|Simple_repeat|Simple_repeat-HOMER35206	chrIII	7176131	7176167	0	Simple_repeat

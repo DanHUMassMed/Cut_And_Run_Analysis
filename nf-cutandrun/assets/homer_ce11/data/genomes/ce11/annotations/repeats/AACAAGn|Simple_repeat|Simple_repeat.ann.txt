@@ -1,0 +1,2 @@
+(AACAAG)n|Simple_repeat|Simple_repeat-HOMER50998	chrIV	9211778	9211823	0	Simple_repeat
+(AACAAG)n|Simple_repeat|Simple_repeat-HOMER79562	chrX	9555134	9555167	0	Simple_repeat

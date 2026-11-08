@@ -1,0 +1,2 @@
+(AGAGAAT)n|Simple_repeat|Simple_repeat-HOMER33682	chrIII	4088706	4088756	0	Simple_repeat
+(AGAGAAT)n|Simple_repeat|Simple_repeat-HOMER83515	chrX	16583859	16583935	0	Simple_repeat

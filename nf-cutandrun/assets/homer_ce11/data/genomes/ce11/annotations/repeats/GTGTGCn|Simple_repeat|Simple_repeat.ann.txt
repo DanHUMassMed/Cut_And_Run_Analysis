@@ -1,0 +1,1 @@
+(GTGTGC)n|Simple_repeat|Simple_repeat-HOMER81439	chrX	14238526	14238560	0	Simple_repeat

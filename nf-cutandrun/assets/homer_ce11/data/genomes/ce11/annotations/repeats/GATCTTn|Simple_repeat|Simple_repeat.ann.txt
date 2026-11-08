@@ -1,0 +1,2 @@
+(GATCTT)n|Simple_repeat|Simple_repeat-HOMER51039	chrIV	9285735	9285769	0	Simple_repeat
+(GATCTT)n|Simple_repeat|Simple_repeat-HOMER51046	chrIV	9293228	9293262	0	Simple_repeat

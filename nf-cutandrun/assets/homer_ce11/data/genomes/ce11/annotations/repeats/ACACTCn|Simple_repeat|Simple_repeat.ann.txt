@@ -1,0 +1,2 @@
+(ACACTC)n|Simple_repeat|Simple_repeat-HOMER7944	chrI	6416862	6416900	0	Simple_repeat
+(ACACTC)n|Simple_repeat|Simple_repeat-HOMER50369	chrIV	8013637	8013672	0	Simple_repeat

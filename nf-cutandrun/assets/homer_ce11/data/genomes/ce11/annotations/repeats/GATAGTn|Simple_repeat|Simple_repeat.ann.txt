@@ -1,0 +1,2 @@
+(GATAGT)n|Simple_repeat|Simple_repeat-HOMER28286	chrIII	40806	40840	0	Simple_repeat
+(GATAGT)n|Simple_repeat|Simple_repeat-HOMER80021	chrX	10796368	10796401	0	Simple_repeat

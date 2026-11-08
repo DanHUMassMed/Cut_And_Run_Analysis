@@ -1,0 +1,2 @@
+(GACAATT)n|Simple_repeat|Simple_repeat-HOMER11366	chrI	11599631	11599670	0	Simple_repeat
+(GACAATT)n|Simple_repeat|Simple_repeat-HOMER11370	chrI	11599908	11599967	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TCAGAAT)n|Simple_repeat|Simple_repeat-HOMER36391	chrIII	9426761	9426818	0	Simple_repeat

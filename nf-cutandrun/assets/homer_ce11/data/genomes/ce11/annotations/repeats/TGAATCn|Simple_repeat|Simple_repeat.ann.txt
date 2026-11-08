@@ -1,0 +1,2 @@
+(TGAATC)n|Simple_repeat|Simple_repeat-HOMER9331	chrI	9261080	9261120	0	Simple_repeat
+(TGAATC)n|Simple_repeat|Simple_repeat-HOMER65629	chrV	10699590	10699621	0	Simple_repeat

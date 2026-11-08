@@ -1,0 +1,1 @@
+(TGTAAT)n|Simple_repeat|Simple_repeat-HOMER80015	chrX	10786150	10786186	0	Simple_repeat

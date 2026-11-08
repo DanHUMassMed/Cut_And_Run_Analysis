@@ -1,0 +1,4 @@
+(TACCC)n|Simple_repeat|Simple_repeat-HOMER34207	chrIII	5025763	5025805	0	Simple_repeat
+(TACCC)n|Simple_repeat|Simple_repeat-HOMER51369	chrIV	10108215	10108257	0	Simple_repeat
+(TACCC)n|Simple_repeat|Simple_repeat-HOMER58394	chrV	1653077	1653119	0	Simple_repeat
+(TACCC)n|Simple_repeat|Simple_repeat-HOMER78465	chrX	7259419	7259458	0	Simple_repeat

@@ -1,0 +1,1 @@
+(CATACCTA)n|Simple_repeat|Simple_repeat-HOMER37214	chrIII	10479179	10479267	0	Simple_repeat

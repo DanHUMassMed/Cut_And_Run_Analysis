@@ -1,0 +1,3 @@
+(CCAA)n|Simple_repeat|Simple_repeat-HOMER19850	chrII	4851422	4851446	0	Simple_repeat
+(CCAA)n|Simple_repeat|Simple_repeat-HOMER20432	chrII	6061811	6061837	0	Simple_repeat
+(CCAA)n|Simple_repeat|Simple_repeat-HOMER49133	chrIV	5600478	5600503	0	Simple_repeat

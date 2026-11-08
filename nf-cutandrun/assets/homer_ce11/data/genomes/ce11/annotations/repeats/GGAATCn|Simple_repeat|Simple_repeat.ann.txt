@@ -1,0 +1,1 @@
+(GGAATC)n|Simple_repeat|Simple_repeat-HOMER76702	chrX	3794366	3794416	0	Simple_repeat

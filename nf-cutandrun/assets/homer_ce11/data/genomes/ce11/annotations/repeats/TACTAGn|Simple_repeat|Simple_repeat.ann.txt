@@ -1,0 +1,1 @@
+(TACTAG)n|Simple_repeat|Simple_repeat-HOMER68354	chrV	16487959	16487988	0	Simple_repeat

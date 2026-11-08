@@ -1,0 +1,2 @@
+(GGATTT)n|Simple_repeat|Simple_repeat-HOMER76414	chrX	3252900	3252937	0	Simple_repeat
+(GGATTT)n|Simple_repeat|Simple_repeat-HOMER76808	chrX	3974528	3974569	0	Simple_repeat

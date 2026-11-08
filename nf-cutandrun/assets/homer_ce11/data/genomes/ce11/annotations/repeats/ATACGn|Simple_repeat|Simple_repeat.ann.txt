@@ -1,0 +1,2 @@
+(ATACG)n|Simple_repeat|Simple_repeat-HOMER80451	chrX	11975134	11975166	0	Simple_repeat
+(ATACG)n|Simple_repeat|Simple_repeat-HOMER80454	chrX	11979948	11979978	0	Simple_repeat

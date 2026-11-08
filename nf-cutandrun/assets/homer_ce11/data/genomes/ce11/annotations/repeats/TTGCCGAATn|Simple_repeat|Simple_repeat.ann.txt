@@ -1,0 +1,1 @@
+(TTGCCGAAT)n|Simple_repeat|Simple_repeat-HOMER3439	chrI	2016278	2016341	0	Simple_repeat

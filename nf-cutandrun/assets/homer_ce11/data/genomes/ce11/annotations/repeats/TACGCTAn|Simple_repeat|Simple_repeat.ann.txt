@@ -1,0 +1,2 @@
+(TACGCTA)n|Simple_repeat|Simple_repeat-HOMER16691	chrII	1455580	1455646	0	Simple_repeat
+(TACGCTA)n|Simple_repeat|Simple_repeat-HOMER52071	chrIV	11615536	11615586	0	Simple_repeat

@@ -1,0 +1,2 @@
+(CATTTTA)n|Simple_repeat|Simple_repeat-HOMER66181	chrV	12086960	12087001	0	Simple_repeat
+(CATTTTA)n|Simple_repeat|Simple_repeat-HOMER66344	chrV	12473198	12473231	0	Simple_repeat

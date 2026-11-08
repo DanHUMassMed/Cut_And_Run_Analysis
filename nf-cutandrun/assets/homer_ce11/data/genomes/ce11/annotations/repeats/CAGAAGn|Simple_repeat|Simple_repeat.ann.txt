@@ -1,0 +1,2 @@
+(CAGAAG)n|Simple_repeat|Simple_repeat-HOMER9169	chrI	8927483	8927517	0	Simple_repeat
+(CAGAAG)n|Simple_repeat|Simple_repeat-HOMER20336	chrII	5831606	5831645	0	Simple_repeat

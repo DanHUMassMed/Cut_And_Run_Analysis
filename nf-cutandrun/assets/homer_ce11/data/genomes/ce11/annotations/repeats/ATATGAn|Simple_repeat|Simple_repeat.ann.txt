@@ -1,0 +1,1 @@
+(ATATGA)n|Simple_repeat|Simple_repeat-HOMER66662	chrV	13275389	13275434	0	Simple_repeat

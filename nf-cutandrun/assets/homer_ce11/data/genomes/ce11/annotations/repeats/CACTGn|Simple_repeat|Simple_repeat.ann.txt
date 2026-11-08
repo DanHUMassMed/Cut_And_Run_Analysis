@@ -1,0 +1,1 @@
+(CACTG)n|Simple_repeat|Simple_repeat-HOMER78032	chrX	6287511	6287720	0	Simple_repeat

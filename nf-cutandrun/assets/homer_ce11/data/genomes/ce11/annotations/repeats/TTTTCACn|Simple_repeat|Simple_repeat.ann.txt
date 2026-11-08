@@ -1,0 +1,2 @@
+(TTTTCAC)n|Simple_repeat|Simple_repeat-HOMER78611	chrX	7436610	7436647	0	Simple_repeat
+(TTTTCAC)n|Simple_repeat|Simple_repeat-HOMER83317	chrX	16347008	16347070	0	Simple_repeat

@@ -1,0 +1,1 @@
+(TTGAC)n|Simple_repeat|Simple_repeat-HOMER64314	chrV	7350809	7350853	0	Simple_repeat

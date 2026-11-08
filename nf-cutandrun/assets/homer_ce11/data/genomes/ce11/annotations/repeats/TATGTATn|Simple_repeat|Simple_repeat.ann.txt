@@ -1,0 +1,1 @@
+(TATGTAT)n|Simple_repeat|Simple_repeat-HOMER1609	chrI	1092907	1092940	0	Simple_repeat

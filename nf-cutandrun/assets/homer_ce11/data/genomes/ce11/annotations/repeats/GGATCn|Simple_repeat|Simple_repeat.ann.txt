@@ -1,0 +1,5 @@
+(GGATC)n|Simple_repeat|Simple_repeat-HOMER21049	chrII	7447358	7447396	0	Simple_repeat
+(GGATC)n|Simple_repeat|Simple_repeat-HOMER21050	chrII	7447509	7447547	0	Simple_repeat
+(GGATC)n|Simple_repeat|Simple_repeat-HOMER21051	chrII	7447839	7447877	0	Simple_repeat
+(GGATC)n|Simple_repeat|Simple_repeat-HOMER21052	chrII	7448169	7448207	0	Simple_repeat
+(GGATC)n|Simple_repeat|Simple_repeat-HOMER63739	chrV	6040735	6040768	0	Simple_repeat

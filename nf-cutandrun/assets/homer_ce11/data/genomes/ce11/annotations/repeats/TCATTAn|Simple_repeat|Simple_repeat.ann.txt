@@ -1,0 +1,2 @@
+(TCATTA)n|Simple_repeat|Simple_repeat-HOMER50050	chrIV	7335016	7335061	0	Simple_repeat
+(TCATTA)n|Simple_repeat|Simple_repeat-HOMER77695	chrX	5603498	5603538	0	Simple_repeat

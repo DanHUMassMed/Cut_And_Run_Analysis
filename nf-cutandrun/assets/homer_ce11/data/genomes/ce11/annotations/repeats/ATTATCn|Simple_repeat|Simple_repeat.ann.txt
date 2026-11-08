@@ -1,0 +1,2 @@
+(ATTATC)n|Simple_repeat|Simple_repeat-HOMER8441	chrI	7575607	7575636	0	Simple_repeat
+(ATTATC)n|Simple_repeat|Simple_repeat-HOMER72824	chrV	20646156	20646191	0	Simple_repeat

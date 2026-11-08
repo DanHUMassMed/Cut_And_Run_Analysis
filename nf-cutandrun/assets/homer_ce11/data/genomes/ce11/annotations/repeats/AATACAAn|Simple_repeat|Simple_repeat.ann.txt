@@ -1,0 +1,3 @@
+(AATACAA)n|Simple_repeat|Simple_repeat-HOMER66144	chrV	12021060	12021098	0	Simple_repeat
+(AATACAA)n|Simple_repeat|Simple_repeat-HOMER66928	chrV	13857958	13858027	0	Simple_repeat
+(AATACAA)n|Simple_repeat|Simple_repeat-HOMER81464	chrX	14294135	14294172	0	Simple_repeat

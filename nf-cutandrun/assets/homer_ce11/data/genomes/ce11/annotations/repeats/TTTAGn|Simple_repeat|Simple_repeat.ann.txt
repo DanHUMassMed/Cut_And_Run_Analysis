@@ -1,0 +1,3 @@
+(TTTAG)n|Simple_repeat|Simple_repeat-HOMER29329	chrIII	980022	980059	0	Simple_repeat
+(TTTAG)n|Simple_repeat|Simple_repeat-HOMER35340	chrIII	7454229	7454288	0	Simple_repeat
+(TTTAG)n|Simple_repeat|Simple_repeat-HOMER59029	chrV	2068408	2068435	0	Simple_repeat

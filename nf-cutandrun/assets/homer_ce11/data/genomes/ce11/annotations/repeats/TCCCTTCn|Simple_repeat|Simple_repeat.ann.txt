@@ -1,0 +1,1 @@
+(TCCCTTC)n|Simple_repeat|Simple_repeat-HOMER8523	chrI	7778881	7778945	0	Simple_repeat

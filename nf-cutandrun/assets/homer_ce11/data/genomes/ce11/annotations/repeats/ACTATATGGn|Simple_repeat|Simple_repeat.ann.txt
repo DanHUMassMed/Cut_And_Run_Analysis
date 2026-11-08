@@ -1,0 +1,1 @@
+(ACTATATGG)n|Simple_repeat|Simple_repeat-HOMER20629	chrII	6503552	6503607	0	Simple_repeat

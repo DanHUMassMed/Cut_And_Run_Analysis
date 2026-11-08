@@ -1,0 +1,1 @@
+(CAGGTC)n|Simple_repeat|Simple_repeat-HOMER9066	chrI	8709110	8709153	0	Simple_repeat

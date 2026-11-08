@@ -1,0 +1,1 @@
+(GATGCT)n|Simple_repeat|Simple_repeat-HOMER7400	chrI	5304875	5304938	0	Simple_repeat

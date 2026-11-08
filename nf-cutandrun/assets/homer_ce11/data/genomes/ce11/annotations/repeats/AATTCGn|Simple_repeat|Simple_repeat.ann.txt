@@ -1,0 +1,1 @@
+(AATTCG)n|Simple_repeat|Simple_repeat-HOMER7870	chrI	6247035	6247074	0	Simple_repeat

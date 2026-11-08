@@ -1,0 +1,3 @@
+(GCCGC)n|Simple_repeat|Simple_repeat-HOMER19096	chrII	4021337	4021379	0	Simple_repeat
+(GCCGC)n|Simple_repeat|Simple_repeat-HOMER19114	chrII	4034969	4034994	0	Simple_repeat
+(GCCGC)n|Simple_repeat|Simple_repeat-HOMER19117	chrII	4035931	4035978	0	Simple_repeat

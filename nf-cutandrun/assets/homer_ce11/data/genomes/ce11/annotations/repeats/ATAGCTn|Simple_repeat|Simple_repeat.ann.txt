@@ -1,0 +1,1 @@
+(ATAGCT)n|Simple_repeat|Simple_repeat-HOMER21776	chrII	9379849	9379883	0	Simple_repeat

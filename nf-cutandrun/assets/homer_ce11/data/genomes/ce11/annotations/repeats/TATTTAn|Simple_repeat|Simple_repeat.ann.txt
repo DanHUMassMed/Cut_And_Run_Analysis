@@ -1,0 +1,3 @@
+(TATTTA)n|Simple_repeat|Simple_repeat-HOMER26969	chrII	14384732	14384766	0	Simple_repeat
+(TATTTA)n|Simple_repeat|Simple_repeat-HOMER27965	chrII	15151862	15151910	0	Simple_repeat
+(TATTTA)n|Simple_repeat|Simple_repeat-HOMER66240	chrV	12253934	12253970	0	Simple_repeat

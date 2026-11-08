@@ -1,0 +1,1 @@
+(ATTTTTAAGA)n|Simple_repeat|Simple_repeat-HOMER36384	chrIII	9417402	9417446	0	Simple_repeat

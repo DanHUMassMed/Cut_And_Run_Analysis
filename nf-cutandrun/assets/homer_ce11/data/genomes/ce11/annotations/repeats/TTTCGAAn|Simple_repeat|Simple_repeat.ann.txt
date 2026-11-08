@@ -1,0 +1,2 @@
+(TTTCGAA)n|Simple_repeat|Simple_repeat-HOMER7518	chrI	5474253	5474288	0	Simple_repeat
+(TTTCGAA)n|Simple_repeat|Simple_repeat-HOMER34357	chrIII	5281862	5281900	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TGGATA)n|Simple_repeat|Simple_repeat-HOMER61604	chrV	3982540	3982600	0	Simple_repeat
+(TGGATA)n|Simple_repeat|Simple_repeat-HOMER63080	chrV	5131317	5131370	0	Simple_repeat

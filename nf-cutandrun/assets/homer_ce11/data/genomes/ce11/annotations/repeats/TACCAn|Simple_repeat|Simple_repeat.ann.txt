@@ -1,0 +1,1 @@
+(TACCA)n|Simple_repeat|Simple_repeat-HOMER51962	chrIV	11414944	11414974	0	Simple_repeat

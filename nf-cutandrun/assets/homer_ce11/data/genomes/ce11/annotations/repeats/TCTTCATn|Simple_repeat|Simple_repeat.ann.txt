@@ -1,0 +1,1 @@
+(TCTTCAT)n|Simple_repeat|Simple_repeat-HOMER4560	chrI	2706106	2706140	0	Simple_repeat

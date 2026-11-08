@@ -1,0 +1,1 @@
+(CTGATGAT)n|Simple_repeat|Simple_repeat-HOMER12373	chrI	12562159	12562508	0	Simple_repeat

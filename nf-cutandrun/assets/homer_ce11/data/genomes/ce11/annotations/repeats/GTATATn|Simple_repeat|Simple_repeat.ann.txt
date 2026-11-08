@@ -1,0 +1,3 @@
+(GTATAT)n|Simple_repeat|Simple_repeat-HOMER32537	chrIII	3060047	3060100	0	Simple_repeat
+(GTATAT)n|Simple_repeat|Simple_repeat-HOMER70282	chrV	18475572	18475691	0	Simple_repeat
+(GTATAT)n|Simple_repeat|Simple_repeat-HOMER72047	chrV	19957836	19957907	0	Simple_repeat

@@ -1,0 +1,1 @@
+(ACTGTC)n|Simple_repeat|Simple_repeat-HOMER66006	chrV	11662342	11662383	0	Simple_repeat

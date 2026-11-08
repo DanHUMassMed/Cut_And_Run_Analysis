@@ -1,0 +1,2 @@
+(AAACA)n|Simple_repeat|Simple_repeat-HOMER35168	chrIII	7104181	7104208	0	Simple_repeat
+(AAACA)n|Simple_repeat|Simple_repeat-HOMER67398	chrV	14749236	14749260	0	Simple_repeat

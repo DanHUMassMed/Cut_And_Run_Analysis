@@ -1,0 +1,1 @@
+(GATTT)n|Simple_repeat|Simple_repeat-HOMER79490	chrX	9362624	9362676	0	Simple_repeat

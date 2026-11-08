@@ -1,0 +1,2 @@
+(AAAAATT)n|Simple_repeat|Simple_repeat-HOMER33894	chrIII	4379885	4379970	0	Simple_repeat
+(AAAAATT)n|Simple_repeat|Simple_repeat-HOMER39271	chrIII	11947022	11947082	0	Simple_repeat

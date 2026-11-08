@@ -1,0 +1,1 @@
+(TCAGAT)n|Simple_repeat|Simple_repeat-HOMER6693	chrI	4422758	4422812	0	Simple_repeat

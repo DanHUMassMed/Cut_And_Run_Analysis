@@ -1,0 +1,2 @@
+(CCTACCTAG)n|Simple_repeat|Simple_repeat-HOMER74845	chrX	1809620	1809706	0	Simple_repeat
+(CCTACCTAG)n|Simple_repeat|Simple_repeat-HOMER74849	chrX	1811677	1811730	0	Simple_repeat

@@ -1,0 +1,2 @@
+(TTACTA)n|Simple_repeat|Simple_repeat-HOMER2976	chrI	1801245	1801280	0	Simple_repeat
+(TTACTA)n|Simple_repeat|Simple_repeat-HOMER49059	chrIV	5477311	5477345	0	Simple_repeat

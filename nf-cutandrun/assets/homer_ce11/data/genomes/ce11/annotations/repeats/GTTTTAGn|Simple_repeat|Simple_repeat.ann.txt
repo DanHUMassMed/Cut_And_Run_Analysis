@@ -1,0 +1,1 @@
+(GTTTTAG)n|Simple_repeat|Simple_repeat-HOMER64213	chrV	7170059	7170094	0	Simple_repeat

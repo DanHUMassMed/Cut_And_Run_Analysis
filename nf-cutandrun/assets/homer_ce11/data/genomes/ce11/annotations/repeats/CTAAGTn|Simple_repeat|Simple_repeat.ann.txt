@@ -1,0 +1,2 @@
+(CTAAGT)n|Simple_repeat|Simple_repeat-HOMER15674	chrII	368358	368379	0	Simple_repeat
+(CTAAGT)n|Simple_repeat|Simple_repeat-HOMER15676	chrII	368448	368475	0	Simple_repeat

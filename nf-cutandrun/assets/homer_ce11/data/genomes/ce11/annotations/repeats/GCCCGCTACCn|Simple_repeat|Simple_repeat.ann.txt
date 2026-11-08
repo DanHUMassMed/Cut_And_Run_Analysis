@@ -1,0 +1,2 @@
+(GCCCGCTACC)n|Simple_repeat|Simple_repeat-HOMER60342	chrV	2777542	2777959	0	Simple_repeat
+(GCCCGCTACC)n|Simple_repeat|Simple_repeat-HOMER60343	chrV	2778329	2778666	0	Simple_repeat

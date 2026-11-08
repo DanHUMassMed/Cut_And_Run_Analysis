@@ -1,0 +1,1 @@
+(CAATTTA)n|Simple_repeat|Simple_repeat-HOMER83140	chrX	16174383	16174431	0	Simple_repeat

@@ -1,0 +1,1 @@
+(CATGT)n|Simple_repeat|Simple_repeat-HOMER80559	chrX	12310822	12310864	0	Simple_repeat

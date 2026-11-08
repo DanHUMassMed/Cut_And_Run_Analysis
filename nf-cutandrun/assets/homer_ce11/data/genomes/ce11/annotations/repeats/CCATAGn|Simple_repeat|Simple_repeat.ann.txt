@@ -1,0 +1,1 @@
+(CCATAG)n|Simple_repeat|Simple_repeat-HOMER30522	chrIII	1755816	1755869	0	Simple_repeat

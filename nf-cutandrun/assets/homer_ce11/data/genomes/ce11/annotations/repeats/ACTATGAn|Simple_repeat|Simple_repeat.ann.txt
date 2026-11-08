@@ -1,0 +1,1 @@
+(ACTATGA)n|Simple_repeat|Simple_repeat-HOMER43092	chrIV	498686	498737	0	Simple_repeat

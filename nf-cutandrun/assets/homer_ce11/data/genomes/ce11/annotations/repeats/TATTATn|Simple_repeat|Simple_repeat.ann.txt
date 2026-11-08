@@ -1,0 +1,3 @@
+(TATTAT)n|Simple_repeat|Simple_repeat-HOMER30951	chrIII	1987373	1987458	0	Simple_repeat
+(TATTAT)n|Simple_repeat|Simple_repeat-HOMER34333	chrIII	5246847	5246878	0	Simple_repeat
+(TATTAT)n|Simple_repeat|Simple_repeat-HOMER34478	chrIII	5501048	5501082	0	Simple_repeat

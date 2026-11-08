@@ -1,0 +1,1 @@
+(TACCTAGAC)n|Simple_repeat|Simple_repeat-HOMER51769	chrIV	11070935	11072394	0	Simple_repeat

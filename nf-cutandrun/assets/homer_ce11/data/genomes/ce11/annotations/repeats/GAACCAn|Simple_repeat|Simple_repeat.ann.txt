@@ -1,0 +1,2 @@
+(GAACCA)n|Simple_repeat|Simple_repeat-HOMER35911	chrIII	8575240	8575283	0	Simple_repeat
+(GAACCA)n|Simple_repeat|Simple_repeat-HOMER42407	chrIII	13619673	13619707	0	Simple_repeat

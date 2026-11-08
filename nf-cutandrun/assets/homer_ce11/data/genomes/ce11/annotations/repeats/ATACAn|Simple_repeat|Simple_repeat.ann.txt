@@ -1,0 +1,2 @@
+(ATACA)n|Simple_repeat|Simple_repeat-HOMER18962	chrII	3906865	3906892	0	Simple_repeat
+(ATACA)n|Simple_repeat|Simple_repeat-HOMER52140	chrIV	11730498	11730524	0	Simple_repeat

@@ -1,0 +1,1 @@
+(GAATCC)n|Simple_repeat|Simple_repeat-HOMER34412	chrIII	5386470	5386515	0	Simple_repeat

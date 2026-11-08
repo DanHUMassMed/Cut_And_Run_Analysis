@@ -1,0 +1,2 @@
+(AGCTAT)n|Simple_repeat|Simple_repeat-HOMER35453	chrIII	7678889	7678927	0	Simple_repeat
+(AGCTAT)n|Simple_repeat|Simple_repeat-HOMER48077	chrIV	4189534	4189572	0	Simple_repeat

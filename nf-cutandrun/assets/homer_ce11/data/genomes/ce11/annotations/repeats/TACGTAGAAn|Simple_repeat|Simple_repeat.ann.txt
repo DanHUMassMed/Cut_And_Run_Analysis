@@ -1,0 +1,1 @@
+(TACGTAGAA)n|Simple_repeat|Simple_repeat-HOMER81156	chrX	13764606	13764662	0	Simple_repeat

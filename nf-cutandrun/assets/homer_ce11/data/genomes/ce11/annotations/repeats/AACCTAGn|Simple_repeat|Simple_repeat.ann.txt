@@ -1,0 +1,1 @@
+(AACCTAG)n|Simple_repeat|Simple_repeat-HOMER81862	chrX	14905628	14905677	0	Simple_repeat

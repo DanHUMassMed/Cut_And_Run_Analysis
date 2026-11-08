@@ -1,0 +1,2 @@
+(GTAGGCAT)n|Simple_repeat|Simple_repeat-HOMER43211	chrIV	594381	594536	0	Simple_repeat
+(GTAGGCAT)n|Simple_repeat|Simple_repeat-HOMER47684	chrIV	3825815	3826025	0	Simple_repeat

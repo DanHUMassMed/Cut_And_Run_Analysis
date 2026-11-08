@@ -1,0 +1,3 @@
+(ACCACA)n|Simple_repeat|Simple_repeat-HOMER28215	chrII	15267540	15267581	0	Simple_repeat
+(ACCACA)n|Simple_repeat|Simple_repeat-HOMER56031	chrIV	17355720	17355758	0	Simple_repeat
+(ACCACA)n|Simple_repeat|Simple_repeat-HOMER68745	chrV	16932636	16932688	0	Simple_repeat

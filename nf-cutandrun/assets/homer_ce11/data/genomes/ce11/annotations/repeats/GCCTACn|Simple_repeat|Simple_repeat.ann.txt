@@ -1,0 +1,1 @@
+(GCCTAC)n|Simple_repeat|Simple_repeat-HOMER56585	chrV	337258	337407	0	Simple_repeat

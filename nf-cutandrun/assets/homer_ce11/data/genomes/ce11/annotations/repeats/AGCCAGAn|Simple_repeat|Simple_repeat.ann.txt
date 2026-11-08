@@ -1,0 +1,1 @@
+(AGCCAGA)n|Simple_repeat|Simple_repeat-HOMER4301	chrI	2550256	2550289	0	Simple_repeat

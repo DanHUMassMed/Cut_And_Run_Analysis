@@ -1,0 +1,1 @@
+(AATTTTCA)n|Simple_repeat|Simple_repeat-HOMER9761	chrI	9974961	9975020	0	Simple_repeat

@@ -1,0 +1,1 @@
+(ACGATG)n|Simple_repeat|Simple_repeat-HOMER8324	chrI	7403428	7403458	0	Simple_repeat

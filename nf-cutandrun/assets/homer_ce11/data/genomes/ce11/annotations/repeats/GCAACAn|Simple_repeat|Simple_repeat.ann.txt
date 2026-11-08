@@ -1,0 +1,3 @@
+(GCAACA)n|Simple_repeat|Simple_repeat-HOMER39413	chrIII	12022491	12022523	0	Simple_repeat
+(GCAACA)n|Simple_repeat|Simple_repeat-HOMER65065	chrV	9326607	9326647	0	Simple_repeat
+(GCAACA)n|Simple_repeat|Simple_repeat-HOMER78860	chrX	7954467	7954526	0	Simple_repeat

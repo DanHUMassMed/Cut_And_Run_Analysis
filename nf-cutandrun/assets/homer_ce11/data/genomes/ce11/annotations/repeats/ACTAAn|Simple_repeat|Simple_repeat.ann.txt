@@ -1,0 +1,3 @@
+(ACTAA)n|Simple_repeat|Simple_repeat-HOMER21360	chrII	8231639	8231685	0	Simple_repeat
+(ACTAA)n|Simple_repeat|Simple_repeat-HOMER28448	chrIII	204828	204882	0	Simple_repeat
+(ACTAA)n|Simple_repeat|Simple_repeat-HOMER54573	chrIV	15278067	15278092	0	Simple_repeat

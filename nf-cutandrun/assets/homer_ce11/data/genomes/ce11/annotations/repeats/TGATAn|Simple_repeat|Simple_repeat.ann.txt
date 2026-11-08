@@ -1,0 +1,4 @@
+(TGATA)n|Simple_repeat|Simple_repeat-HOMER7801	chrI	6098000	6098024	0	Simple_repeat
+(TGATA)n|Simple_repeat|Simple_repeat-HOMER7803	chrI	6098072	6098110	0	Simple_repeat
+(TGATA)n|Simple_repeat|Simple_repeat-HOMER34351	chrIII	5273544	5273570	0	Simple_repeat
+(TGATA)n|Simple_repeat|Simple_repeat-HOMER49022	chrIV	5427726	5427780	0	Simple_repeat

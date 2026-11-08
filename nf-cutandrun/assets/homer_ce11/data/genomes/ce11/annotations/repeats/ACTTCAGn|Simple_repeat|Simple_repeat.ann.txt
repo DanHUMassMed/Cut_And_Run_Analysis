@@ -1,0 +1,1 @@
+(ACTTCAG)n|Simple_repeat|Simple_repeat-HOMER37981	chrIII	11186405	11186441	0	Simple_repeat

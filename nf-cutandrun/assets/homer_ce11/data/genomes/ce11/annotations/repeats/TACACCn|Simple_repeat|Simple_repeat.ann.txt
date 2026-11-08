@@ -1,0 +1,2 @@
+(TACACC)n|Simple_repeat|Simple_repeat-HOMER34629	chrIII	5816940	5816997	0	Simple_repeat
+(TACACC)n|Simple_repeat|Simple_repeat-HOMER48727	chrIV	4906931	4906994	0	Simple_repeat

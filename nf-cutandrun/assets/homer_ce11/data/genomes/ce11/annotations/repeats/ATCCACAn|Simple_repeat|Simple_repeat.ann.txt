@@ -1,0 +1,1 @@
+(ATCCACA)n|Simple_repeat|Simple_repeat-HOMER58269	chrV	1539044	1539104	0	Simple_repeat

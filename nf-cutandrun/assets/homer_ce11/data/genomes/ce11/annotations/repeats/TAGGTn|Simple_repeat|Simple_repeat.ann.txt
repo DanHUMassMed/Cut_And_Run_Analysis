@@ -1,0 +1,1 @@
+(TAGGT)n|Simple_repeat|Simple_repeat-HOMER10081	chrI	10456011	10456045	0	Simple_repeat

@@ -1,0 +1,1 @@
+(GGGA)n|Simple_repeat|Simple_repeat-HOMER9999	chrI	10369429	10369453	0	Simple_repeat

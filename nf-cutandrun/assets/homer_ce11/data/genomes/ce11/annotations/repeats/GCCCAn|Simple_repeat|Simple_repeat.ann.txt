@@ -1,0 +1,1 @@
+(GCCCA)n|Simple_repeat|Simple_repeat-HOMER41841	chrIII	13130797	13130847	0	Simple_repeat

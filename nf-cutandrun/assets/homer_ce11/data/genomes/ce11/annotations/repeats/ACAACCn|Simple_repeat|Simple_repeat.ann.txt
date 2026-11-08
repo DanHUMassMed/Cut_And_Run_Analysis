@@ -1,0 +1,5 @@
+(ACAACC)n|Simple_repeat|Simple_repeat-HOMER56016	chrIV	17349140	17349174	0	Simple_repeat
+(ACAACC)n|Simple_repeat|Simple_repeat-HOMER56017	chrIV	17349838	17349872	0	Simple_repeat
+(ACAACC)n|Simple_repeat|Simple_repeat-HOMER56020	chrIV	17350343	17350409	0	Simple_repeat
+(ACAACC)n|Simple_repeat|Simple_repeat-HOMER56022	chrIV	17353612	17353646	0	Simple_repeat
+(ACAACC)n|Simple_repeat|Simple_repeat-HOMER64533	chrV	7997538	7997582	0	Simple_repeat

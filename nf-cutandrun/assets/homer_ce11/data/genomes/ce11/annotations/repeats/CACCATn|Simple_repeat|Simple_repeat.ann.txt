@@ -1,0 +1,4 @@
+(CACCAT)n|Simple_repeat|Simple_repeat-HOMER73728	chrX	477849	477884	0	Simple_repeat
+(CACCAT)n|Simple_repeat|Simple_repeat-HOMER79183	chrX	8709884	8710026	0	Simple_repeat
+(CACCAT)n|Simple_repeat|Simple_repeat-HOMER81926	chrX	15005776	15005811	0	Simple_repeat
+(CACCAT)n|Simple_repeat|Simple_repeat-HOMER83594	chrX	16679657	16679796	0	Simple_repeat

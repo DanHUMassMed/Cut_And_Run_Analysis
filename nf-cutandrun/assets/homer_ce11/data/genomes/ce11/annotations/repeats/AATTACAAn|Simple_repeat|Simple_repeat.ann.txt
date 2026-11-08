@@ -1,0 +1,1 @@
+(AATTACAA)n|Simple_repeat|Simple_repeat-HOMER78234	chrX	6756511	6756547	0	Simple_repeat

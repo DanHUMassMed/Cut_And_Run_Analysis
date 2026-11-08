@@ -1,0 +1,1 @@
+(AGGGCTC)n|Simple_repeat|Simple_repeat-HOMER43177	chrIV	562070	562113	0	Simple_repeat

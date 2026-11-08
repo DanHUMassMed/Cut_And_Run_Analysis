@@ -1,0 +1,7 @@
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER16709	chrII	1468478	1468534	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER22888	chrII	11307003	11307049	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER53058	chrIV	13172627	13172671	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER56015	chrIV	17349032	17349084	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER64613	chrV	8260177	8260224	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER66043	chrV	11749584	11749626	0	Simple_repeat
+(ACTACA)n|Simple_repeat|Simple_repeat-HOMER67617	chrV	15109949	15110007	0	Simple_repeat

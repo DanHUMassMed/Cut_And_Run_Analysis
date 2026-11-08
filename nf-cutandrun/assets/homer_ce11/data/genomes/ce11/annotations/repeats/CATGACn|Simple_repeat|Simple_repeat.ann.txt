@@ -1,0 +1,2 @@
+(CATGAC)n|Simple_repeat|Simple_repeat-HOMER50132	chrIV	7498384	7498423	0	Simple_repeat
+(CATGAC)n|Simple_repeat|Simple_repeat-HOMER78118	chrX	6501776	6501820	0	Simple_repeat

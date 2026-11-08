@@ -1,0 +1,2 @@
+(AACTGA)n|Simple_repeat|Simple_repeat-HOMER64694	chrV	8423334	8423372	0	Simple_repeat
+(AACTGA)n|Simple_repeat|Simple_repeat-HOMER65978	chrV	11616003	11616037	0	Simple_repeat

@@ -1,0 +1,1 @@
+(GATAACA)n|Simple_repeat|Simple_repeat-HOMER65341	chrV	10012815	10012849	0	Simple_repeat

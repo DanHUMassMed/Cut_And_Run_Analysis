@@ -1,0 +1,2 @@
+(GATTTTA)n|Simple_repeat|Simple_repeat-HOMER22085	chrII	10165340	10165382	0	Simple_repeat
+(GATTTTA)n|Simple_repeat|Simple_repeat-HOMER74635	chrX	1605596	1605678	0	Simple_repeat

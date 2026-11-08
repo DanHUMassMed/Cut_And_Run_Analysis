@@ -1,0 +1,5 @@
+(CCCCAG)n|Simple_repeat|Simple_repeat-HOMER44630	chrIV	1721016	1721155	0	Simple_repeat
+(CCCCAG)n|Simple_repeat|Simple_repeat-HOMER44632	chrIV	1721421	1721577	0	Simple_repeat
+(CCCCAG)n|Simple_repeat|Simple_repeat-HOMER44634	chrIV	1721820	1721861	0	Simple_repeat
+(CCCCAG)n|Simple_repeat|Simple_repeat-HOMER44638	chrIV	1722405	1722534	0	Simple_repeat
+(CCCCAG)n|Simple_repeat|Simple_repeat-HOMER65183	chrV	9625940	9626118	0	Simple_repeat

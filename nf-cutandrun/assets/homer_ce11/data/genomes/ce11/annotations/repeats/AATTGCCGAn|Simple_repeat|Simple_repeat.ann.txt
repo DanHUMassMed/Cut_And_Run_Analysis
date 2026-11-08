@@ -1,0 +1,1 @@
+(AATTGCCGA)n|Simple_repeat|Simple_repeat-HOMER11020	chrI	11302953	11303005	0	Simple_repeat

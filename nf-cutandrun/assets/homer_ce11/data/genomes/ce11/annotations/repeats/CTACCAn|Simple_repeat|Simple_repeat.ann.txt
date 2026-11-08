@@ -1,0 +1,2 @@
+(CTACCA)n|Simple_repeat|Simple_repeat-HOMER77995	chrX	6190532	6190577	0	Simple_repeat
+(CTACCA)n|Simple_repeat|Simple_repeat-HOMER81722	chrX	14703249	14703295	0	Simple_repeat

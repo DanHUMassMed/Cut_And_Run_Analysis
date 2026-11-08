@@ -1,0 +1,1 @@
+(TACG)n|Simple_repeat|Simple_repeat-HOMER51477	chrIV	10389284	10389320	0	Simple_repeat

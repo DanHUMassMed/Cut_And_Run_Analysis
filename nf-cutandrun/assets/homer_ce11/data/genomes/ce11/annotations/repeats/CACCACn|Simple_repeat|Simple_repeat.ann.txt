@@ -1,0 +1,2 @@
+(CACCAC)n|Simple_repeat|Simple_repeat-HOMER26670	chrII	14183509	14183550	0	Simple_repeat
+(CACCAC)n|Simple_repeat|Simple_repeat-HOMER48726	chrIV	4906119	4906161	0	Simple_repeat

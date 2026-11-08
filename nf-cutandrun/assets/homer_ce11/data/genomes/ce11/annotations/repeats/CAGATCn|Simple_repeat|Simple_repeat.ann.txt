@@ -1,0 +1,1 @@
+(CAGATC)n|Simple_repeat|Simple_repeat-HOMER20617	chrII	6490564	6490599	0	Simple_repeat

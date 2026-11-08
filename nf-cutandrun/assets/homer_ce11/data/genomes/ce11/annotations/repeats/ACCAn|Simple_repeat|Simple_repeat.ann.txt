@@ -1,0 +1,2 @@
+(ACCA)n|Simple_repeat|Simple_repeat-HOMER9847	chrI	10083333	10083373	0	Simple_repeat
+(ACCA)n|Simple_repeat|Simple_repeat-HOMER67654	chrV	15197486	15197517	0	Simple_repeat

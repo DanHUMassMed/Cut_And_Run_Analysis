@@ -1,0 +1,3 @@
+(GGTCTA)n|Simple_repeat|Simple_repeat-HOMER1431	chrI	992953	993013	0	Simple_repeat
+(GGTCTA)n|Simple_repeat|Simple_repeat-HOMER61601	chrV	3979351	3979413	0	Simple_repeat
+(GGTCTA)n|Simple_repeat|Simple_repeat-HOMER67545	chrV	14974345	14974385	0	Simple_repeat

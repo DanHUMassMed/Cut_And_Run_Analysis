@@ -1,0 +1,2 @@
+(TACTTA)n|Simple_repeat|Simple_repeat-HOMER8817	chrI	8270539	8270603	0	Simple_repeat
+(TACTTA)n|Simple_repeat|Simple_repeat-HOMER69890	chrV	18142262	18142318	0	Simple_repeat

@@ -1,0 +1,3 @@
+(TGTAT)n|Simple_repeat|Simple_repeat-HOMER7874	chrI	6255809	6255833	0	Simple_repeat
+(TGTAT)n|Simple_repeat|Simple_repeat-HOMER10417	chrI	10911409	10911439	0	Simple_repeat
+(TGTAT)n|Simple_repeat|Simple_repeat-HOMER10826	chrI	11173466	11173516	0	Simple_repeat

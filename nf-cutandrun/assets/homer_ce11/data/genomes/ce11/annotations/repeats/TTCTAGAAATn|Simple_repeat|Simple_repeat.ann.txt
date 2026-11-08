@@ -1,0 +1,1 @@
+(TTCTAGAAAT)n|Simple_repeat|Simple_repeat-HOMER4439	chrI	2619913	2619974	0	Simple_repeat

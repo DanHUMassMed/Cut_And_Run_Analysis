@@ -1,0 +1,2 @@
+(TTAGATT)n|Simple_repeat|Simple_repeat-HOMER20107	chrII	5335065	5335107	0	Simple_repeat
+(TTAGATT)n|Simple_repeat|Simple_repeat-HOMER43402	chrIV	769685	769723	0	Simple_repeat

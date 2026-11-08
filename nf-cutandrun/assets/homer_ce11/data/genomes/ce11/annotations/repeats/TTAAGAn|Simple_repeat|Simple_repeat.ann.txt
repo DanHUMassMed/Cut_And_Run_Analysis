@@ -1,0 +1,1 @@
+(TTAAGA)n|Simple_repeat|Simple_repeat-HOMER79655	chrX	9831651	9831682	0	Simple_repeat

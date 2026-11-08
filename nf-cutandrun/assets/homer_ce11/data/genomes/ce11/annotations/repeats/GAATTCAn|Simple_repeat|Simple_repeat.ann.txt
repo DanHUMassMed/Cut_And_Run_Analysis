@@ -1,0 +1,1 @@
+(GAATTCA)n|Simple_repeat|Simple_repeat-HOMER51618	chrIV	10747644	10747682	0	Simple_repeat

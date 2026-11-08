@@ -1,0 +1,1 @@
+(ATTGTAG)n|Simple_repeat|Simple_repeat-HOMER20974	chrII	7264014	7264050	0	Simple_repeat

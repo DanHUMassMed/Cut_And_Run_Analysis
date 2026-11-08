@@ -1,0 +1,1 @@
+(CAAGTTAG)n|Simple_repeat|Simple_repeat-HOMER654	chrI	571926	571999	0	Simple_repeat

@@ -1,0 +1,1 @@
+(AACATAT)n|Simple_repeat|Simple_repeat-HOMER35163	chrIII	7099444	7099500	0	Simple_repeat

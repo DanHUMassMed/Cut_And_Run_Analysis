@@ -1,0 +1,2 @@
+(AAAAG)n|Simple_repeat|Simple_repeat-HOMER74924	chrX	1882028	1882066	0	Simple_repeat
+(AAAAG)n|Simple_repeat|Simple_repeat-HOMER80073	chrX	10949993	10950018	0	Simple_repeat

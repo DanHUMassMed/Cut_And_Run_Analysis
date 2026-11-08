@@ -1,0 +1,3 @@
+(TATAAT)n|Simple_repeat|Simple_repeat-HOMER6963	chrI	4693162	4693219	0	Simple_repeat
+(TATAAT)n|Simple_repeat|Simple_repeat-HOMER79831	chrX	10326962	10327014	0	Simple_repeat
+(TATAAT)n|Simple_repeat|Simple_repeat-HOMER81443	chrX	14244887	14244923	0	Simple_repeat

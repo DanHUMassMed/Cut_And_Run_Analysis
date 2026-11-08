@@ -1,0 +1,3 @@
+(AAATTA)n|Simple_repeat|Simple_repeat-HOMER53457	chrIV	13488671	13488696	0	Simple_repeat
+(AAATTA)n|Simple_repeat|Simple_repeat-HOMER62876	chrV	4889934	4889978	0	Simple_repeat
+(AAATTA)n|Simple_repeat|Simple_repeat-HOMER72027	chrV	19940167	19940191	0	Simple_repeat

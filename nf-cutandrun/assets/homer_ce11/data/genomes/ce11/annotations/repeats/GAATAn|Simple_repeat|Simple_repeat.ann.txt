@@ -1,0 +1,2 @@
+(GAATA)n|Simple_repeat|Simple_repeat-HOMER55976	chrIV	17229257	17229287	0	Simple_repeat
+(GAATA)n|Simple_repeat|Simple_repeat-HOMER83806	chrX	16992914	16992940	0	Simple_repeat

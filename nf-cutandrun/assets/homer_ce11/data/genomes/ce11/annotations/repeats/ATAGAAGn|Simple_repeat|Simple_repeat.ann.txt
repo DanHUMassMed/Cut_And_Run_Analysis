@@ -1,0 +1,1 @@
+(ATAGAAG)n|Simple_repeat|Simple_repeat-HOMER21619	chrII	9032007	9032052	0	Simple_repeat

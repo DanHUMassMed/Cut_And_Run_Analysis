@@ -1,0 +1,1 @@
+(CTTACA)n|Simple_repeat|Simple_repeat-HOMER61073	chrV	3540484	3540536	0	Simple_repeat

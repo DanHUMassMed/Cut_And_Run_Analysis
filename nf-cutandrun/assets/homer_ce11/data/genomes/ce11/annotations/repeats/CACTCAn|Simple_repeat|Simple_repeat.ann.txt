@@ -1,0 +1,3 @@
+(CACTCA)n|Simple_repeat|Simple_repeat-HOMER27208	chrII	14684581	14684612	0	Simple_repeat
+(CACTCA)n|Simple_repeat|Simple_repeat-HOMER54417	chrIV	15021096	15021131	0	Simple_repeat
+(CACTCA)n|Simple_repeat|Simple_repeat-HOMER54420	chrIV	15023320	15023354	0	Simple_repeat

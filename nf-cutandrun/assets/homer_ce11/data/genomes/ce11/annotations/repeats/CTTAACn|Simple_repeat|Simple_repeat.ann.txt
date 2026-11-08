@@ -1,0 +1,1 @@
+(CTTAAC)n|Simple_repeat|Simple_repeat-HOMER78319	chrX	6962308	6962337	0	Simple_repeat

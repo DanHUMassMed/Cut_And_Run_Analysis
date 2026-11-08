@@ -1,0 +1,1 @@
+(ATAGA)n|Simple_repeat|Simple_repeat-HOMER79977	chrX	10705360	10705403	0	Simple_repeat

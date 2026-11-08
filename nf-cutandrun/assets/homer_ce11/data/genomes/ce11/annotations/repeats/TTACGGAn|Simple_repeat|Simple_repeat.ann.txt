@@ -1,0 +1,1 @@
+(TTACGGA)n|Simple_repeat|Simple_repeat-HOMER27206	chrII	14683901	14683961	0	Simple_repeat

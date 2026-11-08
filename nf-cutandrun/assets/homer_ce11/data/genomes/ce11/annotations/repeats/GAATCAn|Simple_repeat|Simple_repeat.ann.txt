@@ -1,0 +1,2 @@
+(GAATCA)n|Simple_repeat|Simple_repeat-HOMER13862	chrI	13979544	13979587	0	Simple_repeat
+(GAATCA)n|Simple_repeat|Simple_repeat-HOMER35037	chrIII	6723096	6723140	0	Simple_repeat

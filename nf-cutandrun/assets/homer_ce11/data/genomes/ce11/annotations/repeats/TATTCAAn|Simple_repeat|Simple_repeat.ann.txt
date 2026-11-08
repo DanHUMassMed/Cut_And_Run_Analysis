@@ -1,0 +1,2 @@
+(TATTCAA)n|Simple_repeat|Simple_repeat-HOMER9211	chrI	9019454	9019512	0	Simple_repeat
+(TATTCAA)n|Simple_repeat|Simple_repeat-HOMER83351	chrX	16373377	16373419	0	Simple_repeat

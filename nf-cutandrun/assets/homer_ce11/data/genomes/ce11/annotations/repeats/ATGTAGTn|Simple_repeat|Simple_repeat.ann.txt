@@ -1,0 +1,3 @@
+(ATGTAGT)n|Simple_repeat|Simple_repeat-HOMER13424	chrI	13601625	13601722	0	Simple_repeat
+(ATGTAGT)n|Simple_repeat|Simple_repeat-HOMER71973	chrV	19891282	19891321	0	Simple_repeat
+(ATGTAGT)n|Simple_repeat|Simple_repeat-HOMER71975	chrV	19891373	19891411	0	Simple_repeat

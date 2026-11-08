@@ -1,0 +1,1 @@
+(GAAGCCC)n|Simple_repeat|Simple_repeat-HOMER71854	chrV	19803180	19803213	0	Simple_repeat

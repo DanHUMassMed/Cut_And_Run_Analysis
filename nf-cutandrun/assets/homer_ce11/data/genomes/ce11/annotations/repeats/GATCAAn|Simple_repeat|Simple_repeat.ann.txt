@@ -1,0 +1,1 @@
+(GATCAA)n|Simple_repeat|Simple_repeat-HOMER79308	chrX	8998615	8998651	0	Simple_repeat

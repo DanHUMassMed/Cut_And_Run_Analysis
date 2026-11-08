@@ -1,0 +1,3 @@
+(AGCCTAG)n|Simple_repeat|Simple_repeat-HOMER16796	chrII	1605080	1605125	0	Simple_repeat
+(AGCCTAG)n|Simple_repeat|Simple_repeat-HOMER16798	chrII	1605462	1605484	0	Simple_repeat
+(AGCCTAG)n|Simple_repeat|Simple_repeat-HOMER16800	chrII	1605525	1605539	0	Simple_repeat

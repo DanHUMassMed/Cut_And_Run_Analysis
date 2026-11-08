@@ -1,0 +1,1 @@
+(TATGTAG)n|Simple_repeat|Simple_repeat-HOMER10831	chrI	11174679	11174721	0	Simple_repeat

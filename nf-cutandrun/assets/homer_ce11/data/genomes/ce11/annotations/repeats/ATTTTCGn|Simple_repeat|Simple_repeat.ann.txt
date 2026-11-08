@@ -1,0 +1,7 @@
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER5975	chrI	3580874	3580917	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER9892	chrI	10152559	10152609	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER11132	chrI	11416959	11417011	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER14219	chrI	14228392	14228452	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER34471	chrIII	5486865	5486940	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER70459	chrV	18674109	18674156	0	Simple_repeat
+(ATTTTCG)n|Simple_repeat|Simple_repeat-HOMER83028	chrX	16090233	16090286	0	Simple_repeat

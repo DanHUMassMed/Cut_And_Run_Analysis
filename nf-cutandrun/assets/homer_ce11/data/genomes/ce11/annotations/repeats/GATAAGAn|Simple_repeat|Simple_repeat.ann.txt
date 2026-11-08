@@ -1,0 +1,1 @@
+(GATAAGA)n|Simple_repeat|Simple_repeat-HOMER6420	chrI	4037896	4037929	0	Simple_repeat

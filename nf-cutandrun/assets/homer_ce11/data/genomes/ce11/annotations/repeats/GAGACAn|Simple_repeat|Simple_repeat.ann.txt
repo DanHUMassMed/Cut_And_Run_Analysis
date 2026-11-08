@@ -1,0 +1,2 @@
+(GAGACA)n|Simple_repeat|Simple_repeat-HOMER16704	chrII	1462099	1462151	0	Simple_repeat
+(GAGACA)n|Simple_repeat|Simple_repeat-HOMER66329	chrV	12452565	12452597	0	Simple_repeat

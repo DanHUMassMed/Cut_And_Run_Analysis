@@ -1,0 +1,1 @@
+(TATTTGA)n|Simple_repeat|Simple_repeat-HOMER35812	chrIII	8423853	8423892	0	Simple_repeat

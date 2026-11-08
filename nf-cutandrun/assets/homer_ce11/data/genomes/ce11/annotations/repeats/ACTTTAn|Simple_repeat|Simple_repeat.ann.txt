@@ -1,0 +1,2 @@
+(ACTTTA)n|Simple_repeat|Simple_repeat-HOMER49123	chrIV	5585556	5585594	0	Simple_repeat
+(ACTTTA)n|Simple_repeat|Simple_repeat-HOMER61984	chrV	4263705	4263748	0	Simple_repeat

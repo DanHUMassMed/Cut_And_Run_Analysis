@@ -1,0 +1,1 @@
+(TACTTC)n|Simple_repeat|Simple_repeat-HOMER5738	chrI	3426096	3426152	0	Simple_repeat

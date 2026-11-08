@@ -1,0 +1,3 @@
+(TAGT)n|Simple_repeat|Simple_repeat-HOMER283	chrI	273395	273419	0	Simple_repeat
+(TAGT)n|Simple_repeat|Simple_repeat-HOMER35619	chrIII	8068591	8068643	0	Simple_repeat
+(TAGT)n|Simple_repeat|Simple_repeat-HOMER49713	chrIV	6617362	6617385	0	Simple_repeat

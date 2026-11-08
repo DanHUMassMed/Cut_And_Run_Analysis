@@ -1,0 +1,2 @@
+(CATGTAGG)n|Simple_repeat|Simple_repeat-HOMER43210	chrIV	593516	593575	0	Simple_repeat
+(CATGTAGG)n|Simple_repeat|Simple_repeat-HOMER46922	chrIV	3211738	3211858	0	Simple_repeat

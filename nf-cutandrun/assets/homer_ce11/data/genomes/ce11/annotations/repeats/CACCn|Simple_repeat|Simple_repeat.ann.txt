@@ -1,0 +1,1 @@
+(CACC)n|Simple_repeat|Simple_repeat-HOMER79717	chrX	9999746	9999789	0	Simple_repeat

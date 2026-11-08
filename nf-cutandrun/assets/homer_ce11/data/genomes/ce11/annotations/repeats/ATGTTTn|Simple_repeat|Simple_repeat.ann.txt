@@ -1,0 +1,2 @@
+(ATGTTT)n|Simple_repeat|Simple_repeat-HOMER49942	chrIV	7125113	7125123	0	Simple_repeat
+(ATGTTT)n|Simple_repeat|Simple_repeat-HOMER49944	chrIV	7125155	7125163	0	Simple_repeat

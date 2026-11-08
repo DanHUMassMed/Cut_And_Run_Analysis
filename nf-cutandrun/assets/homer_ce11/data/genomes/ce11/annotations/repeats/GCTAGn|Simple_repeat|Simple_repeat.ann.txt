@@ -1,0 +1,1 @@
+(GCTAG)n|Simple_repeat|Simple_repeat-HOMER41840	chrIII	13130674	13130714	0	Simple_repeat

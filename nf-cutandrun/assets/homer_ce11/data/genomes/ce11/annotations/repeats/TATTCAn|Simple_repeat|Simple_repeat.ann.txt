@@ -1,0 +1,2 @@
+(TATTCA)n|Simple_repeat|Simple_repeat-HOMER50697	chrIV	8644023	8644092	0	Simple_repeat
+(TATTCA)n|Simple_repeat|Simple_repeat-HOMER64136	chrV	6977720	6977756	0	Simple_repeat

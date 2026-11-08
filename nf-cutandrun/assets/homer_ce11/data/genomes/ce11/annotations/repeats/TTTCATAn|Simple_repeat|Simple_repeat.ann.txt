@@ -1,0 +1,2 @@
+(TTTCATA)n|Simple_repeat|Simple_repeat-HOMER25016	chrII	13124208	13124243	0	Simple_repeat
+(TTTCATA)n|Simple_repeat|Simple_repeat-HOMER51567	chrIV	10591845	10591906	0	Simple_repeat

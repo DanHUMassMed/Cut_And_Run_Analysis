@@ -1,0 +1,3 @@
+(AAGATA)n|Simple_repeat|Simple_repeat-HOMER6058	chrI	3641883	3641900	0	Simple_repeat
+(AAGATA)n|Simple_repeat|Simple_repeat-HOMER9279	chrI	9157380	9157412	0	Simple_repeat
+(AAGATA)n|Simple_repeat|Simple_repeat-HOMER47142	chrIV	3338558	3338605	0	Simple_repeat

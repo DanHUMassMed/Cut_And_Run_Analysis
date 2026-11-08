@@ -1,0 +1,2 @@
+(GCCTAT)n|Simple_repeat|Simple_repeat-HOMER16472	chrII	1252957	1253514	0	Simple_repeat
+(GCCTAT)n|Simple_repeat|Simple_repeat-HOMER19372	chrII	4281621	4281704	0	Simple_repeat

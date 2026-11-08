@@ -1,0 +1,2 @@
+(TAATCA)n|Simple_repeat|Simple_repeat-HOMER35	chrI	18142	18171	0	Simple_repeat
+(TAATCA)n|Simple_repeat|Simple_repeat-HOMER30436	chrIII	1703645	1703684	0	Simple_repeat
