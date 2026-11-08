@@ -100,13 +100,19 @@ def resolveBowtie2Index(index_param) {
         return [ [ id: 'bowtie2_index' ], [] ]
     }
     def index_file = file(index_param)
+    def index_id   = index_file.name ?: 'bowtie2_index'
+    def bt2_files  = file("${index_param}.*.bt2*")
+    if (bt2_files) {
+        return [ [ id: index_id ], bt2_files ]
+    }
     if (index_file.exists() && index_file.isDirectory()) {
-        return [ [ id: 'bowtie2_index' ], index_file ]
+        def dir_bt2_files = file("${index_param}/*.bt2*")
+        return [ [ id: index_id ], dir_bt2_files ?: index_file ]
     }
     if (index_file.parent && index_file.parent.exists()) {
-        return [ [ id: 'bowtie2_index' ], index_file.parent ]
+        return [ [ id: index_id ], index_file.parent ]
     }
-    return [ [ id: 'bowtie2_index' ], [] ]
+    return [ [ id: index_id ], [] ]
 }
 
 def resolveChromSizes(chrom_sizes_param) {
