@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CUT&amp;RUN Analysis Pipeline — 4-Page Presentation</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --accent-green: #16a34a;
+      --accent-orange: #ea580c;
+      --accent-blue: #2563eb;
+      --accent-cyan: #0891b2;
+      --accent-purple: #7c3aed;
+      --accent-red: #dc2626;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: #cbd5e1;
+      color: var(--ink);
+      line-height: 1.45;
+      padding: 24px 16px 64px;
+    }
+
+    .toolbar {
+      max-width: 1280px;
+      margin: 0 auto 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 10px 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+    }
+
+    .toolbar-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      letter-spacing: 0.01em;
+    }
+
+    .toolbar-actions button {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+
+    .toolbar-actions button:hover {
+      background: #1d4ed8;
+    }
+
+    .slide {
+      max-width: 1280px;
+      min-height: 720px;
+      margin: 0 auto 28px;
+      background: var(--card);
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      page-break-after: always;
+      break-after: page;
+    }
+
+    .slide-header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 12px;
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .slide-header h1 {
+      font-size: 1.55rem;
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    .slide-header .page-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--accent-blue);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      padding: 4px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .subtitle {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .metromap-box {
+      text-align: center;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      margin-bottom: 16px;
+    }
+
+    .metromap-box img {
+      max-width: 100%;
+      max-height: 410px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-left: 5px solid var(--accent-blue);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+
+    .card.green { border-left-color: var(--accent-green); }
+    .card.orange { border-left-color: var(--accent-orange); }
+    .card.blue { border-left-color: var(--accent-blue); }
+    .card.cyan { border-left-color: var(--accent-cyan); }
+    .card.purple { border-left-color: var(--accent-purple); }
+    .card.red { border-left-color: var(--accent-red); }
+
+    .card h3 {
+      font-size: 1.02rem;
+      margin-bottom: 6px;
+      color: var(--ink);
+    }
+
+    .card p, .card ul {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .card ul {
+      padding-left: 18px;
+      margin-top: 4px;
+    }
+
+    .card li {
+      margin-bottom: 4px;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.82em;
+      background: #e2e8f0;
+      color: #0f172a;
+      padding: 2px 5px;
+      border-radius: 4px;
+    }
+
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      overflow-x: auto;
+      margin-top: 8px;
+    }
+
+    pre code {
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.86rem;
+      margin-bottom: 14px;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .slide-footer {
+      border-top: 1px solid var(--border);
+      padding-top: 10px;
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    @page {
+      size: 13.333in 7.5in;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+      .toolbar {
+        display: none;
+      }
+      .slide {
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        margin: 0;
+        width: 13.333in;
+        height: 7.5in;
+        min-height: 7.5in;
+        max-height: 7.5in;
+        padding: 22px 36px;
+        overflow: hidden;
+        page-break-after: always;
+        break-after: page;
+      }
+      .slide:last-of-type {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .slide-header {
+        padding-bottom: 8px;
+        margin-bottom: 12px;
+      }
+      .slide-header h1 {
+        font-size: 1.38rem;
+      }
+      .subtitle {
+        font-size: 0.86rem;
+      }
+      .metromap-box {
+        padding: 6px;
+        margin-bottom: 10px;
+      }
+      .metromap-box img {
+        max-height: 365px;
+      }
+      .card {
+        padding: 10px 14px;
+      }
+      .card h3 {
+        font-size: 0.94rem;
+        margin-bottom: 4px;
+      }
+      .card p, .card ul {
+        font-size: 0.81rem;
+        line-height: 1.35;
+      }
+      .card li {
+        margin-bottom: 3px;
+      }
+      table {
+        font-size: 0.8rem;
+        margin-bottom: 10px;
+      }
+      th, td {
+        padding: 5px 10px;
+      }
+      pre {
+        padding: 8px 12px;
+        font-size: 0.78rem;
+        margin-top: 4px;
+      }
+      .slide-footer {
+        padding-top: 6px;
+        margin-top: 8px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <div class="toolbar-title">CUT&amp;RUN Analysis Pipeline — 4-Page Overview Presentation</div>
+    <div class="toolbar-actions">
+      <button onclick="window.print()">Print / Save as 4-Page PDF</button>
+    </div>
+  </div>
+
+  <!-- ==================== PAGE 1 ==================== -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <div>
+          <h1>1. CUT&amp;RUN Analysis Pipeline — End-to-End Metro Map</h1>
+          <div class="subtitle">High-Level Architecture: From Raw Paired-End FASTQs to Downstream Peak &amp; Motif Discovery</div>
+        </div>
+        <span class="page-badge">Page 1 of 4</span>
+      </div>
+
+      <div class="metromap-box">
+        <img src="metromap.png" alt="CUT&RUN Pipeline Metro Map" />
+      </div>
+
+      <div class="grid-3">
+        <div class="card green">
+          <h3>Phases 1–2: Upstream HPC Prep</h3>
+          <ul>
+            <li><strong>Steps 1–5:</strong> <code>Trimmomatic</code> &rarr; <code>Bowtie2</code> &rarr; <code>Picard</code> Dedup &rarr; <code>samtools</code> MAPQ &ge; 10 filter.</li>
+            <li><strong>Steps 6–8:</strong> Generates indexed BAMs (<code>06_index_bam/</code>), HOMER TagDirs &amp; UCSC bedGraphs (<code>07_homer/</code>), and BigWigs (<code>08_bigwig/</code>).</li>
+          </ul>
+        </div>
+        <div class="card blue">
+          <h3>Phase 3: Peak Calling &amp; Merging</h3>
+          <ul>
+            <li><strong>Step c:</strong> Calls per-sample peaks via <code>MACS2</code> (from BAMs) and/or <code>HOMER</code> (from TagDirs).</li>
+            <li><strong>Step d:</strong> Filters reproducible peaks across replicates (<code>&ge;2</code>) and builds an inclusive union <code>&lt;target&gt;_master_peaks.bed</code>.</li>
+          </ul>
+        </div>
+        <div class="card orange">
+          <h3>Phase 4: Downstream Discovery</h3>
+          <ul>
+            <li><strong>Steps e–f:</strong> HOMER gene/TSS annotation, normalized tag counts, and DESeq2 differential binding.</li>
+            <li><strong>Steps g–i:</strong> <code>deepTools</code> tornado heatmaps, HOMER/MEME motif discovery, and 5 automated QC plot suites.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Walker Lab • UMass Chan Medical School</span>
+      <span>Nextflow DSL2 Pipeline (<code>Cut_And_Run_Analysis</code>)</span>
+    </div>
+  </section>
+
+  <!-- ==================== PAGE 2 ==================== -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <div>
+          <h1>2. Dropbox Inputs &amp; Phase 3: Peak Calling &amp; Consensus Merging</h1>
+          <div class="subtitle">Resolving Staged Upstream Tracks &rarr; Per-Sample Peak Calling (Step c) &rarr; Replicate &amp; Master Peak Merging (Step d)</div>
+        </div>
+        <span class="page-badge">Page 2 of 4</span>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Dropbox Input Subfolder (<code>${params.input_dir}</code>)</th>
+            <th>Config Parameter / Glob</th>
+            <th>File Contents</th>
+            <th>Downstream Steps Fed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>06_index_bam/</code></td>
+            <td><code>input_bam = ".../06_index_bam/*.bam"</code></td>
+            <td>Deduplicated, MAPQ-filtered <code>.bam</code> + <code>.bam.bai</code></td>
+            <td><strong>Step c1:</strong> <code>MACS2_CALLPEAK</code></td>
+          </tr>
+          <tr>
+            <td><code>07_homer/tag_dir/</code></td>
+            <td><code>input_tagdirs = ".../07_homer/tag_dir/*"</code></td>
+            <td>Sample HOMER Tag Directories (<code>&lt;sample_id&gt;/</code>)</td>
+            <td><strong>Steps c2, e, f:</strong> HOMER FindPeaks, AnnotatePeaks, DiffPeaks</td>
+          </tr>
+          <tr>
+            <td><code>08_bigwig/{deepTools,UCSC}/</code></td>
+            <td><code>bigwig_source = "deepTools"</code> (or <code>"UCSC"</code>)</td>
+            <td>RPKM (<code>deepTools</code>) or UCSC (<code>bedGraphToBigWig</code>) <code>.bw</code></td>
+            <td><strong>Step g:</strong> <code>DEEPTOOLS_METAPEAK</code> tornado heatmaps</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="grid-2" style="margin-bottom: 16px;">
+        <div class="card blue">
+          <h3>Step c1: MACS2 Peak Calling (<code>MACS2_CALLPEAK</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_macs2_callpeak = true</code></li>
+            <li><strong>Command:</strong> <code>macs2 callpeak -t &lt;id&gt;.bam -f BAMPE -g ce -q 0.01</code></li>
+            <li><strong>Narrow vs. Broad:</strong> Set <code>macs2_broad = true</code> for spreading histone domains (e.g., <code>H3K27me3</code>) or <code>false</code> for sharp marks (<code>H3K4me3</code>, TFs).</li>
+            <li><strong>Published:</strong> <code>09_peaks/macs2/&lt;id&gt;_peaks.narrowPeak</code>, <code>_peaks.xls</code>, <code>_summits.bed</code></li>
+          </ul>
+        </div>
+        <div class="card orange">
+          <h3>Step c2: HOMER Peak Calling (<code>HOMER_FINDPEAKS</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_homer_findpeaks = true</code></li>
+            <li><strong>Command:</strong> <code>findPeaks &lt;tagdir&gt; -style factor -o &lt;id&gt;_peaks.txt &amp;&amp; pos2bed.pl</code></li>
+            <li><strong>Style Selection:</strong> Supports <code>homer_peak_style = "factor"</code> or <code>"histone"</code>.</li>
+            <li><strong>Published:</strong> <code>09_peaks/homer/&lt;id&gt;_peaks.txt</code> &amp; <code>&lt;id&gt;_peaks.bed</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card green">
+          <h3>Step d1: Replicate Peak Filtering (<code>BEDTOOLS_MERGE_REPLICATES</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_merge_replicate_peaks = true</code> (uses <code>active_peak_caller = "macs2"</code> or <code>"homer"</code>)</li>
+            <li><strong>Logic:</strong> Groups sample peak BEDs by <code>condition</code>, merges overlapping coordinates via <code>bedtools sort | bedtools merge -c 4 -o count_distinct</code>, and retains intervals present in <code>&ge; min_replicate_overlap</code> replicates (default <code>2</code>).</li>
+            <li><strong>Published:</strong> <code>10_merged_peaks/replicates/&lt;condition&gt;_replicated_peaks.bed</code></li>
+          </ul>
+        </div>
+        <div class="card green">
+          <h3>Step d2: Master Peak Union per Target (<code>BEDTOOLS_MERGE_MASTER</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_merge_master_peaks = true</code></li>
+            <li><strong>Logic:</strong> Automatically excludes <code>IgG</code> controls, groups condition peaks by <code>target</code> (e.g., all <code>H3K4me3</code> conditions together, all <code>H3K27me3</code> conditions together), and merges into an inclusive master coordinate list.</li>
+            <li><strong>Published:</strong> <code>10_merged_peaks/master/&lt;target&gt;_master_peaks.bed</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Walker Lab • UMass Chan Medical School</span>
+      <span>Phase 3: Peak Calling &amp; Replicate Consensus</span>
+    </div>
+  </section>
+
+  <!-- ==================== PAGE 3 ==================== -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <div>
+          <h1>3. Phase 4: Peak Quantification, Differential Binding &amp; Tornado Plots</h1>
+          <div class="subtitle">Measuring Signal Across Master Peaks (Step e), Statistical Contrasts (Step f), and Metapeak Visualization (Step g)</div>
+        </div>
+        <span class="page-badge">Page 3 of 4</span>
+      </div>
+
+      <div class="card orange" style="margin-bottom: 16px;">
+        <h3>Step e: Peak-by-Peak Quantification &amp; Gene Annotation (<code>HOMER_ANNOTATEPEAKS</code>)</h3>
+        <ul>
+          <li><strong>Toggle &amp; Input:</strong> <code>run_homer_annotatepeaks = true</code> | Combines <code>&lt;target&gt;_master_peaks.bed</code> + all target Tag Directories (<code>07_homer/tag_dir/*</code>).</li>
+          <li><strong>Command:</strong> <code>annotatePeaks.pl &lt;target&gt;_master_peaks.bed ce11 -size given -cpu 4 -d &lt;sample1_tagdir&gt; &lt;sample2_tagdir&gt; ... &gt; &lt;target&gt;_annotated_peaks.txt</code></li>
+          <li><strong>Key Outputs in <code>11_peak_quantification/&lt;target&gt;_annotated_peaks.txt</code>:</strong>
+            Nearest gene name &amp; description, <code>Distance to TSS</code>, genomic feature class (<code>Promoter-TSS</code>, <code>Exon</code>, <code>Intron</code>, <code>Intergenic</code>), and depth-normalized tag counts (reads per 10M) for every sample across the exact width of each master peak (<code>-size given</code>).
+          </li>
+          <li><strong>Optional Width Normalization:</strong> Run <code>bin/normalize_homer_peaks.py</code> to append length-normalized <code>*_per_kb</code> columns when comparing peaks of different widths.</li>
+        </ul>
+      </div>
+
+      <div class="grid-2">
+        <div class="card red">
+          <h3>Step f: Differential Peak Calling (<code>HOMER_GETDIFFERENTIALPEAKS</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_homer_diffpeaks = true</code></li>
+            <li><strong>Configured Contrasts (<code>params.diff_contrasts</code>):</strong>
+              Pairs treatment vs. background conditions per target (e.g., <code>EV_INT_H3K4me3</code> vs. <code>N2_H3K4me3</code>).
+            </li>
+            <li><strong>Command:</strong>
+              <code>getDifferentialPeaksReplicates.pl -t &lt;treat_tagdirs&gt; -b &lt;bg_tagdirs&gt; -p &lt;target&gt;_master_peaks.bed -genome ce11 -all</code>
+            </li>
+            <li><strong>Statistical Output:</strong> Runs DESeq2 across biological replicates and outputs fold change, raw <em>p</em>-value, and Benjamini–Hochberg adjusted <strong>FDR</strong> for all master peaks.</li>
+            <li><strong>Published:</strong> <code>12_differential_peaks/&lt;contrast_id&gt;_differential_peaks.txt</code></li>
+          </ul>
+        </div>
+
+        <div class="card cyan">
+          <h3>Step g: Metapeak &amp; Tornado Heatmaps (<code>DEEPTOOLS_METAPEAK</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_deeptools_metapeak = true</code></li>
+            <li><strong>Signal Source:</strong> Automatically selects <code>08_bigwig/deepTools/*.bw</code> (RPKM) or <code>08_bigwig/UCSC/*.bw</code> via <code>params.bigwig_source</code>.</li>
+            <li><strong>Stage 1 (<code>computeMatrix reference-point</code>):</strong> Aligns all target BigWig tracks on <code>&lt;target&gt;_master_peaks.bed</code> centers (<code>--referencePoint center -b 2000 -a 2000</code>).</li>
+            <li><strong>Stage 2 (<code>plotHeatmap</code>):</strong> Renders top summary profile curves and bottom per-peak sorted heatmaps (<code>--colorMap inferno</code>).</li>
+            <li><strong>Published:</strong> <code>13_metapeak_plots/&lt;target&gt;_metapeak_heatmap.pdf</code> &amp; <code>_matrix.mat.gz</code></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Walker Lab • UMass Chan Medical School</span>
+      <span>Phase 4 (Steps e–g): Quantification, Statistics &amp; Tornado Heatmaps</span>
+    </div>
+  </section>
+
+  <!-- ==================== PAGE 4 ==================== -->
+  <section class="slide">
+    <div>
+      <div class="slide-header">
+        <div>
+          <h1>4. Phase 4: Motif Discovery, Automated QC Plots &amp; Pipeline Execution</h1>
+          <div class="subtitle">Enriched Sequence Motifs (Step h), Publication Summary Figures (Step i), and One-Command Execution</div>
+        </div>
+        <span class="page-badge">Page 4 of 4</span>
+      </div>
+
+      <div class="grid-2" style="margin-bottom: 16px;">
+        <div class="card purple">
+          <h3>Step h1: HOMER Motif Discovery (<code>HOMER_FINDMOTIFSGENOME</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_homer_findmotifs = true</code></li>
+            <li><strong>Command:</strong> <code>findMotifsGenome.pl &lt;target&gt;_master_peaks.bed ce11 &lt;outdir&gt; -size 100</code></li>
+            <li><strong>Outputs:</strong> <code>14_motifs/homer/&lt;target&gt;_homer_motifs/</code> containing interactive web reports for <strong>known TF motifs</strong> (<code>knownResults.html</code>) and <strong><em>de novo</em> motifs</strong> (<code>homerResults.html</code>).</li>
+          </ul>
+        </div>
+        <div class="card orange">
+          <h3>Step h2: MEME Suite STREME Motifs (<code>MEME_STREME</code>)</h3>
+          <ul>
+            <li><strong>Toggle:</strong> <code>run_meme_streme = true</code></li>
+            <li><strong>Workflow:</strong> Finds peak centers (<code>awk</code>) &rarr; expands &plusmn;50 bp windows (<code>bedtools slop -l 50 -r 49</code>) &rarr; extracts FASTA (<code>bed2fasta</code>) &rarr; runs <code>streme --nmotifs 20 --dna</code>.</li>
+            <li><strong>Outputs:</strong> <code>14_motifs/meme_streme/&lt;target&gt;_streme_motifs/streme.html</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card blue" style="margin-bottom: 16px;">
+        <h3>Step i: Automated QC &amp; Biological Summary Suite (<code>run_summary_plots = true</code> &rarr; <code>15_summary_plots/</code>)</h3>
+        <ul>
+          <li><strong><code>01_peak_counts/</code> (<code>PLOT_PEAK_COUNTS</code>):</strong> Bar chart of per-sample MACS2/HOMER peaks, replicate-filtered peaks, and master union peak totals.</li>
+          <li><strong><code>02_genomic_features/</code> (<code>PLOT_ANNOTATED_SUMMARY</code>):</strong> Stacked bar chart, donut chart, and TSS distance histogram (<code>Promoter-TSS</code>, <code>Exon</code>, <code>Intron</code>, <code>Intergenic</code>).</li>
+          <li><strong><code>03_correlation_and_pca/</code> (<code>PLOT_ANNOTATED_SUMMARY</code>):</strong> Sample-to-sample Pearson correlation heatmap and PCA scatter plot on log<sub>2</sub>(Tag Count + 1).</li>
+          <li><strong><code>04_signal_distributions/</code> (<code>PLOT_ANNOTATED_SUMMARY</code>):</strong> Violin/boxplots of raw tag counts vs. width-normalized density (tags/kb) and peak width histograms.</li>
+          <li><strong><code>05_differential_plots/</code> (<code>PLOT_DIFFERENTIAL_VOLCANO_MA</code>):</strong> Volcano (&minus;log<sub>10</sub>FDR vs. log<sub>2</sub>FC) and MA plots with automated top differential gene labels.</li>
+        </ul>
+      </div>
+
+      <div class="card green">
+        <h3>Quick Start: Running &amp; Customizing from <code>Analysis_Run/</code></h3>
+        <pre><code># 1. Configure Analysis_Run/config/experiment.config (experiment = "cut_run103026A", bigwig_source = "deepTools")
+# 2. Launch pipeline (automatically mounts Dropbox &amp; resumes cached tasks):
+cd Analysis_Run &amp;&amp; ./run.sh</code></pre>
+      </div>
+    </div>
+
+    <div class="slide-footer">
+      <span>Walker Lab • UMass Chan Medical School</span>
+      <span>Phase 4 (Steps h–i): Motifs, Summary Plots &amp; Execution</span>
+    </div>
+  </section>
+
+</body>
+</html>

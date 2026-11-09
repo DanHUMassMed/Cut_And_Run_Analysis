@@ -8,7 +8,7 @@ This guide covers how to configure, preview, and execute the CUT&RUN downstream 
 
 1. **Nextflow (`>=25.10.4`):** Installed and available on your `PATH`.
 2. **Container Engine (Docker Recommended):** Docker Desktop (or Singularity/Apptainer/Conda via Nextflow `-profile`) must be running. The pipeline automatically mounts both the project repository and your `params.input_dir` into the containers.
-3. **Dropbox Offline Availability:** If reading input files from a Dropbox folder (e.g., `<dropbox_dir>/Bioinformatics_parent/cut_run103026`), ensure the required input subfolders (`05_mapq_filter/`, `06_index_bam/`, `07_ucsc/`, `08_bigwig/`) are set to **"Make available offline"** in Finder. The pipeline automatically warns and skips any `0B` online-only placeholder files.
+3. **Dropbox Offline Availability:** If reading input files from a Dropbox folder (e.g., `<dropbox_dir>/Bioinformatics_parent/cut_run103026A`), ensure the required input subfolders (`06_index_bam/`, `07_homer/`, `08_bigwig/`) are set to **"Make available offline"** in Finder. The pipeline automatically warns and skips any `0B` online-only placeholder files.
 
 ---
 
@@ -65,20 +65,20 @@ flowchart LR
     SAM120 --> ACTIVE_SAM
 
     ACTIVE_SAM --> TAG_TOGGLE{"run_homer_maketagdirectory?"}
-    TAG_TOGGLE -- "true" --> TAG["HOMER_MAKETAGDIRECTORY\n(06_tag_dir/*_tagdir/)"]
-    TAG_TOGGLE -- "false" --> TAG_EXIST["Existing input_tagdirs"]
+    TAG_TOGGLE -- "true" --> TAG["HOMER_MAKETAGDIRECTORY\n(07_homer/tag_dir/<id>/)"]
+    TAG_TOGGLE -- "false" --> TAG_EXIST["Existing input_tagdirs\n(07_homer/tag_dir/*)"]
 
     TAG --> UCSC_TOGGLE{"run_homer_makeucscfile?"}
     TAG_EXIST --> UCSC_TOGGLE
-    UCSC_TOGGLE -- "true" --> UCSC["HOMER_MAKEUCSCFILE\n(07_ucsc/<id>/<id>.ucsc.bedGraph.gz)"]
+    UCSC_TOGGLE -- "true" --> UCSC["HOMER_MAKEUCSCFILE\n(07_homer/UCSC/<id>.ucsc.bedGraph.gz)"]
 
     ACTIVE_SAM --> BAM_TOGGLE{"run_sam_to_bam?"}
-    BAM_TOGGLE -- "true" --> BAM["SAMTOOLS_VIEW_INDEX\n(05_bam/*.bam + *.bam.bai)"]
-    BAM_TOGGLE -- "false" --> BAM_EXIST["Existing input_bam"]
+    BAM_TOGGLE -- "true" --> BAM["SAMTOOLS_VIEW_INDEX\n(06_index_bam/*.bam + *.bam.bai)"]
+    BAM_TOGGLE -- "false" --> BAM_EXIST["Existing input_bam\n(06_index_bam/*.bam)"]
 
     BAM --> BW_TOGGLE{"run_deeptools_bamcoverage?"}
     BAM_EXIST --> BW_TOGGLE
-    BW_TOGGLE -- "true" --> BW["DEEPTOOLS_BAMCOVERAGE\n(08_bigwig/*.bw)"]
+    BW_TOGGLE -- "true" --> BW["DEEPTOOLS_BAMCOVERAGE\n(08_bigwig/deepTools/*.bw)"]
 ```
 
 ---
@@ -105,33 +105,28 @@ flowchart LR
 - **Purpose:** Creates a HOMER tag directory for each sample from the active SAM alignment channel (either the raw `05_mapq_filter/*.sam` or the $\le 120\text{ bp}$ filtered SAM if `run_fragment_filter_120bp = true`). Required for HOMER browser track generation, HOMER peak calling, peak annotation, and differential peak analysis.
 - **Configuration in `experiment.config`:**
   ```groovy
-  run_homer_maketagdirectory = true
-  // Used only when run_homer_maketagdirectory = false:
-  input_tagdirs              = "${params.outdir}/06_tag_dir/*_tagdir"
+  input_tagdirs              = "${params.input_dir}/07_homer/tag_dir/*"
   ```
 - **Underlying Command:**
   ```bash
-  makeTagDirectory <sample_id>_tagdir/ <sample>.sam
+  makeTagDirectory tag_dir/<sample_id>/ <sample>.sam
   ```
-- **Published Output:** `Analysis_Run/results/<experiment>/06_tag_dir/<sample_id>_tagdir/`
+- **Published Output:** `07_homer/tag_dir/<sample_id>/`
 
 ---
 
 ### Step `b` (Part 1): Making UCSC `bedGraph` Browser Tracks with HOMER
-- **Module:** `HOMER_MAKEUCSCFILE` (`modules/local/homer_makeucscfile/main.nf`)
+- **Module:** `HOMER_MAKEUCSCfile` (`modules/local/homer_makeucscfile/main.nf`)
 - **Purpose:** Generates gzipped UCSC `bedGraph` tracks from each sample's HOMER tag directory.
 - **Configuration in `experiment.config`:**
   ```groovy
-  run_homer_makeucscfile = true   // Set to false if 07_ucsc/*.ucsc.bedGraph.gz already exist
-  // Used when run_homer_makeucscfile = false:
-  input_ucsc_bedgraph    = "${params.input_dir}/07_ucsc/**/*.ucsc.bedGraph.gz"
+  input_ucsc_bedgraph    = "${params.input_dir}/07_homer/UCSC/*.ucsc.bedGraph.gz"
   ```
 - **Underlying Command:**
   ```bash
-  makeUCSCfile <sample_id>_tagdir/ -o auto
-  cp <sample_id>_tagdir/*.ucsc.bedGraph.gz <sample_id>.ucsc.bedGraph.gz
+  makeUCSCfile tag_dir/<sample_id>/ -o UCSC/<sample_id>.ucsc.bedGraph
   ```
-- **Published Output:** `Analysis_Run/results/<experiment>/07_ucsc/<sample_id>/<sample_id>.ucsc.bedGraph.gz`
+- **Published Output:** `07_homer/UCSC/<sample_id>.ucsc.bedGraph.gz`
 
 ---
 
@@ -140,9 +135,7 @@ flowchart LR
 - **Purpose:** Converts the coordinate-sorted SAM file into binary `.bam` format and creates its `.bam.bai` index. Required for `deepTools bamCoverage` and `MACS2 callpeak`.
 - **Configuration in `experiment.config`:**
   ```groovy
-  run_sam_to_bam = true   // Set to false if indexed BAMs already exist in input_bam
-  // Used when run_sam_to_bam = false:
-  input_bam      = "${params.outdir}/05_bam/*.bam"
+  input_bam      = "${params.input_dir}/06_index_bam/*.bam"
   ```
 - **Underlying Command:**
   ```bash
@@ -150,26 +143,24 @@ flowchart LR
   samtools index -@ <cpus> <sample_id>.bam
   ```
 - **Published Output:**
-  - `Analysis_Run/results/<experiment>/05_bam/<sample_id>.bam`
-  - `Analysis_Run/results/<experiment>/05_bam/<sample_id>.bam.bai`
+  - `06_index_bam/<sample_id>.bam`
+  - `06_index_bam/<sample_id>.bam.bai`
 
 ---
 
-### Step `b` (Part 3): Making `bigWig` Browser Tracks with `deepTools`
+### Step `b` (Part 3): Making `bigWig` Browser Tracks with `deepTools` & UCSC
 - **Module:** `DEEPTOOLS_BAMCOVERAGE` (`modules/local/deeptools_bamcoverage/main.nf`)
-- **Purpose:** Generates normalized `.bw` (`bigWig`) coverage tracks from indexed BAM files using `deepTools bamCoverage`.
+- **Purpose:** Generates normalized `.bw` (`bigWig`) coverage tracks from indexed BAM files using `deepTools bamCoverage` (`08_bigwig/deepTools/*.bw`) or from HOMER bedGraphs using `bedGraphToBigWig` (`08_bigwig/UCSC/*.bw`).
 - **Configuration in `experiment.config`:**
   ```groovy
-  run_deeptools_bamcoverage = false  // Set to true to generate new .bw files, or false to reuse input_bigwig
-  bamcoverage_norm          = "RPKM" // Normalization method (--normalizeUsing)
-  // Used when run_deeptools_bamcoverage = false:
-  input_bigwig              = "${params.input_dir}/08_bigwig/*.bw"
+  bigwig_source             = "deepTools" // 'deepTools' (RPKM) or 'UCSC' (bedGraphToBigWig)
+  input_bigwig              = "${params.input_dir}/08_bigwig/${params.bigwig_source}/*.bw"
   ```
 - **Underlying Command:**
   ```bash
   bamCoverage -b <sample_id>.bam --normalizeUsing RPKM -p <cpus> -o <sample_id>.bw
   ```
-- **Published Output:** `Analysis_Run/results/<experiment>/08_bigwig/<sample_id>.bw`
+- **Published Output:** `08_bigwig/deepTools/<sample_id>.bw` and `08_bigwig/UCSC/<sample_id>.bw`
 
 ---
 
@@ -179,10 +170,10 @@ Phase 3 implements Steps `c` and `d` from [`docs/Downstream_analysis_steps.md`](
 
 ```mermaid
 flowchart LR
-    BAM["05_bam/*.bam + .bai"] --> MACS2_TOGGLE{"run_macs2_callpeak?"}
+    BAM["06_index_bam/*.bam + .bai"] --> MACS2_TOGGLE{"run_macs2_callpeak?"}
     MACS2_TOGGLE -- "true" --> MACS2["MACS2_CALLPEAK\n(09_peaks/macs2/*_peaks.narrowPeak)"]
 
-    TAG["06_tag_dir/*_tagdir/"] --> HOMER_TOGGLE{"run_homer_findpeaks?"}
+    TAG["07_homer/tag_dir/*/"] --> HOMER_TOGGLE{"run_homer_findpeaks?"}
     HOMER_TOGGLE -- "true" --> HOMER_PK["HOMER_FINDPEAKS\n(09_peaks/homer/*_peaks.bed)"]
 
     MACS2 --> CALLER{"active_peak_caller\n('macs2' or 'homer')"}
@@ -294,7 +285,7 @@ Phase 4 implements Steps `e`, `f`, `g`, and `h` from [`docs/Downstream_analysis_
 ```mermaid
 flowchart LR
     MASTER["10_merged_peaks/master/\n<target>_master_peaks.bed"] --> ANNOT_TOGGLE{"run_homer_annotatepeaks?"}
-    TAG["06_tag_dir/*_tagdir/"] --> ANNOT_TOGGLE
+    TAG["07_homer/tag_dir/*/"] --> ANNOT_TOGGLE
     ANNOT_TOGGLE -- "true" --> ANNOT["HOMER_ANNOTATEPEAKS\n(11_peak_quantification/<target>_annotated_peaks.txt)"]
 
     MASTER --> DIFF_TOGGLE{"run_homer_diffpeaks?"}
@@ -302,7 +293,7 @@ flowchart LR
     DIFF_TOGGLE -- "true" --> DIFF["HOMER_GETDIFFERENTIALPEAKS\n(12_differential_peaks/<contrast_id>_differential_peaks.txt)"]
 
     MASTER --> META_TOGGLE{"run_deeptools_metapeak?"}
-    BW["08_bigwig/*.bw"] --> META_TOGGLE
+    BW["08_bigwig/<bigwig_source>/*.bw"] --> META_TOGGLE
     META_TOGGLE -- "true" --> METAPEAK["DEEPTOOLS_METAPEAK\n(13_metapeak_plots/<target>_metapeak_heatmap.pdf)"]
 
     MASTER --> MOTIF_H_TOGGLE{"run_homer_findmotifs?"}
@@ -370,7 +361,7 @@ flowchart LR
 
 ### Step `g`: Making Metapeak / Tornado Plots (`deepTools`)
 - **Module:** [`DEEPTOOLS_METAPEAK`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf)
-- **Purpose:** Computes signal matrices (`computeMatrix reference-point`) centered on `<target>_master_peaks.bed` across all BigWig tracks for that target (`08_bigwig/*.bw`) and renders tornado heatmaps (`plotHeatmap`).
+- **Purpose:** Computes signal matrices (`computeMatrix reference-point`) centered on `<target>_master_peaks.bed` across all BigWig tracks for that target (`08_bigwig/${params.bigwig_source}/*.bw`) and renders tornado heatmaps (`plotHeatmap`).
 - **Configuration in `experiment.config`:**
   ```groovy
   run_deeptools_metapeak   = true
@@ -497,14 +488,13 @@ From `Analysis_Run/`:
 
 ## 8. Common Recipes
 
-### Recipe 1: Generate Only HOMER Tag Directories & Indexed BAMs (Default for `cut_run103026`)
-Since `07_ucsc/` and `08_bigwig/` already exist in Dropbox for `cut_run103026`, the default `experiment.config` skips regenerating `bedGraph` and `bigWig` tracks and only builds the HOMER tag directories and indexed BAMs needed for peak calling:
+### Recipe 1: Standard Downstream Analysis from Dropbox Inputs (Default for `cut_run103026A`)
+Since `06_index_bam/`, `07_homer/tag_dir/`, and `08_bigwig/{deepTools,UCSC}/` already exist in Dropbox for `cut_run103026A`, the default `experiment.config` reads those inputs directly for peak calling, annotation, and metapeak plotting:
 ```groovy
-run_fragment_filter_120bp  = false
-run_homer_maketagdirectory = true
-run_homer_makeucscfile     = false
-run_sam_to_bam             = true
-run_deeptools_bamcoverage  = false
+bigwig_source             = "deepTools"
+input_bam                 = "${params.input_dir}/06_index_bam/*.bam"
+input_tagdirs             = "${params.input_dir}/07_homer/tag_dir/*"
+input_bigwig              = "${params.input_dir}/08_bigwig/${params.bigwig_source}/*.bw"
 ```
 
 ### Recipe 2: Re-compute Everything from $\le 120\text{ bp}$ Filtered TF Fragments

@@ -14,8 +14,8 @@ This guide explains how the CUT&RUN pipeline generates metapeak plots (also know
 The metapeak step takes two sets of inputs (loaded directly from Dropbox and `Analysis_Run/results/`) plus the sample metadata in [`Analysis_Run/config/samplesheet.csv`](../Analysis_Run/config/samplesheet.csv):
 
 ```text
-1. BigWig Signal Tracks (controlled by params.bigwig_source: "06_index_bam" or "08_bigwig")
-   ${params.input_dir}/${params.bigwig_source}/
+1. BigWig Signal Tracks (controlled by params.bigwig_source: "deepTools" or "UCSC")
+   ${params.input_dir}/08_bigwig/${params.bigwig_source}/
    ├── *.bw
    │   ├── L9254-0001-0001_S141_L004.bw     (EV_INT_H3K4me3)
    │   ├── L9254-0001-0002_S142_L004.bw     (EV_INT_H3K27me3)
@@ -23,8 +23,8 @@ The metapeak step takes two sets of inputs (loaded directly from Dropbox and `An
    │   ├── L9254-0001-0004_S66_L008.bw      (N2_H3K4me3)
    │   ├── L9254-0001-0005_S67_L008.bw      (N2_H3K27me3)
    │   └── L9254-0001-0006_S68_L008.bw      (EV_INT_MC_H3K4me3)
-   - "06_index_bam": BigWigs generated with `bamCoverage -b SAMPLE.bam --normalizeUsing RPKM -o SAMPLE.bw`
-   - "08_bigwig":    BigWigs generated with `bedGraphToBigWig "$UNZIPPED_BG" "$CHROM_SIZES" "$BIGWIG_OUT"`
+   - "deepTools": BigWigs generated with `bamCoverage -b SAMPLE.bam --normalizeUsing RPKM -o SAMPLE.bw` (in `08_bigwig/deepTools/`)
+   - "UCSC":      BigWigs generated with `bedGraphToBigWig "$UNZIPPED_BG" "$CHROM_SIZES" "$BIGWIG_OUT"` (in `08_bigwig/UCSC/`)
 
 2. Master Peak Regions per Target (input_peaks_bed = "${params.outdir}/10_merged_peaks/master/*_master_peaks.bed")
    Analysis_Run/results/<experiment>/10_merged_peaks/master/
@@ -38,7 +38,7 @@ The metapeak step takes two sets of inputs (loaded directly from Dropbox and `An
 
 ```mermaid
 flowchart LR
-    BW["BigWig Tracks\n(08_bigwig/*.bw)"] --> FILTER["Group by Target\n(Exclude IgG)"]
+    BW["BigWig Tracks\n(08_bigwig/<bigwig_source>/*.bw)"] --> FILTER["Group by Target\n(Exclude IgG)"]
     PEAKS["Master Peaks per Target\n(10_merged_peaks/master/<target>_master_peaks.bed)"] --> JOIN["Join by Target\n(e.g. H3K4me3, H3K27me3)"]
     FILTER --> JOIN
     JOIN --> CM["computeMatrix reference-point\n(<target>_matrix.mat.gz)"]
@@ -75,8 +75,8 @@ Analysis_Run/results/<experiment>/13_metapeak_plots/
 If you have already generated your master peak files (`10_merged_peaks/master/*_master_peaks.bed`), you can run **only** the metapeak step in seconds/minutes by turning off the other toggles in [`Analysis_Run/config/experiment.config`](../Analysis_Run/config/experiment.config):
 
 ```groovy
-// Choose which Dropbox BigWig directory to plot ('06_index_bam' or '08_bigwig')
-bigwig_source                  = "06_index_bam"
+// Choose which Dropbox 08_bigwig subfolder to plot ('deepTools' or 'UCSC')
+bigwig_source                  = "deepTools"
 
 // Turn off other peak analysis steps
 run_macs2_callpeak             = false
@@ -92,7 +92,7 @@ run_meme_streme                = false
 run_deeptools_metapeak         = true
 
 // Pre-existing inputs used automatically when upstream toggles are false:
-input_bigwig                   = "${params.input_dir}/${params.bigwig_source}/*.bw"
+input_bigwig                   = "${params.input_dir}/08_bigwig/${params.bigwig_source}/*.bw"
 input_peaks_bed                = "${params.outdir}/10_merged_peaks/master/*_master_peaks.bed"
 ```
 

@@ -148,15 +148,15 @@ Different proteins bind DNA in different shapes:
 ### E. Customizing Tornado Plots (Metapeak Heatmaps)
 In `experiment.config`, you can adjust the look and data source of your tornado plots:
 ```groovy
-bigwig_source             = "06_index_bam"  // '06_index_bam' (RPKM normalized) or '08_bigwig' (UCSC bedGraph)
+bigwig_source             = "deepTools"     // 'deepTools' (RPKM normalized) or 'UCSC' (UCSC bedGraph)
 metapeak_upstream         = 2000            // Distance (in DNA letters/bp) to show to the left of peak center
 metapeak_downstream       = 2000            // Distance (in DNA letters/bp) to show to the right of peak center
 metapeak_reference_point  = "center"        // Align peaks by their 'center', 'TSS' (start), or 'TES' (end)
 heatmap_colormap          = "inferno"       // Color palette: 'inferno', 'viridis', 'magma', 'Blues', 'RdYlBu_r'
 ```
 - **Which `bigwig_source` should I pick?**
-  - `"06_index_bam"` *(Recommended default)*: Uses RPKM-normalized tracks where signal is scaled for sequencing depth so samples with more or fewer total reads can be compared fairly.
-  - `"08_bigwig"`: Uses tracks converted directly from HOMER UCSC bedGraphs.
+  - `"deepTools"` *(Recommended default)*: Uses RPKM-normalized tracks (`08_bigwig/deepTools/*.bw`) where signal is scaled for sequencing depth so samples with more or fewer total reads can be compared fairly.
+  - `"UCSC"`: Uses tracks (`08_bigwig/UCSC/*.bw`) converted directly from HOMER UCSC bedGraphs.
 
 *(For advanced Tornado Plot tweaks—like sorting rows by a specific sample, fixing the color bar min/max, or grouping peaks into clusters—see [`MAKING_METAPEAK_PLOTS.md`](MAKING_METAPEAK_PLOTS.md)).*
 

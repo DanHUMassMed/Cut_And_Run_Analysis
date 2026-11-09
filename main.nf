@@ -24,7 +24,7 @@ def helpMessage() {
     Core Paths & Inputs:
       --experiment                  Experiment name (default: ${params.experiment})
       --input_dir                   Upstream Dropbox directory (default: ${params.input_dir})
-      --bigwig_source               Dropbox BigWig subfolder: '06_index_bam' or '08_bigwig' (default: ${params.bigwig_source})
+      --bigwig_source               Dropbox 08_bigwig subfolder: 'deepTools' or 'UCSC' (default: ${params.bigwig_source})
       --outdir                      Output directory for results (default: ${params.outdir})
       --samplesheet                 Sample metadata CSV (default: ${params.samplesheet})
 
@@ -107,7 +107,9 @@ workflow {
         error("params.experiment and params.input_dir do not have defaults and must be set in config/experiment.config.")
     }
 
-    def resolved_bigwig_glob = params.input_bigwig ?: "${params.input_dir}/${params.bigwig_source}/*.bw"
+    def resolved_bam_glob     = params.input_bam ?: "${params.input_dir}/06_index_bam/*.bam"
+    def resolved_tagdirs_glob = params.input_tagdirs ?: "${params.input_dir}/07_homer/tag_dir/*"
+    def resolved_bigwig_glob  = params.input_bigwig ?: "${params.input_dir}/08_bigwig/${params.bigwig_source}/*.bw"
 
     log.info """\
     ========================================================================
@@ -116,6 +118,8 @@ workflow {
      experiment                 : ${params.experiment}
      input_dir                  : ${params.input_dir}
      bigwig_source              : ${params.bigwig_source}
+     input_bam                  : ${resolved_bam_glob}
+     input_tagdirs              : ${resolved_tagdirs_glob}
      input_bigwig               : ${resolved_bigwig_glob}
      outdir                     : ${params.outdir}
      samplesheet                : ${params.samplesheet}
@@ -148,7 +152,7 @@ workflow {
     //
     def ch_bam_bai = params.run_macs2_callpeak
         ? channel
-            .fromPath(params.input_bam, checkIfExists: true)
+            .fromPath(resolved_bam_glob, checkIfExists: true)
             .filter { bam_file ->
                 if (bam_file.size() == 0) {
                     log.warn "Skipping 0-byte BAM file (Dropbox online-only placeholder?): ${bam_file}"
@@ -164,7 +168,7 @@ workflow {
         : channel.empty()
 
     //
-    // Resolve HOMER Tag Directories from Dropbox (07_ucsc/*) when HOMER steps are enabled
+    // Resolve HOMER Tag Directories from Dropbox (07_homer/tag_dir/*) when HOMER steps are enabled
     //
     def needs_tagdirs = (
         params.run_homer_findpeaks ||
@@ -173,7 +177,7 @@ workflow {
     )
     def ch_tagdirs = needs_tagdirs
         ? channel
-            .fromPath(params.input_tagdirs, type: 'dir', checkIfExists: true)
+            .fromPath(resolved_tagdirs_glob, type: 'dir', checkIfExists: true)
             .map { tagdir ->
                 def sample_id = extractSampleId(tagdir, ['_tagdir'])
                 [ buildMeta(sample_id, samplesheet_map), tagdir ]
@@ -181,7 +185,7 @@ workflow {
         : channel.empty()
 
     //
-    // Resolve BigWig files from Dropbox (06_index_bam/*.bw or 08_bigwig/*.bw) when metapeak plotting is enabled
+    // Resolve BigWig files from Dropbox (08_bigwig/deepTools/*.bw or 08_bigwig/UCSC/*.bw) when metapeak plotting is enabled
     //
     def ch_bigwig = params.run_deeptools_metapeak
         ? channel
