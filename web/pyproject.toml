@@ -1,0 +1,15 @@
+[project]
+name = "cutandrun-control-center"
+version = "0.1.0"
+description = "Web interface to modify config and launch/monitor CUT&RUN Nextflow pipeline"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115.0",
+    "uvicorn>=0.30.0",
+    "pydantic>=2.8.0",
+    "pytest>=8.0.0",
+]
+
+[tool.uv]
+package = false
