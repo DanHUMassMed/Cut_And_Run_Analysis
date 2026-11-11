@@ -3,9 +3,18 @@ process MACS2_CALLPEAK {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/macs2:2.2.9.1--py39hff71179_1'
-        : 'quay.io/biocontainers/macs2:2.2.9.1--py39hff71179_1'}"
+
+    container {
+        if (workflow.containerEngine in ['singularity', 'apptainer'] &&
+            !task.ext.singularity_pull_docker_container) {
+
+            return 'https://depot.galaxyproject.org/singularity/macs2:2.2.9.1--py39hff71179_1'
+        }
+
+        return task.arch == 'arm64'
+            ? 'community.wave.seqera.io/library/macs2_python_setuptools:0c1a054d6205dcdc'
+            : 'quay.io/biocontainers/macs2:2.2.9.1--py39hff71179_1'
+    }
 
     input:
     tuple val(meta), path(bam), path(bai)

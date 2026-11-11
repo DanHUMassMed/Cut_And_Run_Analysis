@@ -8,6 +8,7 @@ import os
 import re
 import signal
 import subprocess
+import time
 from pathlib import Path
 from typing import Any, AsyncGenerator, Optional
 
@@ -69,7 +70,7 @@ PROCESS_STREAM_RE = re.compile(
 
 
 def reconcile_from_trace_file() -> None:
-    if not CONFIG_PATH.exists():
+    if not CONFIG_PATH.exists() or state.start_time is None:
         return
     try:
         cfg = parse_experiment_config(CONFIG_PATH.read_text(encoding="utf-8"))
@@ -84,6 +85,9 @@ def reconcile_from_trace_file() -> None:
         if not trace_files:
             return
         latest_trace = trace_files[0]
+        # Ignore trace files created before the current run started
+        if latest_trace.stat().st_mtime < (state.start_time - 15):
+            return
         with open(latest_trace, "r", encoding="utf-8") as f:
             reader = csv.DictReader(f, delimiter="\t")
             for r in reader:
@@ -99,6 +103,12 @@ def reconcile_from_trace_file() -> None:
                 if status not in ("CACHED", "COMPLETED", "FAILED"):
                     status = "COMPLETED"
 
+                raw_exit = r.get("exit")
+                if raw_exit and raw_exit.isdigit() and int(raw_exit) != 2147483647:
+                    exit_code = int(raw_exit)
+                else:
+                    exit_code = 0 if status in ("COMPLETED", "CACHED") else None
+
                 task_data = {
                     "task_id": r.get("task_id") or task_hash,
                     "key": task_hash,
@@ -108,7 +118,7 @@ def reconcile_from_trace_file() -> None:
                     "tag": tag,
                     "hash": task_hash,
                     "status": status,
-                    "exit": int(r["exit"]) if r.get("exit") and r["exit"].isdigit() else 0,
+                    "exit": exit_code,
                     "duration": r.get("duration") or "",
                     "realtime_fmt": r.get("realtime") or "",
                     "cpu_percent": float(r["%cpu"].replace("%", "")) if r.get("%cpu") and r["%cpu"].replace("%", "").replace(".", "", 1).isdigit() else 0.0,
@@ -132,8 +142,12 @@ def update_stats() -> dict[str, Any]:
     failed = sum(
         1
         for t in state.tasks.values()
-        if t["status"] == "FAILED"
-        or (t.get("exit") is not None and t.get("exit") != 0)
+        if t["status"] in ("FAILED", "ABORTED")
+        or (
+            t["status"] not in ("SUBMITTED", "RUNNING", "CACHED")
+            and t.get("exit") is not None
+            and t.get("exit") not in (0, 2147483647)
+        )
     )
     percent = (
         (completed / total * 100)
@@ -395,7 +409,7 @@ async def start_pipeline(payload: PipelineStartPayload, background_tasks: Backgr
     # Reset progress tracking state
     state.tasks.clear()
     state.run_name = None
-    state.start_time = asyncio.get_event_loop().time()
+    state.start_time = time.time()
     state.end_time = None
     state.stats = {
         "total": 0,
@@ -412,30 +426,15 @@ async def start_pipeline(payload: PipelineStartPayload, background_tasks: Backgr
     weblog_cfg = ensure_weblog_config(port)
 
     # Prepare command with -ansi-log false and weblog config
-    if payload.resume:
-        cmd = [
-            "bash",
-            str(RUN_SH_PATH),
-            "-ansi-log",
-            "false",
-            "-c",
-            str(weblog_cfg),
-        ]
-    else:
-        cfg = parse_experiment_config(CONFIG_PATH.read_text(encoding="utf-8"))
-        cmd = [
-            "nextflow",
-            "-c",
-            "config/experiment.config",
-            "-c",
-            str(weblog_cfg),
-            "-ansi-log",
-            "false",
-            "run",
-            str(PIPELINE_DIR),
-            "-N",
-            cfg.email,
-        ]
+    cmd = [
+        "bash",
+        str(RUN_SH_PATH),
+        "true" if payload.resume else "false",
+        "-ansi-log",
+        "false",
+        "-c",
+        str(weblog_cfg),
+    ]
 
     try:
         proc = await asyncio.create_subprocess_exec(
@@ -483,6 +482,19 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
         task_key = task_hash or f"task_{task_id}"
         process_full = trace.get("process", "")
         proc_short = process_full.split(":")[-1] if ":" in process_full else process_full
+        status = trace.get("status", "SUBMITTED")
+
+        raw_exit = trace.get("exit")
+        exit_code: Optional[int] = None
+        if raw_exit is not None:
+            try:
+                parsed_exit = int(raw_exit)
+                # Nextflow initializes uncompleted tasks to Integer.MAX_VALUE (2147483647)
+                if parsed_exit != 2147483647 and status not in ("SUBMITTED", "RUNNING"):
+                    exit_code = parsed_exit
+            except (ValueError, TypeError):
+                exit_code = None
+
         task_data = {
             "task_id": task_id or task_key,
             "key": task_key,
@@ -491,8 +503,8 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
             "process_short": proc_short,
             "tag": trace.get("tag") or "",
             "hash": task_hash or "",
-            "status": trace.get("status", "SUBMITTED"),
-            "exit": trace.get("exit"),
+            "status": status,
+            "exit": exit_code,
             "realtime": trace.get("realtime"),
             "cpu_percent": trace.get("%cpu"),
             "peak_rss": trace.get("peak_rss"),
@@ -512,6 +524,8 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
 
     elif event == "started":
         state.run_name = run_name
+        if state.start_time is None:
+            state.start_time = time.time()
         update_stats()
         broadcast_msg = {
             "type": "run_started",

@@ -3,9 +3,18 @@ process DEEPTOOLS_METAPEAK {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ba/ba9641d61acf134c6b989b3af5f25bcd5aadb3faf692a41c00ba4cd25f99032e/data'
-        : 'community.wave.seqera.io/library/deeptools:3.5.6--511a2b05870b9ec3'}"
+
+    container {
+        if (workflow.containerEngine in ['singularity', 'apptainer'] &&
+            !task.ext.singularity_pull_docker_container) {
+
+            return 'https://community-cr-prod.seqera.io/docker/registry/v2/blobs/sha256/ba/ba9641d61acf134c6b989b3af5f25bcd5aadb3faf692a41c00ba4cd25f99032e/data'
+        }
+
+        return task.arch == 'arm64'
+            ? 'community.wave.seqera.io/library/deeptools:3.5.6--8f196e4fd4d940f7'
+            : 'community.wave.seqera.io/library/deeptools:3.5.6--511a2b05870b9ec3'
+    }
 
     input:
     tuple val(meta), path(peaks_bed), path(bigwigs)

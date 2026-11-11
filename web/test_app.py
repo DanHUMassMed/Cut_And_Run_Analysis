@@ -260,3 +260,90 @@ async def test_mixed_cached_and_submitted_no_collision():
     assert state.stats["completed"] == 8
 
 
+@pytest.mark.anyio
+async def test_running_tasks_with_sentinel_exit_not_failed():
+    from app import receive_pipeline_webhook, get_pipeline_status, state
+
+    state.tasks.clear()
+    state.run_name = "test_sentinel_run"
+
+    # Nextflow sends process_started with exit: 2147483647 (Integer.MAX_VALUE) for running tasks
+    running_payload = {
+        "event": "process_started",
+        "runName": "test_sentinel_run",
+        "trace": {
+            "task_id": 4,
+            "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
+            "process": "CUTANDRUN:HOMER_FINDPEAKS",
+            "tag": "sample_1",
+            "hash": "b4/d49d17",
+            "status": "RUNNING",
+            "exit": 2147483647,
+        },
+    }
+    await receive_pipeline_webhook(running_payload)
+
+    status = await get_pipeline_status()
+    assert state.stats["total"] == 1
+    assert state.stats["running"] == 1
+    assert state.stats["failed"] == 0, "Running tasks must NOT be counted as failed"
+    assert state.tasks["b4/d49d17"]["exit"] is None
+
+    # When the long-running task finishes, Nextflow sends exit: 0 and status: COMPLETED
+    complete_payload = {
+        "event": "process_completed",
+        "runName": "test_sentinel_run",
+        "trace": {
+            "task_id": 4,
+            "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
+            "process": "CUTANDRUN:HOMER_FINDPEAKS",
+            "tag": "sample_1",
+            "hash": "b4/d49d17",
+            "status": "COMPLETED",
+            "exit": 0,
+        },
+    }
+    await receive_pipeline_webhook(complete_payload)
+
+    status = await get_pipeline_status()
+    assert state.stats["running"] == 0
+    assert state.stats["completed"] == 1
+    assert state.stats["failed"] == 0
+    assert state.tasks["b4/d49d17"]["exit"] == 0
+
+
+@pytest.mark.anyio
+async def test_start_pipeline_command_args(monkeypatch):
+    from unittest.mock import AsyncMock, MagicMock
+    from app import start_pipeline, PipelineStartPayload, RUN_SH_PATH, state
+    from fastapi import BackgroundTasks
+
+    captured_cmds = []
+
+    async def mock_subprocess_exec(*cmd, **kwargs):
+        captured_cmds.append(list(cmd))
+        mock_proc = MagicMock()
+        mock_proc.pid = 99999
+        mock_proc.wait = AsyncMock(return_value=0)
+        mock_proc.stdout = AsyncMock()
+        mock_proc.stdout.readline = AsyncMock(return_value=b"")
+        return mock_proc
+
+    monkeypatch.setattr("asyncio.create_subprocess_exec", mock_subprocess_exec)
+    monkeypatch.setattr("app.stream_subprocess_output", AsyncMock())
+
+    # 1. Test resume=True
+    state.status = "idle"
+    state.process = None
+    res = await start_pipeline(PipelineStartPayload(resume=True), BackgroundTasks())
+    assert res["status"] == "started"
+    assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "true"]
+
+    # 2. Test resume=False
+    state.status = "idle"
+    state.process = None
+    res = await start_pipeline(PipelineStartPayload(resume=False), BackgroundTasks())
+    assert res["status"] == "started"
+    assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "false"]
+
+

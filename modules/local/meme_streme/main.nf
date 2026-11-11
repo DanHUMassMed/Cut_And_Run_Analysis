@@ -3,9 +3,18 @@ process MEME_STREME {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/meme:5.5.7--pl5321h1ca524f_3'
-        : 'quay.io/biocontainers/meme:5.5.7--pl5321h1ca524f_3'}"
+
+    container {
+        if (workflow.containerEngine in ['singularity', 'apptainer'] &&
+            !task.ext.singularity_pull_docker_container) {
+
+            return 'https://depot.galaxyproject.org/singularity/meme:5.5.7--pl5321h1ca524f_3'
+        }
+
+        return task.arch == 'arm64'
+            ? 'community.wave.seqera.io/library/meme:5.5.7--acac3b0e9dd288df'
+            : 'quay.io/biocontainers/meme:5.5.7--pl5321h1ca524f_3'
+    }
 
     input:
     tuple val(meta), path(peaks_bed)

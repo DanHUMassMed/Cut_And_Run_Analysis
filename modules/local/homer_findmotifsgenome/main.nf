@@ -3,9 +3,18 @@ process HOMER_FINDMOTIFSGENOME {
     label 'process_medium'
 
     conda "${moduleDir}/environment.yml"
-    container "${workflow.containerEngine in ['singularity', 'apptainer'] && !task.ext.singularity_pull_docker_container
-        ? 'https://depot.galaxyproject.org/singularity/homer:4.9.1--pl5.22.0_5'
-        : 'quay.io/biocontainers/homer:4.9.1--pl5.22.0_5'}"
+
+    container {
+        if (workflow.containerEngine in ['singularity', 'apptainer'] &&
+            !task.ext.singularity_pull_docker_container) {
+
+            return 'https://depot.galaxyproject.org/singularity/homer:4.9.1--pl5.22.0_5'
+        }
+
+        return task.arch == 'arm64'
+            ? 'community.wave.seqera.io/library/bioconductor-deseq2_bioconductor-edger_homer_samtools_pruned:bc0d14d491757f78'
+            : 'quay.io/biocontainers/homer:4.9.1--pl5.22.0_5'
+    }
 
     input:
     tuple val(meta), path(peaks_bed)
