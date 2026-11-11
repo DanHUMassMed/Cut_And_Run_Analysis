@@ -337,6 +337,8 @@ async def test_start_pipeline_command_args(monkeypatch):
     state.process = None
     res = await start_pipeline(PipelineStartPayload(resume=True), BackgroundTasks())
     assert res["status"] == "started"
+    assert "start_time" in res
+    assert res["start_time"] is not None
     assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "true"]
 
     # 2. Test resume=False
@@ -344,6 +346,57 @@ async def test_start_pipeline_command_args(monkeypatch):
     state.process = None
     res = await start_pipeline(PipelineStartPayload(resume=False), BackgroundTasks())
     assert res["status"] == "started"
+    assert "start_time" in res
+    assert res["start_time"] is not None
     assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "false"]
+
+
+@pytest.mark.anyio
+async def test_pipeline_timing_lifecycle():
+    import time
+    from app import receive_pipeline_webhook, get_pipeline_status, state
+
+    # Reset state
+    state.tasks.clear()
+    state.run_name = None
+    state.start_time = None
+    state.end_time = None
+
+    # Pipeline started webhook
+    await receive_pipeline_webhook({"event": "started", "runName": "timing_test_run"})
+    assert state.start_time is not None
+    assert state.end_time is None
+
+    # Status check reflects start_time
+    status = await get_pipeline_status()
+    assert status["start_time"] == state.start_time
+    assert status["end_time"] is None
+
+    # Pipeline completed webhook
+    await receive_pipeline_webhook({
+        "event": "completed",
+        "runName": "timing_test_run",
+        "metadata": {"workflow": {"success": True, "stats": {}}}
+    })
+    assert state.end_time is not None
+    assert state.end_time >= state.start_time
+
+    status_done = await get_pipeline_status()
+    assert status_done["start_time"] == state.start_time
+    assert status_done["end_time"] == state.end_time
+
+
+@pytest.mark.anyio
+async def test_index_serves_timer_without_cache():
+    from pathlib import Path
+    from app import get_index
+
+    resp = await get_index()
+    assert "no-store" in resp.headers.get("cache-control", "")
+    html = Path(resp.path).read_text(encoding="utf-8")
+    assert 'id="monitorElapsedTimer"' in html
+    assert 'id="monitorElapsedTime"' in html
+
+
 
 

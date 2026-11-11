@@ -186,7 +186,14 @@ weblog {{
 
 @app.get("/")
 async def get_index() -> FileResponse:
-    return FileResponse(STATIC_DIR / "index.html")
+    return FileResponse(
+        STATIC_DIR / "index.html",
+        headers={
+            "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+            "Pragma": "no-cache",
+            "Expires": "0",
+        },
+    )
 
 
 @app.get("/api/config")
@@ -381,6 +388,8 @@ async def stream_subprocess_output(proc: asyncio.subprocess.Process) -> None:
 
     state.return_code = rc
     state.status = "completed" if rc == 0 else "failed"
+    if state.end_time is None:
+        state.end_time = time.time()
     state.process = None
     update_stats()
 
@@ -394,6 +403,8 @@ async def stream_subprocess_output(proc: asyncio.subprocess.Process) -> None:
             "status": state.status,
             "stats": state.stats,
             "tasks": list(state.tasks.values()),
+            "start_time": state.start_time,
+            "end_time": state.end_time,
         })
 
 
@@ -445,10 +456,13 @@ async def start_pipeline(payload: PipelineStartPayload, background_tasks: Backgr
             preexec_fn=os.setsid,
         )
         state.process = proc
+        state.status = "running"
         state.task = asyncio.create_task(stream_subprocess_output(proc))
-        return {"status": "started", "pid": proc.pid}
+        return {"status": "started", "pid": proc.pid, "start_time": state.start_time}
     except Exception as e:
         state.status = "failed"
+        if state.end_time is None:
+            state.end_time = time.time()
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -460,6 +474,8 @@ async def stop_pipeline() -> dict[str, Any]:
     try:
         os.killpg(os.getpgid(state.process.pid), signal.SIGINT)
         state.status = "cancelled"
+        if state.end_time is None:
+            state.end_time = time.time()
         update_stats()
         return {"status": "stopping"}
     except ProcessLookupError:
@@ -531,6 +547,7 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
             "type": "run_started",
             "run_name": run_name,
             "stats": state.stats,
+            "start_time": state.start_time,
         }
         for q in list(state.subscribers):
             await q.put(broadcast_msg)
@@ -539,7 +556,8 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
         wf = payload.get("metadata", {}).get("workflow", {})
         success = wf.get("success", True)
         wf_stats = wf.get("stats", {})
-        state.end_time = asyncio.get_event_loop().time()
+        if state.end_time is None:
+            state.end_time = time.time()
 
         # Ingest any processes from Nextflow workflow stats that were cached or missed
         for proc in wf_stats.get("processes", []):
@@ -586,11 +604,11 @@ async def receive_pipeline_webhook(payload: dict[str, Any]) -> dict[str, str]:
             "success": success,
             "stats": state.stats,
             "tasks": list(state.tasks.values()),
+            "start_time": state.start_time,
+            "end_time": state.end_time,
         }
         for q in list(state.subscribers):
             await q.put(broadcast_msg)
-
-    return {"status": "ok"}
 
     return {"status": "ok"}
 
@@ -606,6 +624,8 @@ async def get_pipeline_status() -> dict[str, Any]:
         "run_name": state.run_name,
         "stats": state.stats,
         "tasks": list(state.tasks.values()),
+        "start_time": state.start_time,
+        "end_time": state.end_time,
     }
 
 
@@ -623,6 +643,8 @@ async def get_log_stream() -> StreamingResponse:
                 "run_name": state.run_name,
                 "stats": state.stats,
                 "tasks": list(state.tasks.values()),
+                "start_time": state.start_time,
+                "end_time": state.end_time,
             }
             yield f"data: {json.dumps(init_payload)}\n\n"
 

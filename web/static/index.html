@@ -1138,7 +1138,12 @@
             <h2 class="card-title">Pipeline Progress Monitor</h2>
             <p class="card-subtitle" id="monitorSubtitle">Real-time task tracking via Nextflow event pub/sub</p>
           </div>
-          <div style="display:flex; gap:0.6rem; align-items:center;">
+          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
+            <div id="monitorElapsedTimer" title="Pipeline execution elapsed time" style="display:inline-flex; align-items:center; gap:0.4rem; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; padding:0.25rem 0.65rem; border-radius:9999px; font-size:0.82rem; font-weight:600; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; transition:all 0.2s ease;">
+              <span style="font-size:0.9rem;">⏱️</span>
+              <span style="color:#64748b; font-weight:500;">Elapsed:</span>
+              <span id="monitorElapsedTime">00:00:00</span>
+            </div>
             <span id="monitorRunBadge" class="step-tag" style="display:none; font-size:0.8rem; padding:0.25rem 0.6rem;">Run: -</span>
             <span id="monitorProgressBadge" class="status-badge status-idle">Status: Idle</span>
           </div>
@@ -1908,6 +1913,9 @@
         });
         closeModal('launchModal');
         if (res.ok) {
+          const resData = await res.json().catch(() => ({}));
+          const startMs = resData.start_time ? resData.start_time * 1000 : Date.now();
+          startElapsedTimer(startMs);
           showToast(resume ? 'Pipeline started with cached resume (-resume)!' : 'Pipeline started fresh!', 'success');
           switchTab('logsTab', document.querySelectorAll('nav.tabs button')[3]);
         } else {
@@ -1935,6 +1943,7 @@
         const res = await fetch('/api/pipeline/stop', { method: 'POST' });
         closeModal('stopModal');
         if (res.ok) {
+          stopElapsedTimer(Date.now());
           showToast('Stop signal (SIGINT) sent to Nextflow pipeline', 'info');
         } else {
           showToast('Failed to stop pipeline', 'error');
@@ -1983,6 +1992,76 @@
       const min = Math.floor(sec / 60);
       const remSec = Math.round(sec % 60);
       return `${min}m ${remSec}s`;
+    }
+
+    let pipelineTimerInterval = null;
+    let pipelineStartTime = null;
+    let pipelineEndTime = null;
+    let isPipelineRunning = false;
+
+    function formatElapsedTime(ms) {
+      if (!ms || ms < 0 || isNaN(ms)) ms = 0;
+      const totalSecs = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSecs / 3600);
+      const minutes = Math.floor((totalSecs % 3600) / 60);
+      const seconds = totalSecs % 60;
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
+    }
+
+    function startElapsedTimer(startTimeMs) {
+      if (startTimeMs) {
+        pipelineStartTime = Number(startTimeMs);
+      } else if (!pipelineStartTime) {
+        pipelineStartTime = Date.now();
+      }
+      pipelineEndTime = null;
+      isPipelineRunning = true;
+
+      const timerEl = document.getElementById('monitorElapsedTime');
+      const containerEl = document.getElementById('monitorElapsedTimer');
+      if (containerEl) {
+        containerEl.style.borderColor = '#93c5fd';
+        containerEl.style.background = '#eff6ff';
+        containerEl.style.color = '#1e40af';
+      }
+
+      const updateTick = () => {
+        if (!isPipelineRunning) return;
+        const now = Date.now();
+        const elapsed = Math.max(0, now - pipelineStartTime);
+        if (timerEl) timerEl.textContent = formatElapsedTime(elapsed);
+      };
+
+      updateTick();
+      if (pipelineTimerInterval) clearInterval(pipelineTimerInterval);
+      pipelineTimerInterval = setInterval(updateTick, 1000);
+    }
+
+    function stopElapsedTimer(endTimeMs) {
+      isPipelineRunning = false;
+      if (pipelineTimerInterval) {
+        clearInterval(pipelineTimerInterval);
+        pipelineTimerInterval = null;
+      }
+      if (endTimeMs) {
+        pipelineEndTime = Number(endTimeMs);
+      } else if (!pipelineEndTime && pipelineStartTime) {
+        pipelineEndTime = Date.now();
+      }
+
+      const timerEl = document.getElementById('monitorElapsedTime');
+      const containerEl = document.getElementById('monitorElapsedTimer');
+      if (containerEl) {
+        containerEl.style.borderColor = '#cbd5e1';
+        containerEl.style.background = '#f8fafc';
+        containerEl.style.color = '#334155';
+      }
+
+      if (pipelineStartTime && pipelineEndTime && timerEl) {
+        const finalElapsed = Math.max(0, pipelineEndTime - pipelineStartTime);
+        timerEl.textContent = formatElapsedTime(finalElapsed);
+      }
     }
 
     function updateStatsUI(stats, runName) {
@@ -2084,6 +2163,12 @@
                 pBadge.className = 'status-badge status-' + data.status;
                 pBadge.textContent = 'Status: ' + data.status;
               }
+              if (data.status === 'running') {
+                startElapsedTimer(data.start_time ? data.start_time * 1000 : Date.now());
+              } else if (['completed', 'failed', 'cancelled'].includes(data.status) && data.start_time) {
+                pipelineStartTime = data.start_time * 1000;
+                stopElapsedTimer(data.end_time ? data.end_time * 1000 : undefined);
+              }
             }
           } else if (data.type === 'task_update') {
             if (data.task) {
@@ -2104,6 +2189,7 @@
               pBadge.className = 'status-badge status-running';
               pBadge.textContent = 'Status: running';
             }
+            startElapsedTimer(data.start_time ? data.start_time * 1000 : Date.now());
           } else if (data.type === 'run_completed' || data.type === 'process_exit') {
             if (data.tasks && data.tasks.length > 0) {
               data.tasks.forEach(t => {
@@ -2118,6 +2204,7 @@
               pBadge.className = 'status-badge status-' + data.status;
               pBadge.textContent = 'Status: ' + data.status;
             }
+            stopElapsedTimer(data.end_time ? data.end_time * 1000 : Date.now());
           } else if (data.type === 'log') {
             if (box.textContent === 'Connecting to log stream...') {
               box.textContent = '';
@@ -2167,9 +2254,19 @@
         if (data.status === 'running') {
           btnStart.style.display = 'none';
           btnStop.style.display = 'inline-flex';
+          const serverStartMs = data.start_time ? data.start_time * 1000 : null;
+          if (!isPipelineRunning || (serverStartMs && Math.abs(serverStartMs - (pipelineStartTime || 0)) > 1000)) {
+            startElapsedTimer(serverStartMs || Date.now());
+          }
         } else {
           btnStart.style.display = 'inline-flex';
           btnStop.style.display = 'none';
+          if (isPipelineRunning) {
+            stopElapsedTimer(data.end_time ? data.end_time * 1000 : Date.now());
+          } else if (data.start_time) {
+            pipelineStartTime = data.start_time * 1000;
+            stopElapsedTimer(data.end_time ? data.end_time * 1000 : undefined);
+          }
         }
       } catch (e) {}
     }
@@ -2371,6 +2468,7 @@
       loadConfig();
       loadSamplesheet();
       initLogStream();
+      pollStatus();
       setInterval(pollStatus, 2000);
 
       // Dismiss modals when clicking on background backdrop
