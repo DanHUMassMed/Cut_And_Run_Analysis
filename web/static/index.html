@@ -3,1078 +3,387 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CUT&RUN Pipeline Control Center</title>
-  <style>
-    :root {
-      --primary: #2563eb;
-      --primary-hover: #1d4ed8;
-      --bg: #f8fafc;
-      --card-bg: #ffffff;
-      --border: #e2e8f0;
-      --text: #0f172a;
-      --text-muted: #64748b;
-      --success: #16a34a;
-      --warning: #d97706;
-      --danger: #dc2626;
-      --radius: 8px;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    header {
-      background: #ffffff;
-      border-bottom: 1px solid var(--border);
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .brand h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: var(--text);
-    }
-
-    .brand span {
-      background: #eff6ff;
-      color: var(--primary);
-      padding: 0.2rem 0.6rem;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.8rem;
-      border-radius: 9999px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      text-transform: capitalize;
-    }
-
-    .status-idle { background: #f1f5f9; color: #475569; }
-    .status-running { background: #dbeafe; color: #1e40af; }
-    .status-completed { background: #dcfce7; color: #166534; }
-    .status-failed { background: #fee2e2; color: #991b1b; }
-
-    nav.tabs {
-      display: flex;
-      gap: 1rem;
-      padding: 0 2rem;
-      background: #ffffff;
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav.tabs button {
-      padding: 0.75rem 0.5rem;
-      background: none;
-      border: none;
-      border-bottom: 2px solid transparent;
-      font-size: 0.95rem;
-      font-weight: 500;
-      color: var(--text-muted);
-      cursor: pointer;
-    }
-
-    nav.tabs button.active {
-      color: var(--primary);
-      border-bottom-color: var(--primary);
-      font-weight: 600;
-    }
-
-    main {
-      max-width: 1200px;
-      margin: 1.5rem auto;
-      padding: 0 1.5rem;
-    }
-
-    .tab-content {
-      display: none;
-    }
-
-    .tab-content.active {
-      display: block;
-    }
-
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: 1.5rem;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-    }
-
-    .card-header {
-      margin-bottom: 1.25rem;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .card-subtitle {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-
-    .form-group label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #334155;
-    }
-
-    .form-group input[type="text"],
-    .form-group input[type="email"],
-    .form-group input[type="number"],
-    .form-group select {
-      padding: 0.6rem 0.75rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 6px;
-      font-size: 0.9rem;
-      background: #fff;
-    }
-
-    .toggle-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 1rem;
-    }
-
-    .toggle-card {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.9rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      background: #fafafa;
-    }
-
-    .toggle-info h4 {
-      font-size: 0.9rem;
-      font-weight: 600;
-    }
-
-    .toggle-info p {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-    }
-
-    .btn {
-      padding: 0.6rem 1.2rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      border-radius: 6px;
-      border: none;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      transition: background 0.15s;
-    }
-
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-primary:hover { background: var(--primary-hover); }
-    .btn-danger { background: var(--danger); color: white; }
-    .btn-secondary { background: #e2e8f0; color: #1e293b; }
-    .btn-secondary:hover { background: #cbd5e1; }
-    .btn-success { background: var(--success); color: white; }
-
-    .actions-bar {
-      display: flex;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      justify-content: flex-end;
-    }
-
-    .advanced-section {
-      background: #ffffff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.25rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .advanced-section-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 2px solid #f1f5f9;
-    }
-
-    .advanced-section-header .step-tag {
-      background: #e0f2fe;
-      color: #0369a1;
-      font-size: 0.72rem;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-    }
-
-    .field-hint {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 0.15rem;
-    }
-
-    .checkbox-label {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
-      font-weight: 500;
-      margin-top: 0.3rem;
-    }
-
-    /* Table styles */
-    .table-container {
-      overflow-x: auto;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.88rem;
-    }
-
-    th, td {
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    th {
-      background: #f8fafc;
-      font-weight: 600;
-      color: #475569;
-    }
-
-    td input, td select {
-      width: 100%;
-      padding: 0.4rem 0.5rem;
-      border: 1px solid #cbd5e1;
-      border-radius: 4px;
-      font-size: 0.85rem;
-    }
-
-    /* Terminal logs */
-    .log-box {
-      background: #0f172a;
-      color: #f8fafc;
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.85rem;
-      padding: 1rem;
-      border-radius: 6px;
-      height: 480px;
-      overflow-y: auto;
-      white-space: pre-wrap;
-      word-break: break-all;
-    }
-
-    /* Monitor Stat Cards */
-    .monitor-stats-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 0.85rem;
-    }
-    .stat-box {
-      background: #f8fafc;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-    .stat-number {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #0f172a;
-    }
-    .stat-label {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .task-status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      padding: 0.2rem 0.55rem;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-    .task-status-SUBMITTED { background: #f1f5f9; color: #475569; }
-    .task-status-RUNNING { background: #dbeafe; color: #1d4ed8; animation: pulse 1.5s infinite; }
-    .task-status-COMPLETED { background: #dcfce7; color: #15803d; }
-    .task-status-CACHED { background: #f3e8ff; color: #7e22ce; }
-    .task-status-FAILED { background: #fee2e2; color: #b91c1c; }
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
-
-    /* Preflight modal / checklist */
-    .checklist-item {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1rem;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .badge-ok { color: var(--success); font-weight: bold; }
-    .badge-warning { color: var(--warning); font-weight: bold; }
-    .badge-failed { color: var(--danger); font-weight: bold; }
-
-    /* Modal Backdrop & Dialog Box */
-    .modal-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(15, 23, 42, 0.65);
-      backdrop-filter: blur(3px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-    .modal-backdrop.open {
-      display: flex;
-      opacity: 1;
-    }
-    .modal-box {
-      background: #ffffff;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 540px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-      transform: translateY(12px) scale(0.98);
-      transition: transform 0.2s ease;
-      display: flex;
-      flex-direction: column;
-    }
-    .modal-backdrop.open .modal-box {
-      transform: translateY(0) scale(1);
-    }
-    .modal-header {
-      padding: 1.15rem 1.5rem;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #ffffff;
-    }
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin: 0;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .modal-close-btn {
-      background: transparent;
-      border: none;
-      font-size: 1.2rem;
-      color: #94a3b8;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0.25rem 0.5rem;
-      border-radius: 4px;
-    }
-    .modal-close-btn:hover {
-      color: #0f172a;
-      background: #f1f5f9;
-    }
-    .modal-body {
-      padding: 1.5rem;
-      max-height: 65vh;
-      overflow-y: auto;
-    }
-    .modal-footer {
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border);
-      background: #f8fafc;
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.75rem;
-    }
-
-    /* Toast Notifications */
-    #toastContainer {
-      position: fixed;
-      bottom: 1.5rem;
-      right: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-      z-index: 2000;
-      pointer-events: none;
-    }
-    .toast-item {
-      pointer-events: auto;
-      background: #0f172a;
-      color: #ffffff;
-      padding: 0.85rem 1.2rem;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      min-width: 280px;
-      max-width: 440px;
-      transform: translateY(16px);
-      opacity: 0;
-      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .toast-item.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    .toast-item.toast-success {
-      background: #064e3b;
-      border-left: 4px solid #10b981;
-    }
-    .toast-item.toast-error {
-      background: #7f1d1d;
-      border-left: 4px solid #ef4444;
-    }
-    .toast-item.toast-info {
-      background: #1e293b;
-      border-left: 4px solid #3b82f6;
-    }
-    .toast-item.toast-warning {
-      background: #78350f;
-      border-left: 4px solid #f59e0b;
-    }
-
-    /* Results View Styling */
-    .results-finder-banner {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #f1f5f9;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.9rem 1.25rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .results-path-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-    }
-
-    .results-path-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      color: var(--text-muted);
-    }
-
-    .results-path-code {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.85rem;
-      color: #1e293b;
-      word-break: break-all;
-    }
-
-    .results-subnav {
-      display: flex;
-      gap: 0.5rem;
-      margin-bottom: 1.25rem;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 0.75rem;
-      flex-wrap: wrap;
-    }
-
-    .results-subnav button {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 0.4rem 0.9rem;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #475569;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-    }
-
-    .results-subnav button.active {
-      background: #eff6ff;
-      border-color: var(--primary);
-      color: var(--primary);
-    }
-
-    .results-category-section {
-      margin-bottom: 2rem;
-    }
-
-    .results-category-header {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 0.85rem;
-      padding-bottom: 0.4rem;
-      border-bottom: 2px solid #e2e8f0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .qc-plots-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-      gap: 1.25rem;
-    }
-
-    .qc-plot-card {
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-      display: flex;
-      flex-direction: column;
-      transition: transform 0.15s, box-shadow 0.15s;
-    }
-
-    .qc-plot-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    }
-
-    .qc-plot-img-container {
-      background: #fafafa;
-      border-bottom: 1px solid var(--border);
-      height: 240px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-
-    .qc-plot-img-container img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      cursor: pointer;
-    }
-
-    .qc-plot-info {
-      padding: 0.85rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: #fff;
-    }
-
-    .qc-plot-title {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #1e293b;
-    }
-
-    .qc-plot-subtitle {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
-
-    .files-list-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 0.85rem;
-    }
-
-    .file-card-clickable {
-      display: flex;
-      align-items: center;
-      gap: 0.85rem;
-      padding: 0.85rem 1rem;
-      background: #fff;
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      text-decoration: none;
-      color: inherit;
-      transition: border-color 0.15s, background-color 0.15s;
-    }
-
-    .file-card-clickable:hover {
-      border-color: var(--primary);
-      background-color: #f8fafc;
-    }
-
-    .file-icon-badge {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 42px;
-      height: 42px;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 0.78rem;
-      flex-shrink: 0;
-    }
-
-    .badge-pdf { background: #fee2e2; color: #b91c1c; }
-    .badge-html { background: #e0f2fe; color: #0369a1; }
-
-    .file-card-details {
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .file-card-name {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #0f172a;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .file-card-sub {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-  </style>
+  <title>CUT&amp;RUN Pipeline Control Center</title>
+  <link rel="stylesheet" href="/static/css/styles.css">
 </head>
 <body>
-
   <header>
     <div class="brand">
-      <h1>CUT&RUN Pipeline Control Center</h1>
-      <span>v2.0</span>
+      <h1>CUT&amp;RUN Pipeline Control Center</h1>
+      <span class="brand-version">v2.0</span>
+      <button type="button" id="workspacePill" class="workspace-pill" title="Switch experiment workspace">
+        <span aria-hidden="true">📁</span>
+        <span id="workspaceBadgeLabel">Loading workspace...</span>
+        <span class="workspace-pill-action">Switch</span>
+      </button>
     </div>
-    <div style="display: flex; gap: 1rem; align-items: center;">
+    <div class="header-actions">
       <span id="pipelineStatusBadge" class="status-badge status-idle">Status: Idle</span>
-      <button id="btnPreflight" class="btn btn-secondary" onclick="checkPreflight()">Run Pre-Flight Check</button>
-      <button id="btnStartPipeline" class="btn btn-success" onclick="openLaunchModal()">Launch Pipeline</button>
-      <button id="btnStopPipeline" class="btn btn-danger" style="display:none;" onclick="openStopModal()">Stop Pipeline</button>
+      <button type="button" id="btnPreflight" class="btn btn-secondary">Run Pre-Flight Check</button>
+      <button type="button" id="btnStartPipeline" class="btn btn-success">Launch Pipeline</button>
+      <button type="button" id="btnStopPipeline" class="btn btn-danger" style="display:none;">Stop Pipeline</button>
+      <button type="button" id="btnQuitServer" class="btn btn-secondary" title="Shut down Control Center background server">Quit Server</button>
     </div>
   </header>
 
-  <nav class="tabs">
-    <button class="active" onclick="switchTab('configTab', this)">Configuration</button>
-    <button onclick="switchTab('samplesheetTab', this)">Samplesheet</button>
-    <button onclick="switchTab('contrastsTab', this)">Contrasts</button>
-    <button onclick="switchTab('logsTab', this)">Pipeline Monitor</button>
-    <button onclick="switchTab('resultsTab', this)">Results & QC</button>
+  <nav class="tabs" aria-label="Control Center Sections">
+    <button type="button" class="active" data-tab="configTab">Configuration</button>
+    <button type="button" data-tab="samplesheetTab">Samplesheet</button>
+    <button type="button" data-tab="contrastsTab">Contrasts</button>
+    <button type="button" data-tab="logsTab">Pipeline Monitor</button>
+    <button type="button" data-tab="resultsTab">Results &amp; QC</button>
   </nav>
 
   <main>
     <!-- TAB 1: CONFIGURATION -->
-    <div id="configTab" class="tab-content active">
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">1. Experiment & Paths</h2>
-          <p class="card-subtitle">General metadata and data locations on your laptop</p>
-        </div>
-        <div class="form-grid">
-          <div class="form-group">
-            <label for="cfg_email">Notification Email</label>
-            <input type="email" id="cfg_email" required>
-          </div>
-          <div class="form-group">
-            <label for="cfg_experiment">Experiment Name</label>
-            <input type="text" id="cfg_experiment" required>
-          </div>
-          <div class="form-group" style="grid-column: 1 / -1;">
-            <label for="cfg_input_dir">Dropbox Input Directory (Index BAMs, BigWigs, TagDirs)</label>
-            <input type="text" id="cfg_input_dir" required>
-          </div>
-          <div class="form-group">
-            <label for="cfg_bigwig_source">BigWig Source</label>
-            <select id="cfg_bigwig_source">
-              <option value="deepTools">deepTools (bamCoverage RPKM)</option>
-              <option value="UCSC">UCSC (bedGraphToBigWig)</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="cfg_active_peak_caller">Active Peak Caller for Merging</label>
-            <select id="cfg_active_peak_caller">
-              <option value="macs2">MACS2</option>
-              <option value="homer">HOMER</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="cfg_min_replicate_overlap">Min Replicate Overlap</label>
-            <input type="number" id="cfg_min_replicate_overlap" min="1" max="10">
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <h2 class="card-title">2. Pipeline Step Toggles</h2>
-          <p class="card-subtitle">Turn downstream analysis outputs on or off</p>
-        </div>
-        <div class="toggle-grid">
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>MACS2 Peak Calling</h4>
-              <p>Step c: Call sample-level peaks</p>
-            </div>
-            <input type="checkbox" id="cfg_run_macs2_callpeak">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>HOMER findPeaks</h4>
-              <p>Step c: Alternative peak caller</p>
-            </div>
-            <input type="checkbox" id="cfg_run_homer_findpeaks">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>Merge Replicate Peaks</h4>
-              <p>Step d1: Reproducible condition peaks</p>
-            </div>
-            <input type="checkbox" id="cfg_run_merge_replicate_peaks">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>Merge Master Peaks</h4>
-              <p>Step d2: Union peak space per target</p>
-            </div>
-            <input type="checkbox" id="cfg_run_merge_master_peaks">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>HOMER Peak Annotation</h4>
-              <p>Step e: Nearest genes & features</p>
-            </div>
-            <input type="checkbox" id="cfg_run_homer_annotatepeaks">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>Differential Peaks</h4>
-              <p>Step f: Pairwise statistical contrasts</p>
-            </div>
-            <input type="checkbox" id="cfg_run_homer_diffpeaks">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>deepTools Tornado Plots</h4>
-              <p>Step g: Metapeak signal profiles</p>
-            </div>
-            <input type="checkbox" id="cfg_run_deeptools_metapeak">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>HOMER Motif Discovery</h4>
-              <p>Step h1: De novo & known motifs</p>
-            </div>
-            <input type="checkbox" id="cfg_run_homer_findmotifs">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>MEME STREME Motifs</h4>
-              <p>Step h2: Ungapped motif discovery</p>
-            </div>
-            <input type="checkbox" id="cfg_run_meme_streme">
-          </div>
-          <div class="toggle-card">
-            <div class="toggle-info">
-              <h4>Automated QC & Summary Plots</h4>
-              <p>Step i: Volcano, PCA & bar charts</p>
-            </div>
-            <input type="checkbox" id="cfg_run_summary_plots">
-          </div>
-        </div>
-      </div>
-
-      <details class="card" open>
-        <summary style="font-size:1.05rem; font-weight:700; cursor:pointer; color:var(--text); padding-bottom:0.25rem;">
-          ⚙️ Advanced Tool Parameters (Fine-Tuning by Step)
-        </summary>
-        <p class="card-subtitle" style="margin-bottom:1.25rem;">
-          Configure peak caller thresholds, metapeak plot dimensions, motif discovery parameters, and volcano plot cutoffs.
-        </p>
-
-        <!-- Genome Reference -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Reference</span>
-            <span>Genome & Reference Assets</span>
+    <section id="configTab" class="tab-content active">
+      <form id="configForm" novalidate>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">1. Experiment &amp; Paths</h2>
+            <p class="card-subtitle">General metadata and data locations on your system</p>
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label for="cfg_genome_name">Genome Reference Name</label>
-              <input type="text" id="cfg_genome_name" placeholder="ce11, mm10, hg38">
-              <span class="field-hint">e.g. ce11, mm10, hg38</span>
-            </div>
-            <div class="form-group" style="grid-column: span 2;">
-              <label for="cfg_homer_dir">HOMER Reference Directory</label>
-              <input type="text" id="cfg_homer_dir">
-              <span class="field-hint">Path to homer genome directory</span>
-            </div>
-            <div class="form-group" style="grid-column: span 2;">
-              <label for="cfg_genome_fasta">Genome FASTA Path</label>
-              <input type="text" id="cfg_genome_fasta">
+              <label for="cfg_email">Notification Email</label>
+              <input type="email" id="cfg_email" name="email" autocomplete="email" autocorrect="off" autocapitalize="none" spellcheck="false" required>
             </div>
             <div class="form-group">
-              <label for="cfg_chrom_sizes">Chromosome Sizes File</label>
-              <input type="text" id="cfg_chrom_sizes">
+              <label for="cfg_experiment">Experiment Name</label>
+              <input type="text" id="cfg_experiment" name="experiment" pattern="[A-Za-z0-9][A-Za-z0-9._-]{0,127}" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+              <span class="field-hint">Alphanumeric start; letters, digits, '.', '_', '-'</span>
             </div>
-          </div>
-        </div>
-
-        <!-- Step c: MACS2 -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Step c</span>
-            <span>MACS2 Peak Calling Parameters</span>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cfg_macs2_gsize">MACS2 Genome Size (gsize)</label>
-              <input type="text" id="cfg_macs2_gsize" placeholder="ce, hs, mm, dm or number">
-              <span class="field-hint">Common: ce (C. elegans), hs (human), mm (mouse)</span>
+            <div class="form-group form-group-full">
+              <label for="cfg_input_dir">Dropbox Input Directory (Index BAMs, BigWigs, TagDirs)</label>
+              <input type="text" id="cfg_input_dir" name="input_dir" autocorrect="off" autocapitalize="none" spellcheck="false" required>
             </div>
             <div class="form-group">
-              <label for="cfg_macs2_format">MACS2 Read Format</label>
-              <select id="cfg_macs2_format">
-                <option value="BAMPE">BAMPE (Paired-End BAM)</option>
-                <option value="BAM">BAM (Single-End BAM)</option>
-                <option value="BED">BED</option>
+              <label for="cfg_bigwig_source">BigWig Source</label>
+              <select id="cfg_bigwig_source" name="bigwig_source">
+                <option value="deepTools">deepTools (bamCoverage RPKM)</option>
+                <option value="UCSC">UCSC (bedGraphToBigWig)</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="cfg_macs2_qvalue">MACS2 q-value Threshold</label>
-              <input type="number" id="cfg_macs2_qvalue" step="0.001" min="0.0001" max="1.0">
-              <span class="field-hint">Minimum FDR significance cutoff (default: 0.01)</span>
-            </div>
-            <div class="form-group">
-              <label>Broad Peak Calling</label>
-              <label class="checkbox-label" for="cfg_macs2_broad">
-                <input type="checkbox" id="cfg_macs2_broad">
-                <span>Enable Broad Peaks (--broad)</span>
-              </label>
-              <span class="field-hint">Recommended for diffuse marks (e.g. H3K27me3)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_macs2_broad_cutoff">Broad Peak Cutoff</label>
-              <input type="number" id="cfg_macs2_broad_cutoff" step="0.01" min="0.001" max="1.0">
-              <span class="field-hint">q-value cutoff for linking broad regions (default: 0.1)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step c & e: HOMER -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Step c & e</span>
-            <span>HOMER findPeaks & annotatePeaks</span>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cfg_homer_peak_style">HOMER Peak Style</label>
-              <select id="cfg_homer_peak_style">
-                <option value="factor">factor (Transcription Factors / sharp punctate marks)</option>
-                <option value="histone">histone (Broad histone domains / modifications)</option>
-              </select>
-              <span class="field-hint">Controls tag cluster sizing & distribution model</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_annotatepeaks_size">HOMER AnnotatePeaks Window Size</label>
-              <input type="text" id="cfg_annotatepeaks_size" placeholder="given or integer">
-              <span class="field-hint">Use 'given' for actual peak width, or numeric bp (e.g. 1000)</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Step g: deepTools -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Step g</span>
-            <span>deepTools Tornado Plots (computeMatrix & plotHeatmap)</span>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cfg_metapeak_upstream">Upstream Distance (bp)</label>
-              <input type="number" id="cfg_metapeak_upstream" step="100" min="100">
-              <span class="field-hint">Base pairs upstream of reference point (default: 2000)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_metapeak_downstream">Downstream Distance (bp)</label>
-              <input type="number" id="cfg_metapeak_downstream" step="100" min="100">
-              <span class="field-hint">Base pairs downstream of reference point (default: 2000)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_metapeak_reference_point">Reference Anchor Point</label>
-              <select id="cfg_metapeak_reference_point">
-                <option value="center">center (Peak center summit)</option>
-                <option value="TSS">TSS (Transcription Start Site)</option>
-                <option value="TES">TES (Transcription End Site)</option>
+              <label for="cfg_active_peak_caller">Active Peak Caller for Merging</label>
+              <select id="cfg_active_peak_caller" name="active_peak_caller">
+                <option value="macs2">MACS2</option>
+                <option value="homer">HOMER</option>
               </select>
             </div>
             <div class="form-group">
-              <label for="cfg_heatmap_colormap">Heatmap Colormap</label>
-              <select id="cfg_heatmap_colormap">
-                <option value="inferno">inferno (Default dark-to-yellow)</option>
-                <option value="viridis">viridis</option>
-                <option value="magma">magma</option>
-                <option value="plasma">plasma</option>
-                <option value="Blues">Blues</option>
-                <option value="RdBu_r">RdBu (Diverging Blue-Red)</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="cfg_heatmap_interpolation">Interpolation Method</label>
-              <select id="cfg_heatmap_interpolation">
-                <option value="nearest">nearest (Sharp crisp pixels)</option>
-                <option value="bilinear">bilinear (Smooth)</option>
-                <option value="bicubic">bicubic</option>
-                <option value="gaussian">gaussian</option>
-              </select>
+              <label for="cfg_min_replicate_overlap">Min Replicate Overlap</label>
+              <input type="number" id="cfg_min_replicate_overlap" name="min_replicate_overlap" min="1" max="100" required>
             </div>
           </div>
         </div>
 
-        <!-- Step h: Motifs -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Step h</span>
-            <span>Motif Discovery (HOMER & MEME STREME)</span>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">2. Pipeline Step Toggles</h2>
+            <p class="card-subtitle">Turn downstream analysis outputs on or off</p>
+          </div>
+          <div class="toggle-grid">
+            <label class="toggle-card" for="cfg_run_macs2_callpeak">
+              <span class="toggle-info"><h3>MACS2 Peak Calling</h3><p>Step c: Call sample-level peaks</p></span>
+              <input type="checkbox" id="cfg_run_macs2_callpeak" name="run_macs2_callpeak">
+            </label>
+            <label class="toggle-card" for="cfg_run_homer_findpeaks">
+              <span class="toggle-info"><h3>HOMER findPeaks</h3><p>Step c: Alternative peak caller</p></span>
+              <input type="checkbox" id="cfg_run_homer_findpeaks" name="run_homer_findpeaks">
+            </label>
+            <label class="toggle-card" for="cfg_run_merge_replicate_peaks">
+              <span class="toggle-info"><h3>Merge Replicate Peaks</h3><p>Step d1: Reproducible condition peaks</p></span>
+              <input type="checkbox" id="cfg_run_merge_replicate_peaks" name="run_merge_replicate_peaks">
+            </label>
+            <label class="toggle-card" for="cfg_run_merge_master_peaks">
+              <span class="toggle-info"><h3>Merge Master Peaks</h3><p>Step d2: Union peak space per target</p></span>
+              <input type="checkbox" id="cfg_run_merge_master_peaks" name="run_merge_master_peaks">
+            </label>
+            <label class="toggle-card" for="cfg_run_homer_annotatepeaks">
+              <span class="toggle-info"><h3>HOMER Peak Annotation</h3><p>Step e: Nearest genes &amp; features</p></span>
+              <input type="checkbox" id="cfg_run_homer_annotatepeaks" name="run_homer_annotatepeaks">
+            </label>
+            <label class="toggle-card" for="cfg_run_homer_diffpeaks">
+              <span class="toggle-info"><h3>Differential Peaks</h3><p>Step f: Pairwise statistical contrasts</p></span>
+              <input type="checkbox" id="cfg_run_homer_diffpeaks" name="run_homer_diffpeaks">
+            </label>
+            <label class="toggle-card" for="cfg_run_deeptools_metapeak">
+              <span class="toggle-info"><h3>deepTools Tornado Plots</h3><p>Step g: Metapeak signal profiles</p></span>
+              <input type="checkbox" id="cfg_run_deeptools_metapeak" name="run_deeptools_metapeak">
+            </label>
+            <label class="toggle-card" for="cfg_run_homer_findmotifs">
+              <span class="toggle-info"><h3>HOMER Motif Discovery</h3><p>Step h1: De novo &amp; known motifs</p></span>
+              <input type="checkbox" id="cfg_run_homer_findmotifs" name="run_homer_findmotifs">
+            </label>
+            <label class="toggle-card" for="cfg_run_meme_streme">
+              <span class="toggle-info"><h3>MEME STREME Motifs</h3><p>Step h2: Ungapped motif discovery</p></span>
+              <input type="checkbox" id="cfg_run_meme_streme" name="run_meme_streme">
+            </label>
+            <label class="toggle-card" for="cfg_run_summary_plots">
+              <span class="toggle-info"><h3>Automated QC &amp; Summary Plots</h3><p>Step i: Volcano, PCA &amp; bar charts</p></span>
+              <input type="checkbox" id="cfg_run_summary_plots" name="run_summary_plots">
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">3. Compute Resource Limits</h2>
+            <p class="card-subtitle">Upper bounds for Nextflow <code>process.resourceLimits</code> (caps per-task CPU, memory, and wall-time requests)</p>
           </div>
           <div class="form-grid">
             <div class="form-group">
-              <label for="cfg_homer_motif_size">HOMER Motif Window Size (bp)</label>
-              <input type="text" id="cfg_homer_motif_size" placeholder="100 or given">
-              <span class="field-hint">Region width centered on peaks to scan (default: 100)</span>
+              <label for="cfg_resource_cpus">Max CPUs (cores)</label>
+              <input type="number" id="cfg_resource_cpus" name="resource_cpus" min="1" max="1024" step="1" aria-describedby="cfg_resource_cpus_hint" required>
+              <span id="cfg_resource_cpus_hint" class="field-hint">Maximum CPU cores per process (default: 8)</span>
             </div>
-            <div class="form-group">
-              <label for="cfg_meme_slop_left">STREME Left Slop (bp)</label>
-              <input type="number" id="cfg_meme_slop_left" min="0">
-              <span class="field-hint">Distance left of peak center (default: 50)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_meme_slop_right">STREME Right Slop (bp)</label>
-              <input type="number" id="cfg_meme_slop_right" min="0">
-              <span class="field-hint">Distance right of peak center (default: 49)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_meme_streme_nmotifs">STREME Number of Motifs</label>
-              <input type="number" id="cfg_meme_streme_nmotifs" min="1" max="50">
-              <span class="field-hint">Maximum number of motifs to discover (default: 20)</span>
-            </div>
+            <fieldset class="form-group resource-fieldset">
+              <legend>Max Memory</legend>
+              <div class="input-with-unit">
+                <label for="cfg_resource_memory_value" class="visually-hidden">Memory amount</label>
+                <input type="number" id="cfg_resource_memory_value" name="resource_memory_value" min="0.01" step="any" aria-describedby="cfg_resource_memory_hint" required>
+                <label for="cfg_resource_memory_unit" class="visually-hidden">Memory unit</label>
+                <select id="cfg_resource_memory_unit" name="resource_memory_unit">
+                  <option value="KB">KB</option>
+                  <option value="MB">MB</option>
+                  <option value="GB" selected>GB</option>
+                  <option value="TB">TB</option>
+                </select>
+              </div>
+              <span id="cfg_resource_memory_hint" class="field-hint">Maximum RAM per process, e.g. 16.GB (default: 16.GB)</span>
+            </fieldset>
+            <fieldset class="form-group resource-fieldset">
+              <legend>Max Wall Time</legend>
+              <div class="input-with-unit">
+                <label for="cfg_resource_time_value" class="visually-hidden">Time amount</label>
+                <input type="number" id="cfg_resource_time_value" name="resource_time_value" min="0.01" step="any" aria-describedby="cfg_resource_time_hint" required>
+                <label for="cfg_resource_time_unit" class="visually-hidden">Time unit</label>
+                <select id="cfg_resource_time_unit" name="resource_time_unit">
+                  <option value="s">s (sec)</option>
+                  <option value="m">m (min)</option>
+                  <option value="h" selected>h (hours)</option>
+                  <option value="d">d (days)</option>
+                </select>
+              </div>
+              <span id="cfg_resource_time_hint" class="field-hint">Maximum runtime per process, e.g. 72.h (default: 72.h)</span>
+            </fieldset>
           </div>
         </div>
 
-        <!-- Step i: QC & Summary Plots -->
-        <div class="advanced-section">
-          <div class="advanced-section-header">
-            <span class="step-tag">Step i</span>
-            <span>Automated QC & Differential Volcano Plot Cutoffs</span>
-          </div>
-          <div class="form-grid">
-            <div class="form-group">
-              <label for="cfg_volcano_fdr_threshold">Volcano FDR Threshold</label>
-              <input type="number" id="cfg_volcano_fdr_threshold" step="0.01" min="0.0001" max="1.0">
-              <span class="field-hint">Horizontal dashed line significance cutoff (default: 0.05)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_volcano_log2fc_threshold">Volcano log2FC Threshold</label>
-              <input type="number" id="cfg_volcano_log2fc_threshold" step="0.1" min="0">
-              <span class="field-hint">Vertical dashed lines fold-change cutoff (default: 1.0)</span>
-            </div>
-            <div class="form-group">
-              <label for="cfg_volcano_top_n_labels">Volcano Top Gene Labels</label>
-              <input type="number" id="cfg_volcano_top_n_labels" min="0" max="100">
-              <span class="field-hint">Number of top differential gene names to annotate (default: 12)</span>
-            </div>
-          </div>
-        </div>
-      </details>
+        <details class="card advanced-details">
+          <summary>⚙️ Advanced Tool Parameters (Fine-Tuning by Step)</summary>
+          <p class="card-subtitle" style="margin-bottom:1.25rem;">
+            Configure peak caller thresholds, metapeak plot dimensions, motif discovery parameters, and volcano plot cutoffs.
+          </p>
 
-      <div class="actions-bar">
-        <button id="btnSaveConfig" class="btn btn-primary" onclick="saveConfig(this)">Save Configuration</button>
-      </div>
-    </div>
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Reference</span>
+              <span>Genome &amp; Reference Assets</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_genome_name">Genome Reference Name</label>
+                <input type="text" id="cfg_genome_name" name="genome_name" placeholder="ce11, mm10, hg38" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                <span class="field-hint">e.g. ce11, mm10, hg38</span>
+              </div>
+              <div class="form-group form-group-wide">
+                <label for="cfg_homer_dir">HOMER Reference Directory</label>
+                <input type="text" id="cfg_homer_dir" name="homer_dir" autocorrect="off" autocapitalize="none" spellcheck="false">
+                <span class="field-hint">Path to HOMER genome directory</span>
+              </div>
+              <div class="form-group form-group-wide">
+                <label for="cfg_genome_fasta">Genome FASTA Path</label>
+                <input type="text" id="cfg_genome_fasta" name="genome_fasta" autocorrect="off" autocapitalize="none" spellcheck="false">
+              </div>
+              <div class="form-group">
+                <label for="cfg_chrom_sizes">Chromosome Sizes File</label>
+                <input type="text" id="cfg_chrom_sizes" name="chrom_sizes" autocorrect="off" autocapitalize="none" spellcheck="false">
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Step c</span>
+              <span>MACS2 Peak Calling Parameters</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_macs2_gsize">MACS2 Genome Size (gsize)</label>
+                <input type="text" id="cfg_macs2_gsize" name="macs2_gsize" placeholder="ce, hs, mm, dm or number" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                <span class="field-hint">Common: ce (C. elegans), hs (human), mm (mouse)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_macs2_format">MACS2 Read Format</label>
+                <select id="cfg_macs2_format" name="macs2_format">
+                  <option value="BAMPE">BAMPE (Paired-End BAM)</option>
+                  <option value="BAM">BAM (Single-End BAM)</option>
+                  <option value="BED">BED</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cfg_macs2_qvalue">MACS2 q-value Threshold</label>
+                <input type="number" id="cfg_macs2_qvalue" name="macs2_qvalue" step="any" min="0.000001" max="1.0" required>
+                <span class="field-hint">Minimum FDR significance cutoff (default: 0.01)</span>
+              </div>
+              <div class="form-group">
+                <span style="font-size:0.85rem; font-weight:600; color:#334155;">Broad Peak Calling</span>
+                <label class="checkbox-label" for="cfg_macs2_broad">
+                  <input type="checkbox" id="cfg_macs2_broad" name="macs2_broad">
+                  <span>Enable Broad Peaks (--broad)</span>
+                </label>
+                <span class="field-hint">Recommended for diffuse marks (e.g. H3K27me3)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_macs2_broad_cutoff">Broad Peak Cutoff</label>
+                <input type="number" id="cfg_macs2_broad_cutoff" name="macs2_broad_cutoff" step="any" min="0.000001" max="1.0" required>
+                <span class="field-hint">q-value cutoff for linking broad regions (default: 0.1)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Step c &amp; e</span>
+              <span>HOMER findPeaks &amp; annotatePeaks</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_homer_peak_style">HOMER Peak Style</label>
+                <select id="cfg_homer_peak_style" name="homer_peak_style">
+                  <option value="factor">factor (Transcription Factors / sharp punctate marks)</option>
+                  <option value="histone">histone (Broad histone domains / modifications)</option>
+                </select>
+                <span class="field-hint">Controls tag cluster sizing &amp; distribution model</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_annotatepeaks_size">HOMER AnnotatePeaks Window Size</label>
+                <input type="text" id="cfg_annotatepeaks_size" name="annotatepeaks_size" placeholder="given or integer" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                <span class="field-hint">Use 'given' for actual peak width, or numeric bp (e.g. 1000)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Step g</span>
+              <span>deepTools Tornado Plots (computeMatrix &amp; plotHeatmap)</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_metapeak_upstream">Upstream Distance (bp)</label>
+                <input type="number" id="cfg_metapeak_upstream" name="metapeak_upstream" step="1" min="0" required>
+                <span class="field-hint">Base pairs upstream of reference point (default: 2000)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_metapeak_downstream">Downstream Distance (bp)</label>
+                <input type="number" id="cfg_metapeak_downstream" name="metapeak_downstream" step="1" min="0" required>
+                <span class="field-hint">Base pairs downstream of reference point (default: 2000)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_metapeak_reference_point">Reference Anchor Point</label>
+                <select id="cfg_metapeak_reference_point" name="metapeak_reference_point">
+                  <option value="center">center (Peak center summit)</option>
+                  <option value="TSS">TSS (Transcription Start Site)</option>
+                  <option value="TES">TES (Transcription End Site)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cfg_heatmap_colormap">Heatmap Colormap</label>
+                <select id="cfg_heatmap_colormap" name="heatmap_colormap">
+                  <option value="inferno">inferno (Default dark-to-yellow)</option>
+                  <option value="viridis">viridis</option>
+                  <option value="magma">magma</option>
+                  <option value="plasma">plasma</option>
+                  <option value="Blues">Blues</option>
+                  <option value="RdBu_r">RdBu (Diverging Blue-Red)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="cfg_heatmap_interpolation">Interpolation Method</label>
+                <select id="cfg_heatmap_interpolation" name="heatmap_interpolation">
+                  <option value="nearest">nearest (Sharp crisp pixels)</option>
+                  <option value="bilinear">bilinear (Smooth)</option>
+                  <option value="bicubic">bicubic</option>
+                  <option value="gaussian">gaussian</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Step h</span>
+              <span>Motif Discovery (HOMER &amp; MEME STREME)</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_homer_motif_size">HOMER Motif Window Size (bp)</label>
+                <input type="text" id="cfg_homer_motif_size" name="homer_motif_size" placeholder="100 or given" autocorrect="off" autocapitalize="none" spellcheck="false" required>
+                <span class="field-hint">Region width centered on peaks to scan (default: 100)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_meme_slop_left">STREME Left Slop (bp)</label>
+                <input type="number" id="cfg_meme_slop_left" name="meme_slop_left" min="0" required>
+                <span class="field-hint">Distance left of peak center (default: 50)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_meme_slop_right">STREME Right Slop (bp)</label>
+                <input type="number" id="cfg_meme_slop_right" name="meme_slop_right" min="0" required>
+                <span class="field-hint">Distance right of peak center (default: 49)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_meme_streme_nmotifs">STREME Number of Motifs</label>
+                <input type="number" id="cfg_meme_streme_nmotifs" name="meme_streme_nmotifs" min="1" max="200" required>
+                <span class="field-hint">Maximum number of motifs to discover (default: 20)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="advanced-section">
+            <div class="advanced-section-header">
+              <span class="step-tag">Step i</span>
+              <span>Automated QC &amp; Differential Volcano Plot Cutoffs</span>
+            </div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="cfg_volcano_fdr_threshold">Volcano FDR Threshold</label>
+                <input type="number" id="cfg_volcano_fdr_threshold" name="volcano_fdr_threshold" step="any" min="0.000001" max="1.0" required>
+                <span class="field-hint">Horizontal dashed line significance cutoff (default: 0.05)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_volcano_log2fc_threshold">Volcano log2FC Threshold</label>
+                <input type="number" id="cfg_volcano_log2fc_threshold" name="volcano_log2fc_threshold" step="any" min="0" required>
+                <span class="field-hint">Vertical dashed lines fold-change cutoff (default: 1.0)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_volcano_top_n_labels">Volcano Top Gene Labels</label>
+                <input type="number" id="cfg_volcano_top_n_labels" name="volcano_top_n_labels" min="0" max="500" required>
+                <span class="field-hint">Number of top differential gene names to annotate (default: 12)</span>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <div class="actions-bar">
+          <button type="submit" id="btnSaveConfig" class="btn btn-primary">Save Configuration</button>
+        </div>
+      </form>
+    </section>
 
     <!-- TAB 2: SAMPLESHEET -->
-    <div id="samplesheetTab" class="tab-content">
+    <section id="samplesheetTab" class="tab-content">
       <div class="card">
-        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card-header card-header-split">
           <div>
             <h2 class="card-title">Sample Sheet Manager</h2>
             <p class="card-subtitle">Samples, conditions, targets, and control pairs</p>
           </div>
-          <div style="display:flex; gap:0.5rem;">
-            <button class="btn btn-secondary" onclick="discoverSamples()">Auto-Scan BAMs</button>
-            <button class="btn btn-secondary" onclick="addSampleRow()">+ Add Sample</button>
+          <div class="btn-group">
+            <button type="button" id="btnDiscoverSamples" class="btn btn-secondary">Auto-Scan BAMs</button>
+            <button type="button" id="btnAddSampleRow" class="btn btn-secondary">+ Add Sample</button>
           </div>
         </div>
         <div class="table-container">
@@ -1094,20 +403,20 @@
           </table>
         </div>
         <div class="actions-bar">
-          <button id="btnSaveSamplesheet" class="btn btn-primary" onclick="saveSamplesheet(this)">Save Samplesheet</button>
+          <button type="button" id="btnSaveSamplesheet" class="btn btn-primary">Save Samplesheet</button>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- TAB 3: CONTRASTS -->
-    <div id="contrastsTab" class="tab-content">
+    <section id="contrastsTab" class="tab-content">
       <div class="card">
-        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card-header card-header-split">
           <div>
             <h2 class="card-title">Differential Contrasts Builder</h2>
             <p class="card-subtitle">Configure pairwise HOMER differential peak comparisons</p>
           </div>
-          <button class="btn btn-secondary" onclick="addContrastRow()">+ Add Contrast</button>
+          <button type="button" id="btnAddContrastRow" class="btn btn-secondary">+ Add Contrast</button>
         </div>
         <div class="table-container">
           <table id="contrastsTable">
@@ -1124,23 +433,22 @@
           </table>
         </div>
         <div class="actions-bar">
-          <button id="btnSaveContrasts" class="btn btn-primary" onclick="saveContrasts(this)">Save Contrasts</button>
+          <button type="button" id="btnSaveContrasts" class="btn btn-primary">Save Contrasts</button>
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- TAB 4: MONITOR / LOGS -->
-    <div id="logsTab" class="tab-content">
-      <!-- Live Pipeline Progress Monitor Card -->
-      <div class="card" style="margin-bottom: 1.5rem;">
-        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+    <section id="logsTab" class="tab-content">
+      <div class="card">
+        <div class="card-header card-header-split">
           <div>
             <h2 class="card-title">Pipeline Progress Monitor</h2>
             <p class="card-subtitle" id="monitorSubtitle">Real-time task tracking via Nextflow event pub/sub</p>
           </div>
-          <div style="display:flex; gap:0.6rem; align-items:center; flex-wrap:wrap;">
-            <div id="monitorElapsedTimer" title="Pipeline execution elapsed time" style="display:inline-flex; align-items:center; gap:0.4rem; background:#f8fafc; border:1px solid #cbd5e1; color:#334155; padding:0.25rem 0.65rem; border-radius:9999px; font-size:0.82rem; font-weight:600; font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; transition:all 0.2s ease;">
-              <span style="font-size:0.9rem;">⏱️</span>
+          <div class="monitor-badges">
+            <div id="monitorElapsedTimer" class="elapsed-pill" title="Pipeline execution elapsed time">
+              <span aria-hidden="true">⏱️</span>
               <span style="color:#64748b; font-weight:500;">Elapsed:</span>
               <span id="monitorElapsedTime">00:00:00</span>
             </div>
@@ -1149,18 +457,16 @@
           </div>
         </div>
 
-        <!-- Overall Progress Bar -->
-        <div style="margin: 1rem 0 1.5rem 0;">
-          <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; color:#334155; margin-bottom:0.4rem;">
+        <div class="progress-section">
+          <div class="progress-header">
             <span>Overall Task Completion</span>
             <span id="progressPercentText">0%</span>
           </div>
-          <div style="background:#e2e8f0; border-radius:8px; height:12px; overflow:hidden; position:relative;">
-            <div id="progressBarFill" style="background:var(--primary); width:0%; height:100%; transition:width 0.3s ease; border-radius:8px;"></div>
+          <div class="progress-track">
+            <div id="progressBarFill" class="progress-fill"></div>
           </div>
         </div>
 
-        <!-- Metric Counter Cards -->
         <div class="monitor-stats-grid">
           <div class="stat-box">
             <span class="stat-number" id="statTotal">0</span>
@@ -1184,13 +490,12 @@
           </div>
         </div>
 
-        <!-- Real-Time Task Table -->
         <div style="margin-top: 1.5rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.6rem;">
-            <h3 style="font-size:0.95rem; font-weight:700; color:#1e293b; margin:0;">Active & Completed Tasks</h3>
+          <div class="card-header-split" style="margin-bottom:0.6rem;">
+            <h3 style="font-size:0.95rem; font-weight:700; color:#1e293b;">Active &amp; Completed Tasks</h3>
             <span id="taskCountSummary" style="font-size:0.8rem; color:var(--text-muted);">No tasks recorded</span>
           </div>
-          <div class="table-container" style="max-height: 280px; overflow-y: auto;">
+          <div class="table-container table-scroll-y">
             <table id="taskMonitorTable">
               <thead>
                 <tr>
@@ -1214,1278 +519,247 @@
         </div>
       </div>
 
-      <!-- Execution Console Card -->
       <div class="card">
-        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card-header card-header-split">
           <div>
             <h2 class="card-title">Real-Time Execution Logs</h2>
-            <p class="card-subtitle">Clean standard output & error stream (linear mode)</p>
+            <p class="card-subtitle">Clean standard output &amp; error stream (linear mode)</p>
           </div>
-          <div style="display:flex; gap:0.5rem; align-items:center;">
-            <label style="font-size:0.85rem; color:#475569; display:inline-flex; align-items:center; gap:0.3rem; margin-right:0.5rem; cursor:pointer;">
+          <div class="btn-group">
+            <label class="checkbox-label" style="margin-top:0; margin-right:0.5rem; font-size:0.85rem; color:#475569;">
               <input type="checkbox" id="autoScrollLogs" checked> Auto-scroll
             </label>
-            <button class="btn btn-secondary" onclick="copyLogsToClipboard()">Copy Logs</button>
-            <button class="btn btn-secondary" onclick="clearLogsView()">Clear View</button>
+            <button type="button" id="btnCopyLogs" class="btn btn-secondary">Copy Logs</button>
+            <button type="button" id="btnClearLogs" class="btn btn-secondary">Clear View</button>
           </div>
         </div>
         <div class="log-box" id="logOutput">Connecting to log stream...</div>
       </div>
-    </div>
+    </section>
 
     <!-- TAB 5: RESULTS & QC -->
-    <div id="resultsTab" class="tab-content">
+    <section id="resultsTab" class="tab-content">
       <div class="card">
-        <div class="card-header" style="display:flex; justify-content:space-between; align-items:center;">
+        <div class="card-header card-header-split">
           <div>
-            <h2 class="card-title">Generated Results & QC Explorer</h2>
+            <h2 class="card-title">Generated Results &amp; QC Explorer</h2>
             <p class="card-subtitle">Curated view of summary plots, metapeak heatmaps, and motif reports</p>
           </div>
-          <div style="display:flex; gap:0.5rem;">
-            <button class="btn btn-secondary" onclick="loadResultsGallery()">Refresh</button>
-            <button class="btn btn-primary" onclick="openResultsInFinder()">📂 Open in Finder</button>
+          <div class="btn-group">
+            <button type="button" id="btnRefreshResults" class="btn btn-secondary">Refresh</button>
+            <button type="button" id="btnOpenFinder" class="btn btn-primary">📂 Open in Finder</button>
           </div>
         </div>
 
-        <!-- Finder Path Indicator -->
         <div class="results-finder-banner">
           <div class="results-path-info">
             <span class="results-path-label">Results Directory on Local File System</span>
             <span id="resultsDirDisplay" class="results-path-code">Loading directory path...</span>
           </div>
-          <button class="btn btn-secondary" style="font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="copyResultsPath()">Copy Path</button>
+          <button type="button" id="btnCopyResultsPath" class="btn btn-secondary btn-sm">Copy Path</button>
         </div>
 
-        <!-- Subnav Filter -->
-        <div class="results-subnav">
-          <button class="active" onclick="filterResultsCategory('all', this)">All Outputs</button>
-          <button onclick="filterResultsCategory('15_summary_plots', this)">Summary QC Plots (PNG)</button>
-          <button onclick="filterResultsCategory('13_metapeak_plots', this)">Metapeak Tornado Plots (PDF)</button>
-          <button onclick="filterResultsCategory('14_motifs', this)">Motif Discovery (HTML)</button>
+        <div class="results-subnav" role="group" aria-label="Results category filter">
+          <button type="button" class="active" data-category="all">All Outputs</button>
+          <button type="button" data-category="15_summary_plots">Summary QC Plots (PNG)</button>
+          <button type="button" data-category="13_metapeak_plots">Metapeak Tornado Plots (PDF)</button>
+          <button type="button" data-category="14_motifs">Motif Discovery (HTML)</button>
         </div>
 
-        <!-- 15_summary_plots Section -->
         <div id="section_summary_plots" class="results-category-section">
           <div class="results-category-header">
-            <span>📊 15_summary_plots (Automated QC Bar Charts, PCA, Distributions & Volcanoes)</span>
+            <span>📊 15_summary_plots (Automated QC Bar Charts, PCA, Distributions &amp; Volcanoes)</span>
             <span id="summaryCountBadge" style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);"></span>
           </div>
           <div id="summaryPlotsGrid" class="qc-plots-grid"></div>
         </div>
 
-        <!-- 13_metapeak_plots Section -->
         <div id="section_metapeak_plots" class="results-category-section">
           <div class="results-category-header">
-            <span>📈 13_metapeak_plots (deepTools Heatmap PDFs & Signal Profiles)</span>
+            <span>📈 13_metapeak_plots (deepTools Heatmap PDFs &amp; Signal Profiles)</span>
             <span id="metapeakCountBadge" style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);"></span>
           </div>
           <div id="metapeakGrid" class="files-list-grid"></div>
         </div>
 
-        <!-- 14_motifs Section -->
         <div id="section_motifs" class="results-category-section">
           <div class="results-category-header">
-            <span>🧬 14_motifs (HOMER & MEME STREME Primary HTML Reports)</span>
+            <span>🧬 14_motifs (HOMER &amp; MEME STREME Primary HTML Reports)</span>
             <span id="motifsCountBadge" style="font-size:0.8rem; font-weight:normal; color:var(--text-muted);"></span>
           </div>
           <div id="motifsGrid" class="files-list-grid"></div>
         </div>
-
       </div>
-    </div>
+    </section>
   </main>
 
-  <!-- LAUNCH MODAL -->
-  <div id="launchModal" class="modal-backdrop">
-    <div class="modal-box">
-      <div class="modal-header">
-        <h3 class="modal-title">🚀 Launch CUT&RUN Pipeline</h3>
-        <button class="modal-close-btn" onclick="closeModal('launchModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <p style="margin-top:0; color:#475569; font-size:0.9rem;">
-          Review current configuration before starting the Nextflow execution engine:
-        </p>
-        <div style="background:#f8fafc; border:1px solid var(--border); border-radius:8px; padding:1rem; margin-bottom:1.25rem; display:flex; flex-direction:column; gap:0.6rem; font-size:0.88rem;">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:#64748b; font-weight:600;">Experiment:</span>
-            <span id="modalExpName" style="font-weight:700; color:#0f172a; font-family:monospace;">-</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:#64748b; font-weight:600;">Active Peak Caller:</span>
-            <span id="modalActiveCaller" class="step-tag">-</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:#64748b; font-weight:600;">Sample Count:</span>
-            <span id="modalSampleCount" style="font-weight:700; color:#0f172a;">0 sample(s)</span>
-          </div>
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:#64748b; font-weight:600;">Differential Contrasts:</span>
-            <span id="modalContrastCount" style="font-weight:700; color:#0f172a;">0 contrast(s)</span>
-          </div>
+  <!-- NATIVE DIALOG: LAUNCH -->
+  <dialog id="launchModal" class="modal-dialog" closedby="any" aria-labelledby="launchModalTitle">
+    <div class="modal-header">
+      <h3 id="launchModalTitle" class="modal-title">🚀 Launch CUT&amp;RUN Pipeline</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="launchModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; margin-bottom:1rem; color:#475569; font-size:0.9rem;">
+        Review current configuration before starting the Nextflow execution engine:
+      </p>
+      <div class="launch-summary-box">
+        <div class="launch-summary-row">
+          <span style="color:#64748b; font-weight:600;">Experiment:</span>
+          <span id="modalExpName" style="font-weight:700; color:#0f172a; font-family:monospace;">-</span>
         </div>
+        <div class="launch-summary-row">
+          <span style="color:#64748b; font-weight:600;">Active Peak Caller:</span>
+          <span id="modalActiveCaller" class="step-tag">-</span>
+        </div>
+        <div class="launch-summary-row">
+          <span style="color:#64748b; font-weight:600;">Sample Count:</span>
+          <span id="modalSampleCount" style="font-weight:700; color:#0f172a;">0 sample(s)</span>
+        </div>
+        <div class="launch-summary-row">
+          <span style="color:#64748b; font-weight:600;">Differential Contrasts:</span>
+          <span id="modalContrastCount" style="font-weight:700; color:#0f172a;">0 contrast(s)</span>
+        </div>
+      </div>
 
-        <label class="checkbox-label" style="background:#f1f5f9; padding:0.85rem 1rem; border-radius:6px; border:1px solid #cbd5e1; display:flex; align-items:flex-start; gap:0.75rem; cursor:pointer;">
-          <input type="checkbox" id="launchResumeCheck" checked style="width:1.15rem; height:1.15rem; cursor:pointer; margin-top:0.15rem;">
+      <label class="resume-box" for="launchResumeCheck">
+        <input type="checkbox" id="launchResumeCheck" checked autofocus style="width:1.15rem; height:1.15rem; cursor:pointer; margin-top:0.15rem;">
+        <div>
+          <div style="font-weight:700; font-size:0.9rem; color:#0f172a;">Resume cached execution (-resume)</div>
+          <div style="font-size:0.78rem; color:#64748b;">Reuses completed tasks from previous runs to save time and compute.</div>
+        </div>
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="launchModal">Cancel</button>
+      <button type="button" id="btnConfirmLaunch" class="btn btn-success">🚀 Start Execution</button>
+    </div>
+  </dialog>
+
+  <!-- NATIVE DIALOG: STOP -->
+  <dialog id="stopModal" class="modal-dialog modal-dialog-sm" closedby="any" aria-labelledby="stopModalTitle">
+    <div class="modal-header">
+      <h3 id="stopModalTitle" class="modal-title" style="color:var(--danger);">⚠️ Stop Pipeline Execution</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="stopModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; margin-bottom:1rem; font-size:0.92rem; color:#334155;">
+        Are you sure you want to cancel the active pipeline run?
+      </p>
+      <div class="stop-warning-box">
+        An interrupt signal (SIGINT) will be sent to the Nextflow process. Completed intermediate tasks remain cached in <code>work/</code>, allowing you to resume later.
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="stopModal" autofocus>Keep Running</button>
+      <button type="button" id="btnConfirmStop" class="btn btn-danger">Stop Pipeline</button>
+    </div>
+  </dialog>
+
+  <!-- NATIVE DIALOG: PRE-FLIGHT -->
+  <dialog id="preflightModal" class="modal-dialog modal-dialog-lg" closedby="any" aria-labelledby="preflightModalTitle">
+    <div class="modal-header">
+      <h3 id="preflightModalTitle" class="modal-title">🔍 Pre-Flight Environment Validation</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="preflightModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="preflightModalBanner" class="preflight-banner">
+        Checking required directories, BAMs, and Nextflow engine...
+      </div>
+      <div id="preflightModalList" style="display:flex; flex-direction:column; gap:0.5rem; max-height:360px; overflow-y:auto;"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="preflightModal">Close</button>
+      <button type="button" id="preflightLaunchBtn" class="btn btn-success" style="display:none;">🚀 Proceed to Launch</button>
+    </div>
+  </dialog>
+
+  <!-- NATIVE DIALOG: WORKSPACE SWITCHER -->
+  <dialog id="workspaceModal" class="modal-dialog modal-dialog-lg" closedby="any" aria-labelledby="workspaceModalTitle">
+    <div class="modal-header">
+      <h3 id="workspaceModalTitle" class="modal-title">📁 Select Experiment Workspace (Analysis_Run)</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="workspaceModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="workspace-current-box">
+        <div style="font-size:0.78rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.03em;">
+          Active Analysis_Run Directory
+        </div>
+        <div id="workspaceCurrentPath" class="workspace-current-path">-</div>
+        <div id="workspaceCurrentBadges" class="workspace-badges-row"></div>
+      </div>
+
+      <div style="margin-top:1rem;">
+        <div style="font-size:0.85rem; font-weight:700; color:var(--text); margin-bottom:0.45rem;">
+          Recent Experiment Folders
+        </div>
+        <div id="workspaceRecentList" class="workspace-recent-list"></div>
+      </div>
+
+      <div style="margin-top:1.1rem; padding-top:1rem; border-top:1px solid var(--border);">
+        <label for="workspacePathInput" style="display:block; font-size:0.85rem; font-weight:700; color:var(--text); margin-bottom:0.4rem;">
+          Open or Initialize Folder Path
+        </label>
+        <div class="workspace-input-row">
+          <input type="text" id="workspacePathInput" placeholder="/path/to/Experiment/Analysis_Run" autocorrect="off" autocapitalize="none" spellcheck="false">
+          <button type="button" id="btnBrowseWorkspace" class="btn btn-secondary">Browse...</button>
+        </div>
+        <div id="workspaceModalError" class="workspace-error-banner" style="display:none;"></div>
+        <div id="workspaceBrowserPanel" class="workspace-browser-panel" style="display:none;">
+          <div class="workspace-browser-toolbar">
+            <div class="workspace-browser-nav-btns">
+              <button type="button" id="btnBrowserUp" class="btn btn-secondary btn-sm" title="Parent folder">⬆ Up</button>
+              <button type="button" id="btnBrowserHome" class="btn btn-secondary btn-sm" title="Home folder">🏠 Home</button>
+              <button type="button" id="btnBrowserRepoParent" class="btn btn-secondary btn-sm" title="Pipeline parent folder">📁 Workspace Root</button>
+            </div>
+            <span id="workspaceBrowserCurrent" class="workspace-browser-current">-</span>
+          </div>
+          <div id="workspaceBrowserList" class="workspace-browser-list"></div>
+        </div>
+        <label class="resume-box" for="workspaceInitCheck" style="margin-top:0.75rem;">
+          <input type="checkbox" id="workspaceInitCheck" style="width:1.05rem; height:1.05rem; cursor:pointer; margin-top:0.15rem;">
           <div>
-            <div style="font-weight:700; font-size:0.9rem; color:#0f172a;">Resume cached execution (-resume)</div>
-            <div style="font-size:0.78rem; color:#64748b;">Reuses completed tasks from previous runs to save time and compute.</div>
+            <div style="font-weight:600; font-size:0.86rem; color:#0f172a;">Initialize missing starter files</div>
+            <div style="font-size:0.78rem; color:#64748b;">Creates starter <code>config/experiment.config</code>, <code>config/samplesheet.csv</code>, and portable <code>run.sh</code> if not already present (existing files are preserved).</div>
           </div>
         </label>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('launchModal')">Cancel</button>
-        <button id="btnConfirmLaunch" class="btn btn-success" onclick="confirmLaunch()">🚀 Start Execution</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- STOP MODAL -->
-  <div id="stopModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width: 480px;">
-      <div class="modal-header">
-        <h3 class="modal-title" style="color:var(--danger);">⚠️ Stop Pipeline Execution</h3>
-        <button class="modal-close-btn" onclick="closeModal('stopModal')">✕</button>
-      </div>
-      <div class="modal-body">
-        <p style="margin-top:0; font-size:0.92rem; color:#334155;">
-          Are you sure you want to cancel the active pipeline run?
-        </p>
-        <div style="font-size:0.84rem; color:#881337; background:#fff1f2; border:1px solid #fecdd3; border-radius:6px; padding:0.85rem;">
-          An interrupt signal (SIGINT) will be sent to the Nextflow process. Completed intermediate tasks remain cached in <code>work/</code>, allowing you to resume later.
+        <div id="workspaceExpNameWrap" style="display:none; margin-top:0.65rem;">
+          <label for="workspaceExpNameInput" style="display:block; font-size:0.82rem; font-weight:600; color:#334155; margin-bottom:0.25rem;">
+            Experiment Name (optional for new config)
+          </label>
+          <input type="text" id="workspaceExpNameInput" placeholder="e.g. exp_cutrun_02" pattern="[A-Za-z0-9][A-Za-z0-9._-]{0,127}" autocorrect="off" autocapitalize="none" spellcheck="false">
         </div>
       </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('stopModal')">Keep Running</button>
-        <button id="btnConfirmStop" class="btn btn-danger" onclick="confirmStop()">Stop Pipeline</button>
-      </div>
     </div>
-  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="workspaceModal">Cancel</button>
+      <button type="button" id="btnConfirmWorkspace" class="btn btn-primary">Open Workspace</button>
+    </div>
+  </dialog>
 
-  <!-- PRE-FLIGHT MODAL -->
-  <div id="preflightModal" class="modal-backdrop">
-    <div class="modal-box" style="max-width: 580px;">
-      <div class="modal-header">
-        <h3 class="modal-title">🔍 Pre-Flight Environment Validation</h3>
-        <button class="modal-close-btn" onclick="closeModal('preflightModal')">✕</button>
-      </div>
-      <div class="modal-body" style="padding: 1rem 1.25rem;">
-        <div id="preflightModalBanner" style="margin-bottom:1rem; padding:0.75rem 1rem; border-radius:6px; font-weight:600; font-size:0.88rem;">
-          Checking required directories, BAMs, and Nextflow engine...
-        </div>
-        <div id="preflightModalList" style="display:flex; flex-direction:column; gap:0.5rem; max-height:360px; overflow-y:auto;"></div>
-      </div>
-      <div class="modal-footer">
-        <button class="btn btn-secondary" onclick="closeModal('preflightModal')">Close</button>
-        <button id="preflightLaunchBtn" class="btn btn-success" style="display:none;" onclick="closeModal('preflightModal'); openLaunchModal();">🚀 Proceed to Launch</button>
+  <!-- NATIVE DIALOG: QUIT SERVER -->
+  <dialog id="quitServerModal" class="modal-dialog modal-dialog-sm" closedby="any" aria-labelledby="quitServerModalTitle">
+    <div class="modal-header">
+      <h3 id="quitServerModalTitle" class="modal-title">⏻ Quit Control Center Server</h3>
+      <button type="button" class="modal-close-btn" data-close-dialog="quitServerModal" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="margin-top:0; margin-bottom:0.75rem; font-size:0.92rem; color:#334155;">
+        Stop the background Control Center web server?
+      </p>
+      <div id="quitServerRunningWarning" class="stop-warning-box" style="display:none;">
+        A Nextflow pipeline is currently running. Quitting the server will also send <code>SIGINT</code> to interrupt the active run.
       </div>
     </div>
-  </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" data-close-dialog="quitServerModal" autofocus>Cancel</button>
+      <button type="button" id="btnConfirmQuitServer" class="btn btn-danger">Quit Server</button>
+    </div>
+  </dialog>
 
   <!-- TOAST NOTIFICATION CONTAINER -->
-  <div id="toastContainer"></div>
+  <div id="toastContainer" role="status" aria-live="polite"></div>
 
-  <script>
-    let currentConfig = {};
-    let sampleRows = [];
-    let contrastRows = [];
-
-    function switchTab(tabId, el) {
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('nav.tabs button').forEach(b => b.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      el.classList.add('active');
-      if (tabId === 'resultsTab') loadResultsGallery();
-    }
-
-    async function loadConfig() {
-      try {
-        const res = await fetch('/api/config');
-        const data = await res.json();
-        currentConfig = data.config;
-
-        document.getElementById('cfg_email').value = currentConfig.email || '';
-        document.getElementById('cfg_experiment').value = currentConfig.experiment || '';
-        document.getElementById('cfg_input_dir').value = currentConfig.input_dir || '';
-        document.getElementById('cfg_bigwig_source').value = currentConfig.bigwig_source || 'deepTools';
-        document.getElementById('cfg_active_peak_caller').value = currentConfig.active_peak_caller || 'macs2';
-        document.getElementById('cfg_min_replicate_overlap').value = currentConfig.min_replicate_overlap || 2;
-
-        document.getElementById('cfg_run_macs2_callpeak').checked = !!currentConfig.run_macs2_callpeak;
-        document.getElementById('cfg_run_homer_findpeaks').checked = !!currentConfig.run_homer_findpeaks;
-        document.getElementById('cfg_run_merge_replicate_peaks').checked = !!currentConfig.run_merge_replicate_peaks;
-        document.getElementById('cfg_run_merge_master_peaks').checked = !!currentConfig.run_merge_master_peaks;
-        document.getElementById('cfg_run_homer_annotatepeaks').checked = !!currentConfig.run_homer_annotatepeaks;
-        document.getElementById('cfg_run_homer_diffpeaks').checked = !!currentConfig.run_homer_diffpeaks;
-        document.getElementById('cfg_run_deeptools_metapeak').checked = !!currentConfig.run_deeptools_metapeak;
-        document.getElementById('cfg_run_homer_findmotifs').checked = !!currentConfig.run_homer_findmotifs;
-        document.getElementById('cfg_run_meme_streme').checked = !!currentConfig.run_meme_streme;
-        document.getElementById('cfg_run_summary_plots').checked = !!currentConfig.run_summary_plots;
-
-        document.getElementById('cfg_genome_name').value = currentConfig.genome_name || 'ce11';
-        document.getElementById('cfg_homer_dir').value = currentConfig.homer_dir || '';
-        document.getElementById('cfg_genome_fasta').value = currentConfig.genome_fasta || '';
-        document.getElementById('cfg_chrom_sizes').value = currentConfig.chrom_sizes || '';
-
-        document.getElementById('cfg_macs2_gsize').value = currentConfig.macs2_gsize || 'ce';
-        document.getElementById('cfg_macs2_format').value = currentConfig.macs2_format || 'BAMPE';
-        document.getElementById('cfg_macs2_qvalue').value = currentConfig.macs2_qvalue || 0.01;
-        document.getElementById('cfg_macs2_broad').checked = !!currentConfig.macs2_broad;
-        document.getElementById('cfg_macs2_broad_cutoff').value = currentConfig.macs2_broad_cutoff ?? 0.1;
-
-        document.getElementById('cfg_homer_peak_style').value = currentConfig.homer_peak_style || 'factor';
-        document.getElementById('cfg_annotatepeaks_size').value = currentConfig.annotatepeaks_size || 'given';
-
-        document.getElementById('cfg_metapeak_upstream').value = currentConfig.metapeak_upstream ?? 2000;
-        document.getElementById('cfg_metapeak_downstream').value = currentConfig.metapeak_downstream ?? 2000;
-        document.getElementById('cfg_metapeak_reference_point').value = currentConfig.metapeak_reference_point || 'center';
-        document.getElementById('cfg_heatmap_colormap').value = currentConfig.heatmap_colormap || 'inferno';
-        document.getElementById('cfg_heatmap_interpolation').value = currentConfig.heatmap_interpolation || 'nearest';
-
-        document.getElementById('cfg_homer_motif_size').value = currentConfig.homer_motif_size || '100';
-        document.getElementById('cfg_meme_slop_left').value = currentConfig.meme_slop_left ?? 50;
-        document.getElementById('cfg_meme_slop_right').value = currentConfig.meme_slop_right ?? 49;
-        document.getElementById('cfg_meme_streme_nmotifs').value = currentConfig.meme_streme_nmotifs ?? 20;
-
-        document.getElementById('cfg_volcano_fdr_threshold').value = currentConfig.volcano_fdr_threshold ?? 0.05;
-        document.getElementById('cfg_volcano_log2fc_threshold').value = currentConfig.volcano_log2fc_threshold ?? 1.0;
-        document.getElementById('cfg_volcano_top_n_labels').value = currentConfig.volcano_top_n_labels ?? 12;
-
-        contrastRows = currentConfig.diff_contrasts || [];
-        renderContrasts();
-      } catch (err) {
-        console.error('Failed to load config', err);
-      }
-    }
-
-    function showToast(message, type = 'success', duration = 3200) {
-      const container = document.getElementById('toastContainer');
-      if (!container) return;
-
-      const toast = document.createElement('div');
-      toast.className = `toast-item toast-${type}`;
-
-      let icon = '✓';
-      if (type === 'error') icon = '✕';
-      else if (type === 'warning') icon = '⚠';
-      else if (type === 'info') icon = 'ℹ';
-
-      toast.innerHTML = `
-        <span style="font-weight:700; font-size:1rem;">${icon}</span>
-        <span style="flex:1;">${escapeHtml(message)}</span>
-        <button onclick="this.parentElement.remove()" style="background:transparent; border:none; color:rgba(255,255,255,0.7); cursor:pointer; font-size:1rem; padding:0 0.2rem;">✕</button>
-      `;
-
-      container.appendChild(toast);
-      requestAnimationFrame(() => toast.classList.add('show'));
-
-      setTimeout(() => {
-        toast.classList.remove('show');
-        setTimeout(() => toast.remove(), 260);
-      }, duration);
-    }
-
-    function setButtonState(btn, state, successText = '✓ Saved!') {
-      if (!btn) return;
-      if (state === 'loading') {
-        btn.dataset.origHtml = btn.innerHTML;
-        btn.disabled = true;
-        btn.innerHTML = `Saving...`;
-      } else if (state === 'success') {
-        btn.disabled = false;
-        btn.innerHTML = successText;
-        btn.classList.add('btn-success');
-        btn.classList.remove('btn-primary');
-        setTimeout(() => {
-          btn.innerHTML = btn.dataset.origHtml || 'Save';
-          btn.classList.remove('btn-success');
-          btn.classList.add('btn-primary');
-        }, 1500);
-      } else {
-        btn.disabled = false;
-        btn.innerHTML = btn.dataset.origHtml || 'Save';
-        btn.classList.remove('btn-success');
-        btn.classList.add('btn-primary');
-      }
-    }
-
-    function openModal(id) {
-      const m = document.getElementById(id);
-      if (m) m.classList.add('open');
-    }
-
-    function closeModal(id) {
-      const m = document.getElementById(id);
-      if (m) m.classList.remove('open');
-    }
-
-    async function saveConfig(btn) {
-      const saveBtn = btn || document.getElementById('btnSaveConfig');
-      setButtonState(saveBtn, 'loading');
-
-      try {
-        currentConfig.email = document.getElementById('cfg_email').value;
-        currentConfig.experiment = document.getElementById('cfg_experiment').value;
-        currentConfig.input_dir = document.getElementById('cfg_input_dir').value;
-        currentConfig.bigwig_source = document.getElementById('cfg_bigwig_source').value;
-        currentConfig.active_peak_caller = document.getElementById('cfg_active_peak_caller').value;
-        currentConfig.min_replicate_overlap = parseInt(document.getElementById('cfg_min_replicate_overlap').value, 10);
-
-        currentConfig.run_macs2_callpeak = document.getElementById('cfg_run_macs2_callpeak').checked;
-        currentConfig.run_homer_findpeaks = document.getElementById('cfg_run_homer_findpeaks').checked;
-        currentConfig.run_merge_replicate_peaks = document.getElementById('cfg_run_merge_replicate_peaks').checked;
-        currentConfig.run_merge_master_peaks = document.getElementById('cfg_run_merge_master_peaks').checked;
-        currentConfig.run_homer_annotatepeaks = document.getElementById('cfg_run_homer_annotatepeaks').checked;
-        currentConfig.run_homer_diffpeaks = document.getElementById('cfg_run_homer_diffpeaks').checked;
-        currentConfig.run_deeptools_metapeak = document.getElementById('cfg_run_deeptools_metapeak').checked;
-        currentConfig.run_homer_findmotifs = document.getElementById('cfg_run_homer_findmotifs').checked;
-        currentConfig.run_meme_streme = document.getElementById('cfg_run_meme_streme').checked;
-        currentConfig.run_summary_plots = document.getElementById('cfg_run_summary_plots').checked;
-
-        currentConfig.genome_name = document.getElementById('cfg_genome_name').value;
-        currentConfig.homer_dir = document.getElementById('cfg_homer_dir').value;
-        currentConfig.genome_fasta = document.getElementById('cfg_genome_fasta').value;
-        currentConfig.chrom_sizes = document.getElementById('cfg_chrom_sizes').value;
-
-        currentConfig.macs2_gsize = document.getElementById('cfg_macs2_gsize').value;
-        currentConfig.macs2_format = document.getElementById('cfg_macs2_format').value;
-        currentConfig.macs2_qvalue = parseFloat(document.getElementById('cfg_macs2_qvalue').value);
-        currentConfig.macs2_broad = document.getElementById('cfg_macs2_broad').checked;
-        currentConfig.macs2_broad_cutoff = parseFloat(document.getElementById('cfg_macs2_broad_cutoff').value);
-
-        currentConfig.homer_peak_style = document.getElementById('cfg_homer_peak_style').value;
-        currentConfig.annotatepeaks_size = document.getElementById('cfg_annotatepeaks_size').value;
-
-        currentConfig.metapeak_upstream = parseInt(document.getElementById('cfg_metapeak_upstream').value, 10);
-        currentConfig.metapeak_downstream = parseInt(document.getElementById('cfg_metapeak_downstream').value, 10);
-        currentConfig.metapeak_reference_point = document.getElementById('cfg_metapeak_reference_point').value;
-        currentConfig.heatmap_colormap = document.getElementById('cfg_heatmap_colormap').value;
-        currentConfig.heatmap_interpolation = document.getElementById('cfg_heatmap_interpolation').value;
-
-        currentConfig.homer_motif_size = document.getElementById('cfg_homer_motif_size').value;
-        currentConfig.meme_slop_left = parseInt(document.getElementById('cfg_meme_slop_left').value, 10);
-        currentConfig.meme_slop_right = parseInt(document.getElementById('cfg_meme_slop_right').value, 10);
-        currentConfig.meme_streme_nmotifs = parseInt(document.getElementById('cfg_meme_streme_nmotifs').value, 10);
-
-        currentConfig.volcano_fdr_threshold = parseFloat(document.getElementById('cfg_volcano_fdr_threshold').value);
-        currentConfig.volcano_log2fc_threshold = parseFloat(document.getElementById('cfg_volcano_log2fc_threshold').value);
-        currentConfig.volcano_top_n_labels = parseInt(document.getElementById('cfg_volcano_top_n_labels').value, 10);
-
-        const res = await fetch('/api/config', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentConfig)
-        });
-
-        if (res.ok) {
-          setButtonState(saveBtn, 'success', '✓ Saved!');
-          showToast('Configuration saved successfully!', 'success');
-        } else {
-          setButtonState(saveBtn, 'error');
-          showToast('Failed to save configuration', 'error');
-        }
-      } catch (err) {
-        setButtonState(saveBtn, 'error');
-        showToast('Error saving configuration: ' + err.message, 'error');
-      }
-    }
-
-    async function loadSamplesheet() {
-      const res = await fetch('/api/samplesheet');
-      const data = await res.json();
-      sampleRows = data.rows || [];
-      renderSamples();
-    }
-
-    function getUniqueConditions() {
-      const set = new Set();
-      sampleRows.forEach(r => {
-        if (r.condition && r.condition.trim()) set.add(r.condition.trim());
-      });
-      return Array.from(set);
-    }
-
-    function getUniqueTargets() {
-      const set = new Set();
-      sampleRows.forEach(r => {
-        if (r.target && r.target.trim() && r.target.trim() !== 'IgG') set.add(r.target.trim());
-      });
-      return Array.from(set);
-    }
-
-    function getIgGControls() {
-      return sampleRows
-        .filter(r => (r.target && r.target.trim().toLowerCase() === 'igg') || (r.condition && r.condition.toLowerCase().includes('igg')))
-        .map(r => r.sample_id);
-    }
-
-    function renderSamples() {
-      const tbody = document.querySelector('#samplesTable tbody');
-      tbody.innerHTML = '';
-      const iggOptions = getIgGControls();
-
-      sampleRows.forEach((r, idx) => {
-        const tr = document.createElement('tr');
-        
-        let controlSelectHtml = `<select onchange="sampleRows[${idx}].control_id = this.value; renderContrasts();">
-          <option value="" ${!r.control_id ? 'selected' : ''}>(None / Self Control)</option>`;
-        
-        const knownControls = new Set(iggOptions);
-        if (r.control_id && !knownControls.has(r.control_id)) {
-          knownControls.add(r.control_id);
-        }
-
-        knownControls.forEach(cid => {
-          controlSelectHtml += `<option value="${cid}" ${r.control_id === cid ? 'selected' : ''}>${cid}</option>`;
-        });
-        controlSelectHtml += `</select>`;
-
-        tr.innerHTML = `
-          <td><input type="text" value="${r.sample_id || ''}" onchange="sampleRows[${idx}].sample_id = this.value; renderSamples(); renderContrasts();"></td>
-          <td><input type="text" value="${r.sample_name || ''}" onchange="sampleRows[${idx}].sample_name = this.value"></td>
-          <td><input type="text" value="${r.condition || ''}" onchange="sampleRows[${idx}].condition = this.value; renderContrasts();"></td>
-          <td><input type="text" value="${r.target || ''}" onchange="sampleRows[${idx}].target = this.value; renderContrasts();"></td>
-          <td><input type="number" style="max-width:80px;" value="${r.replicate || '1'}" onchange="sampleRows[${idx}].replicate = this.value"></td>
-          <td>${controlSelectHtml}</td>
-          <td><button class="btn btn-danger" style="padding:0.25rem 0.6rem; font-size:0.8rem;" onclick="removeSampleRow(${idx})">✕</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function addSampleRow() {
-      sampleRows.push({ sample_id: '', sample_name: '', condition: '', target: 'H3K4me3', replicate: '1', control_id: '' });
-      renderSamples();
-    }
-
-    function removeSampleRow(idx) {
-      sampleRows.splice(idx, 1);
-      renderSamples();
-      renderContrasts();
-    }
-
-    async function saveSamplesheet(btn) {
-      const saveBtn = btn || document.getElementById('btnSaveSamplesheet');
-      setButtonState(saveBtn, 'loading');
-
-      try {
-        const res = await fetch('/api/samplesheet', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ rows: sampleRows })
-        });
-        if (res.ok) {
-          setButtonState(saveBtn, 'success', '✓ Saved!');
-          showToast('Samplesheet saved successfully!', 'success');
-          renderContrasts();
-        } else {
-          setButtonState(saveBtn, 'error');
-          showToast('Failed to save samplesheet', 'error');
-        }
-      } catch (err) {
-        setButtonState(saveBtn, 'error');
-        showToast('Error saving samplesheet: ' + err.message, 'error');
-      }
-    }
-
-    async function discoverSamples() {
-      try {
-        const res = await fetch('/api/samplesheet/discover', { method: 'POST' });
-        const data = await res.json();
-        if (data.discovered && data.discovered.length) {
-          let added = 0;
-          data.discovered.forEach(id => {
-            if (!sampleRows.some(r => r.sample_id === id)) {
-              const isIgG = id.toLowerCase().includes('igg');
-              sampleRows.push({
-                sample_id: id,
-                sample_name: id,
-                condition: id,
-                target: isIgG ? 'IgG' : 'H3K4me3',
-                replicate: '1',
-                control_id: ''
-              });
-              added++;
-            }
-          });
-          renderSamples();
-          renderContrasts();
-          showToast(`Discovered and added ${added} new BAM samples!`, 'success');
-        } else {
-          showToast(data.error || 'No new BAM samples found.', 'info');
-        }
-      } catch (err) {
-        showToast('Failed to discover samples: ' + err.message, 'error');
-      }
-    }
-
-    function renderContrasts() {
-      const tbody = document.querySelector('#contrastsTable tbody');
-      tbody.innerHTML = '';
-
-      const conditions = getUniqueConditions();
-      const targets = getUniqueTargets();
-
-      contrastRows.forEach((c, idx) => {
-        const tr = document.createElement('tr');
-
-        // Target select
-        let targetSelect = `<select onchange="contrastRows[${idx}].target = this.value;">`;
-        if (!targets.includes(c.target) && c.target) {
-          targetSelect += `<option value="${c.target}" selected>${c.target}</option>`;
-        }
-        targets.forEach(t => {
-          targetSelect += `<option value="${t}" ${c.target === t ? 'selected' : ''}>${t}</option>`;
-        });
-        targetSelect += `</select>`;
-
-        // Treatment select
-        let treatSelect = `<select onchange="contrastRows[${idx}].treatment = this.value; autoUpdateContrastId(${idx});">`;
-        if (!conditions.includes(c.treatment) && c.treatment) {
-          treatSelect += `<option value="${c.treatment}" selected>${c.treatment}</option>`;
-        }
-        conditions.forEach(cond => {
-          treatSelect += `<option value="${cond}" ${c.treatment === cond ? 'selected' : ''}>${cond}</option>`;
-        });
-        treatSelect += `</select>`;
-
-        // Background select
-        let bgSelect = `<select onchange="contrastRows[${idx}].background = this.value; autoUpdateContrastId(${idx});">`;
-        if (!conditions.includes(c.background) && c.background) {
-          bgSelect += `<option value="${c.background}" selected>${c.background}</option>`;
-        }
-        conditions.forEach(cond => {
-          bgSelect += `<option value="${cond}" ${c.background === cond ? 'selected' : ''}>${cond}</option>`;
-        });
-        bgSelect += `</select>`;
-
-        tr.innerHTML = `
-          <td><input type="text" id="contrast_id_${idx}" value="${c.id || ''}" onchange="contrastRows[${idx}].id = this.value"></td>
-          <td>${treatSelect}</td>
-          <td>${bgSelect}</td>
-          <td>${targetSelect}</td>
-          <td><button class="btn btn-danger" style="padding:0.25rem 0.6rem; font-size:0.8rem;" onclick="removeContrastRow(${idx})">✕</button></td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function autoUpdateContrastId(idx) {
-      const c = contrastRows[idx];
-      if (c.treatment && c.background) {
-        c.id = `${c.treatment}_vs_${c.background}`;
-        const input = document.getElementById(`contrast_id_${idx}`);
-        if (input) input.value = c.id;
-      }
-    }
-
-    function addContrastRow() {
-      const conditions = getUniqueConditions();
-      const targets = getUniqueTargets();
-      const defaultTreat = conditions[0] || 'Treatment';
-      const defaultBg = conditions[1] || conditions[0] || 'Background';
-      const defaultTgt = targets[0] || 'H3K4me3';
-      
-      contrastRows.push({
-        id: `${defaultTreat}_vs_${defaultBg}`,
-        treatment: defaultTreat,
-        background: defaultBg,
-        target: defaultTgt
-      });
-      renderContrasts();
-    }
-
-    function removeContrastRow(idx) {
-      contrastRows.splice(idx, 1);
-      renderContrasts();
-    }
-
-    async function saveContrasts(btn) {
-      const saveBtn = btn || document.getElementById('btnSaveContrasts');
-      setButtonState(saveBtn, 'loading');
-      try {
-        currentConfig.diff_contrasts = contrastRows;
-        const res = await fetch('/api/config', {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(currentConfig)
-        });
-        if (res.ok) {
-          setButtonState(saveBtn, 'success', '✓ Contrasts Saved!');
-          showToast('Contrasts updated and saved to config!', 'success');
-        } else {
-          setButtonState(saveBtn, 'idle');
-          showToast('Failed to save contrasts', 'error');
-        }
-      } catch (err) {
-        setButtonState(saveBtn, 'idle');
-        showToast('Error saving contrasts: ' + err.message, 'error');
-      }
-    }
-
-    async function checkPreflight() {
-      openModal('preflightModal');
-      const banner = document.getElementById('preflightModalBanner');
-      const list = document.getElementById('preflightModalList');
-      const launchBtn = document.getElementById('preflightLaunchBtn');
-
-      banner.style.background = '#eff6ff';
-      banner.style.color = '#1e40af';
-      banner.style.border = '1px solid #bfdbfe';
-      banner.textContent = 'Running pre-flight environment validation...';
-      list.innerHTML = '<div style="padding:1.5rem; text-align:center; color:#64748b;">Checking Nextflow engine, input paths, BAM alignment files, and dependencies...</div>';
-      launchBtn.style.display = 'none';
-
-      try {
-        const res = await fetch('/api/preflight', { method: 'POST' });
-        const data = await res.json();
-
-        if (data.ready) {
-          banner.style.background = '#ecfdf5';
-          banner.style.color = '#065f46';
-          banner.style.border = '1px solid #a7f3d0';
-          banner.textContent = '✓ All pre-flight checks passed! Pipeline is ready to execute.';
-          launchBtn.style.display = 'inline-flex';
-        } else {
-          banner.style.background = '#fff1f2';
-          banner.style.color = '#991b1b';
-          banner.style.border = '1px solid #fecdd3';
-          banner.textContent = '✕ Pre-flight validation found issues. Please review and resolve below:';
-          launchBtn.style.display = 'none';
-        }
-
-        list.innerHTML = '';
-        (data.checks || []).forEach(c => {
-          const item = document.createElement('div');
-          item.className = 'checklist-item';
-          let badgeClass = 'badge-failed';
-          let badgeIcon = 'FAIL';
-          if (c.status === 'ok') {
-            badgeClass = 'badge-ok';
-            badgeIcon = 'OK';
-          } else if (c.status === 'warning') {
-            badgeClass = 'badge-warning';
-            badgeIcon = 'WARN';
-          }
-
-          item.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.25rem;">
-              <span style="font-weight:600; font-size:0.88rem; color:#0f172a;">${escapeHtml(c.name)}</span>
-              <span class="badge ${badgeClass}" style="font-size:0.75rem;">${badgeIcon}</span>
-            </div>
-            <div style="font-size:0.8rem; color:#475569;">${escapeHtml(c.detail)}</div>
-          `;
-          list.appendChild(item);
-        });
-      } catch (err) {
-        banner.style.background = '#fff1f2';
-        banner.style.color = '#991b1b';
-        banner.style.border = '1px solid #fecdd3';
-        banner.textContent = 'Failed to execute pre-flight checks: ' + err.message;
-      }
-    }
-
-    function openLaunchModal() {
-      const expEl = document.getElementById('modalExpName');
-      const callerEl = document.getElementById('modalActiveCaller');
-      const sampleEl = document.getElementById('modalSampleCount');
-      const contrastEl = document.getElementById('modalContrastCount');
-
-      if (expEl) expEl.textContent = currentConfig.experiment || '-';
-      if (callerEl) callerEl.textContent = currentConfig.active_peak_caller || 'MACS2';
-      if (sampleEl) sampleEl.textContent = `${sampleRows ? sampleRows.length : 0} sample(s)`;
-      if (contrastEl) contrastEl.textContent = `${contrastRows ? contrastRows.length : 0} contrast(s)`;
-
-      openModal('launchModal');
-    }
-
-    async function confirmLaunch() {
-      const resume = document.getElementById('launchResumeCheck').checked;
-      const launchBtn = document.getElementById('btnConfirmLaunch');
-      launchBtn.disabled = true;
-      launchBtn.textContent = 'Launching...';
-
-      try {
-        const res = await fetch('/api/pipeline/start', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ resume })
-        });
-        closeModal('launchModal');
-        if (res.ok) {
-          const resData = await res.json().catch(() => ({}));
-          const startMs = resData.start_time ? resData.start_time * 1000 : Date.now();
-          startElapsedTimer(startMs);
-          showToast(resume ? 'Pipeline started with cached resume (-resume)!' : 'Pipeline started fresh!', 'success');
-          switchTab('logsTab', document.querySelectorAll('nav.tabs button')[3]);
-        } else {
-          const err = await res.json();
-          showToast('Could not start pipeline: ' + (err.detail || 'Unknown error'), 'error');
-        }
-      } catch (err) {
-        closeModal('launchModal');
-        showToast('Network error starting pipeline: ' + err.message, 'error');
-      } finally {
-        launchBtn.disabled = false;
-        launchBtn.textContent = '🚀 Start Execution';
-      }
-    }
-
-    function openStopModal() {
-      openModal('stopModal');
-    }
-
-    async function confirmStop() {
-      const stopBtn = document.getElementById('btnConfirmStop');
-      stopBtn.disabled = true;
-      stopBtn.textContent = 'Stopping...';
-      try {
-        const res = await fetch('/api/pipeline/stop', { method: 'POST' });
-        closeModal('stopModal');
-        if (res.ok) {
-          stopElapsedTimer(Date.now());
-          showToast('Stop signal (SIGINT) sent to Nextflow pipeline', 'info');
-        } else {
-          showToast('Failed to stop pipeline', 'error');
-        }
-      } catch (err) {
-        closeModal('stopModal');
-        showToast('Network error stopping pipeline: ' + err.message, 'error');
-      } finally {
-        stopBtn.disabled = false;
-        stopBtn.textContent = 'Stop Pipeline';
-      }
-    }
-
-    const activeTasksMap = new Map();
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function clearLogsView() {
-      const box = document.getElementById('logOutput');
-      if (box) box.textContent = '';
-    }
-
-    async function copyLogsToClipboard() {
-      const box = document.getElementById('logOutput');
-      if (!box) return;
-      try {
-        await navigator.clipboard.writeText(box.textContent);
-        showToast('Execution logs copied to clipboard!', 'success');
-      } catch (err) {
-        showToast('Could not copy logs: ' + err, 'error');
-      }
-    }
-
-    function formatDuration(ms) {
-      if (!ms && ms !== 0) return '-';
-      if (ms < 1000) return `${ms}ms`;
-      const sec = (ms / 1000).toFixed(1);
-      if (sec < 60) return `${sec}s`;
-      const min = Math.floor(sec / 60);
-      const remSec = Math.round(sec % 60);
-      return `${min}m ${remSec}s`;
-    }
-
-    let pipelineTimerInterval = null;
-    let pipelineStartTime = null;
-    let pipelineEndTime = null;
-    let isPipelineRunning = false;
-
-    function formatElapsedTime(ms) {
-      if (!ms || ms < 0 || isNaN(ms)) ms = 0;
-      const totalSecs = Math.floor(ms / 1000);
-      const hours = Math.floor(totalSecs / 3600);
-      const minutes = Math.floor((totalSecs % 3600) / 60);
-      const seconds = totalSecs % 60;
-      const pad = (n) => String(n).padStart(2, '0');
-      return `${pad(hours)}:${pad(minutes)}:${pad(seconds)}`;
-    }
-
-    function startElapsedTimer(startTimeMs) {
-      if (startTimeMs) {
-        pipelineStartTime = Number(startTimeMs);
-      } else if (!pipelineStartTime) {
-        pipelineStartTime = Date.now();
-      }
-      pipelineEndTime = null;
-      isPipelineRunning = true;
-
-      const timerEl = document.getElementById('monitorElapsedTime');
-      const containerEl = document.getElementById('monitorElapsedTimer');
-      if (containerEl) {
-        containerEl.style.borderColor = '#93c5fd';
-        containerEl.style.background = '#eff6ff';
-        containerEl.style.color = '#1e40af';
-      }
-
-      const updateTick = () => {
-        if (!isPipelineRunning) return;
-        const now = Date.now();
-        const elapsed = Math.max(0, now - pipelineStartTime);
-        if (timerEl) timerEl.textContent = formatElapsedTime(elapsed);
-      };
-
-      updateTick();
-      if (pipelineTimerInterval) clearInterval(pipelineTimerInterval);
-      pipelineTimerInterval = setInterval(updateTick, 1000);
-    }
-
-    function stopElapsedTimer(endTimeMs) {
-      isPipelineRunning = false;
-      if (pipelineTimerInterval) {
-        clearInterval(pipelineTimerInterval);
-        pipelineTimerInterval = null;
-      }
-      if (endTimeMs) {
-        pipelineEndTime = Number(endTimeMs);
-      } else if (!pipelineEndTime && pipelineStartTime) {
-        pipelineEndTime = Date.now();
-      }
-
-      const timerEl = document.getElementById('monitorElapsedTime');
-      const containerEl = document.getElementById('monitorElapsedTimer');
-      if (containerEl) {
-        containerEl.style.borderColor = '#cbd5e1';
-        containerEl.style.background = '#f8fafc';
-        containerEl.style.color = '#334155';
-      }
-
-      if (pipelineStartTime && pipelineEndTime && timerEl) {
-        const finalElapsed = Math.max(0, pipelineEndTime - pipelineStartTime);
-        timerEl.textContent = formatElapsedTime(finalElapsed);
-      }
-    }
-
-    function updateStatsUI(stats, runName) {
-      if (!stats) return;
-      const total = stats.total || 0;
-      const running = stats.running || 0;
-      const completed = stats.completed || 0;
-      const cached = stats.cached || 0;
-      const failed = stats.failed || 0;
-      const percent = stats.percent !== undefined ? stats.percent : 0;
-
-      const statTotal = document.getElementById('statTotal');
-      const statRunning = document.getElementById('statRunning');
-      const statCompleted = document.getElementById('statCompleted');
-      const statCached = document.getElementById('statCached');
-      const statFailed = document.getElementById('statFailed');
-      const progressBarFill = document.getElementById('progressBarFill');
-      const progressPercentText = document.getElementById('progressPercentText');
-      const taskCountSummary = document.getElementById('taskCountSummary');
-
-      if (statTotal) statTotal.textContent = total;
-      if (statRunning) statRunning.textContent = running;
-      if (statCompleted) statCompleted.textContent = completed;
-      if (statCached) statCached.textContent = cached;
-      if (statFailed) statFailed.textContent = failed;
-      if (progressBarFill) progressBarFill.style.width = `${percent}%`;
-      if (progressPercentText) progressPercentText.textContent = `${percent}%`;
-
-      if (taskCountSummary) {
-        const cachedNote = cached > 0 ? ` (${cached} cached)` : '';
-        taskCountSummary.textContent = `${completed} of ${total} tasks finished (${percent}%)${cachedNote}`;
-      }
-
-      const runBadge = document.getElementById('monitorRunBadge');
-      const rName = runName || stats.run_name;
-      if (runBadge && rName) {
-        runBadge.style.display = 'inline-block';
-        runBadge.textContent = 'Run: ' + rName;
-      }
-    }
-
-    function renderTaskRow(task) {
-      const tbody = document.getElementById('taskTableBody');
-      if (!tbody) return;
-
-      const noTasksRow = document.getElementById('noTasksRow');
-      if (noTasksRow) noTasksRow.remove();
-
-      const rowKey = (task.hash || task.key || task.task_id || '').replace(/[^a-zA-Z0-9_-]/g, '_');
-      let row = document.getElementById(`task-row-${rowKey}`);
-      const isNew = !row;
-      if (isNew) {
-        row = document.createElement('tr');
-        row.id = `task-row-${rowKey}`;
-        tbody.appendChild(row);
-      }
-
-      const status = task.status || 'SUBMITTED';
-      const statusClass = `task-status-${status}`;
-      const statusLabel = status === 'RUNNING' ? 'Running' :
-                          status === 'COMPLETED' ? 'Completed' :
-                          status === 'CACHED' ? '⚡ Cached' :
-                          status === 'FAILED' ? 'Failed' : 'Submitted';
-      const durationText = status === 'CACHED' ? 'Cached' : (task.duration || task.realtime_fmt || formatDuration(task.realtime));
-      const displayIndex = Array.from(tbody.children).indexOf(row) + 1;
-
-      row.innerHTML = `
-        <td style="font-weight:600; color:#64748b;">${displayIndex}</td>
-        <td style="font-weight:600; color:#1e293b;">${escapeHtml(task.process_short || task.process || '')}</td>
-        <td><span style="font-size:0.82rem; background:#f1f5f9; padding:0.15rem 0.4rem; border-radius:4px; font-family:monospace;">${escapeHtml(task.tag || '-')}</span></td>
-        <td><span class="task-status-badge ${statusClass}">${statusLabel}</span></td>
-        <td style="color:#64748b; font-size:0.82rem;">${durationText}</td>
-        <td style="font-family:monospace; font-size:0.8rem; color:#64748b;">${escapeHtml(task.hash || '-')}</td>
-      `;
-    }
-
-    function initLogStream() {
-      const evtSource = new EventSource('/api/pipeline/stream');
-      const box = document.getElementById('logOutput');
-      const autoScroll = document.getElementById('autoScrollLogs');
-
-      evtSource.onmessage = function(event) {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'init_state') {
-            if (data.stats) updateStatsUI(data.stats, data.run_name);
-            if (data.tasks && data.tasks.length > 0) {
-              const tbody = document.getElementById('taskTableBody');
-              if (tbody) tbody.innerHTML = '';
-              data.tasks.forEach(t => {
-                const k = t.hash || t.key || t.task_id;
-                activeTasksMap.set(k, t);
-                renderTaskRow(t);
-              });
-            }
-            if (data.status) {
-              const pBadge = document.getElementById('monitorProgressBadge');
-              if (pBadge) {
-                pBadge.className = 'status-badge status-' + data.status;
-                pBadge.textContent = 'Status: ' + data.status;
-              }
-              if (data.status === 'running') {
-                startElapsedTimer(data.start_time ? data.start_time * 1000 : Date.now());
-              } else if (['completed', 'failed', 'cancelled'].includes(data.status) && data.start_time) {
-                pipelineStartTime = data.start_time * 1000;
-                stopElapsedTimer(data.end_time ? data.end_time * 1000 : undefined);
-              }
-            }
-          } else if (data.type === 'task_update') {
-            if (data.task) {
-              const k = data.task.hash || data.task.key || data.task.task_id;
-              activeTasksMap.set(k, data.task);
-              renderTaskRow(data.task);
-            }
-            if (data.stats) updateStatsUI(data.stats, data.run_name);
-          } else if (data.type === 'run_started') {
-            activeTasksMap.clear();
-            const tbody = document.getElementById('taskTableBody');
-            if (tbody) {
-              tbody.innerHTML = '<tr id="noTasksRow"><td colspan="6" style="text-align:center; color:var(--text-muted); padding:1.5rem;">Pipeline run starting...</td></tr>';
-            }
-            if (data.stats) updateStatsUI(data.stats, data.run_name);
-            const pBadge = document.getElementById('monitorProgressBadge');
-            if (pBadge) {
-              pBadge.className = 'status-badge status-running';
-              pBadge.textContent = 'Status: running';
-            }
-            startElapsedTimer(data.start_time ? data.start_time * 1000 : Date.now());
-          } else if (data.type === 'run_completed' || data.type === 'process_exit') {
-            if (data.tasks && data.tasks.length > 0) {
-              data.tasks.forEach(t => {
-                const k = t.hash || t.key || t.task_id;
-                activeTasksMap.set(k, t);
-                renderTaskRow(t);
-              });
-            }
-            if (data.stats) updateStatsUI(data.stats);
-            const pBadge = document.getElementById('monitorProgressBadge');
-            if (pBadge && data.status) {
-              pBadge.className = 'status-badge status-' + data.status;
-              pBadge.textContent = 'Status: ' + data.status;
-            }
-            stopElapsedTimer(data.end_time ? data.end_time * 1000 : Date.now());
-          } else if (data.type === 'log') {
-            if (box.textContent === 'Connecting to log stream...') {
-              box.textContent = '';
-            }
-            box.textContent += data.line;
-            if (autoScroll && autoScroll.checked) {
-              box.scrollTop = box.scrollHeight;
-            }
-          }
-        } catch (e) {
-          console.error('Error handling SSE message:', e);
-        }
-      };
-    }
-
-    async function pollStatus() {
-      try {
-        const res = await fetch('/api/pipeline/status');
-        const data = await res.json();
-        const badge = document.getElementById('pipelineStatusBadge');
-        badge.className = 'status-badge status-' + data.status;
-        badge.textContent = 'Status: ' + data.status;
-
-        const pBadge = document.getElementById('monitorProgressBadge');
-        if (pBadge) {
-          pBadge.className = 'status-badge status-' + data.status;
-          pBadge.textContent = 'Status: ' + data.status;
-        }
-
-        if (data.stats) {
-          updateStatsUI(data.stats, data.run_name);
-        }
-
-        if (data.tasks && data.tasks.length > 0) {
-          if (activeTasksMap.size === 0 || activeTasksMap.size < data.tasks.length) {
-            data.tasks.forEach(t => {
-              const k = t.hash || t.key || t.task_id;
-              activeTasksMap.set(k, t);
-              renderTaskRow(t);
-            });
-          }
-        }
-
-        const btnStart = document.getElementById('btnStartPipeline');
-        const btnStop = document.getElementById('btnStopPipeline');
-
-        if (data.status === 'running') {
-          btnStart.style.display = 'none';
-          btnStop.style.display = 'inline-flex';
-          const serverStartMs = data.start_time ? data.start_time * 1000 : null;
-          if (!isPipelineRunning || (serverStartMs && Math.abs(serverStartMs - (pipelineStartTime || 0)) > 1000)) {
-            startElapsedTimer(serverStartMs || Date.now());
-          }
-        } else {
-          btnStart.style.display = 'inline-flex';
-          btnStop.style.display = 'none';
-          if (isPipelineRunning) {
-            stopElapsedTimer(data.end_time ? data.end_time * 1000 : Date.now());
-          } else if (data.start_time) {
-            pipelineStartTime = data.start_time * 1000;
-            stopElapsedTimer(data.end_time ? data.end_time * 1000 : undefined);
-          }
-        }
-      } catch (e) {}
-    }
-
-    let cachedResultsData = null;
-
-    async function openResultsInFinder() {
-      try {
-        const res = await fetch('/api/results/open-finder', { method: 'POST' });
-        if (res.ok) {
-          showToast('Opened results directory in Finder', 'success');
-        } else {
-          showToast('Could not open Finder on server host', 'error');
-        }
-      } catch (e) {
-        showToast('Failed to request opening in Finder', 'error');
-      }
-    }
-
-    function copyResultsPath() {
-      const pathText = document.getElementById('resultsDirDisplay')?.textContent?.trim() || '';
-      if (pathText) {
-        navigator.clipboard.writeText(pathText);
-        showToast('Results path copied to clipboard!', 'success');
-      }
-    }
-
-    function filterResultsCategory(cat, btn) {
-      document.querySelectorAll('.results-subnav button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const secSummary = document.getElementById('section_summary_plots');
-      const secMetapeak = document.getElementById('section_metapeak_plots');
-      const secMotifs = document.getElementById('section_motifs');
-
-      if (cat === 'all') {
-        secSummary.style.display = 'block';
-        secMetapeak.style.display = 'block';
-        secMotifs.style.display = 'block';
-      } else if (cat === '15_summary_plots') {
-        secSummary.style.display = 'block';
-        secMetapeak.style.display = 'none';
-        secMotifs.style.display = 'none';
-      } else if (cat === '13_metapeak_plots') {
-        secSummary.style.display = 'none';
-        secMetapeak.style.display = 'block';
-        secMotifs.style.display = 'none';
-      } else if (cat === '14_motifs') {
-        secSummary.style.display = 'none';
-        secMetapeak.style.display = 'none';
-        secMotifs.style.display = 'block';
-      }
-    }
-
-    async function loadResultsGallery() {
-      const summaryGrid = document.getElementById('summaryPlotsGrid');
-      const metapeakGrid = document.getElementById('metapeakGrid');
-      const motifsGrid = document.getElementById('motifsGrid');
-
-      summaryGrid.innerHTML = '<p style="color:#64748b;">Loading summary plots...</p>';
-      metapeakGrid.innerHTML = '<p style="color:#64748b;">Loading metapeak files...</p>';
-      motifsGrid.innerHTML = '<p style="color:#64748b;">Loading motifs...</p>';
-
-      const res = await fetch('/api/results/files');
-      const data = await res.json();
-      cachedResultsData = data;
-
-      document.getElementById('resultsDirDisplay').textContent = data.results_dir || 'Directory not found';
-
-      if (!data.exists || !data.files.length) {
-        summaryGrid.innerHTML = '<p style="color:#64748b;">No results found yet in results directory.</p>';
-        metapeakGrid.innerHTML = '';
-        motifsGrid.innerHTML = '';
-        return;
-      }
-
-      // 1. Filter 15_summary_plots to PNG files only with defined order
-      const summaryOrder = [
-        '01_peak_counts',
-        '02_genomic_features',
-        '03_correlation_and_pca',
-        '04_signal_distributions',
-        '05_differential_plots'
-      ];
-
-      const summaryPngs = data.files.filter(f => {
-        return f.category === '15_summary_plots' && f.name.endsWith('.png');
-      });
-
-      // Sort by orderly biological stage, then by name
-      summaryPngs.sort((a, b) => {
-        const orderA = summaryOrder.findIndex(prefix => a.path.includes(prefix));
-        const orderB = summaryOrder.findIndex(prefix => b.path.includes(prefix));
-        if (orderA !== orderB) return (orderA === -1 ? 99 : orderA) - (orderB === -1 ? 99 : orderB);
-        return a.name.localeCompare(b.name);
-      });
-
-      document.getElementById('summaryCountBadge').textContent = `${summaryPngs.length} figures`;
-      summaryGrid.innerHTML = '';
-      if (!summaryPngs.length) {
-        summaryGrid.innerHTML = '<p style="color:#64748b;">No PNG summary plots found.</p>';
-      } else {
-        summaryPngs.forEach(f => {
-          const card = document.createElement('div');
-          card.className = 'qc-plot-card';
-          
-          let stepLabel = '';
-          if (f.path.includes('01_peak_counts')) stepLabel = 'Step i (QC 1: Counts)';
-          else if (f.path.includes('02_genomic_features')) stepLabel = 'Step i (QC 2: Features)';
-          else if (f.path.includes('03_correlation_and_pca')) stepLabel = 'Step i (QC 3: PCA / Correlation)';
-          else if (f.path.includes('04_signal_distributions')) stepLabel = 'Step i (QC 4: Signal)';
-          else if (f.path.includes('05_differential_plots')) stepLabel = 'Step i (QC 5: Differential Volcano / MA)';
-
-          card.innerHTML = `
-            <a href="/api/results/file/${f.path}" target="_blank" class="qc-plot-img-container" title="Click to view full size">
-              <img src="/api/results/file/${f.path}" alt="${f.name}" loading="lazy">
-            </a>
-            <div class="qc-plot-info">
-              <div>
-                <div class="qc-plot-title">${f.name}</div>
-                <div class="qc-plot-subtitle">${stepLabel}</div>
-              </div>
-              <a href="/api/results/file/${f.path}" target="_blank" class="btn btn-secondary" style="font-size:0.75rem; padding:0.3rem 0.6rem;">Open</a>
-            </div>
-          `;
-          summaryGrid.appendChild(card);
-        });
-      }
-
-      // 2. Filter 13_metapeak_plots to PDF files only (clickable)
-      const metapeakPdfs = data.files.filter(f => {
-        return f.category === '13_metapeak_plots' && f.name.endsWith('.pdf');
-      });
-      metapeakPdfs.sort((a, b) => a.name.localeCompare(b.name));
-
-      document.getElementById('metapeakCountBadge').textContent = `${metapeakPdfs.length} PDF report(s)`;
-      metapeakGrid.innerHTML = '';
-      if (!metapeakPdfs.length) {
-        metapeakGrid.innerHTML = '<p style="color:#64748b;">No metapeak PDFs found.</p>';
-      } else {
-        metapeakPdfs.forEach(f => {
-          const a = document.createElement('a');
-          a.className = 'file-card-clickable';
-          a.href = `/api/results/file/${f.path}`;
-          a.target = '_blank';
-          a.innerHTML = `
-            <div class="file-icon-badge badge-pdf">PDF</div>
-            <div class="file-card-details">
-              <div class="file-card-name">${f.name}</div>
-              <div class="file-card-sub">deepTools Metapeak Heatmap & Signal Matrix</div>
-            </div>
-          `;
-          metapeakGrid.appendChild(a);
-        });
-      }
-
-      // 3. Filter 14_motifs: drill down to first level of HTML file only
-      // Homer has homerResults.html and knownResults.html; STREME has streme.html
-      const motifHtmls = data.files.filter(f => {
-        if (f.category !== '14_motifs' || !f.name.endsWith('.html')) return false;
-        // Keep primary reports only (exclude nested sub-reports or motif image indexes)
-        return (
-          f.name === 'homerResults.html' ||
-          f.name === 'knownResults.html' ||
-          f.name === 'streme.html'
-        );
-      });
-      motifHtmls.sort((a, b) => a.path.localeCompare(b.path));
-
-      document.getElementById('motifsCountBadge').textContent = `${motifHtmls.length} primary HTML report(s)`;
-      motifsGrid.innerHTML = '';
-      if (!motifHtmls.length) {
-        motifsGrid.innerHTML = '<p style="color:#64748b;">No primary motif HTML reports found.</p>';
-      } else {
-        motifHtmls.forEach(f => {
-          const a = document.createElement('a');
-          a.className = 'file-card-clickable';
-          a.href = `/api/results/file/${f.path}`;
-          a.target = '_blank';
-          
-          let subLabel = '';
-          if (f.name === 'homerResults.html') subLabel = 'HOMER De Novo Motifs HTML Report';
-          else if (f.name === 'knownResults.html') subLabel = 'HOMER Known Transcription Factor Motifs';
-          else if (f.name === 'streme.html') subLabel = 'MEME STREME De Novo Motifs HTML Report';
-
-          a.innerHTML = `
-            <div class="file-icon-badge badge-html">HTML</div>
-            <div class="file-card-details">
-              <div class="file-card-name">${f.name} (${f.subfolder.split('/').pop()})</div>
-              <div class="file-card-sub">${subLabel}</div>
-            </div>
-          `;
-          motifsGrid.appendChild(a);
-        });
-      }
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      loadConfig();
-      loadSamplesheet();
-      initLogStream();
-      pollStatus();
-      setInterval(pollStatus, 2000);
-
-      // Dismiss modals when clicking on background backdrop
-      document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
-        backdrop.addEventListener('click', (e) => {
-          if (e.target === backdrop) closeModal(backdrop.id);
-        });
-      });
-    });
-
-    // Dismiss any open modal on Escape key press
-    window.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        ['launchModal', 'stopModal', 'preflightModal'].forEach(closeModal);
-      }
-    });
-  </script>
+  <script type="module" src="/static/js/main.js"></script>
 </body>
 </html>
-

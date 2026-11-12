@@ -1,8 +1,25 @@
-"""Unit tests for CUT&RUN Control Center config parser and API."""
+"""Unit and integration tests for CUT&RUN Control Center."""
+
+from __future__ import annotations
+
+import asyncio
+from pathlib import Path
+from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pathlib import Path
-from config_parser import parse_experiment_config, serialize_experiment_config, ExperimentConfigModel, ContrastModel
+from fastapi.testclient import TestClient
+
+from app import create_app
+from config_parser import (
+    ContrastModel,
+    ExperimentConfigModel,
+    parse_experiment_config,
+    serialize_experiment_config,
+)
+from dependencies import AppContainer
+from services.pipeline_runner import SubprocessHandle
+from services.task_tracker import PROCESS_STREAM_RE, TaskTracker
+from settings import WorkspaceSettings
 
 SAMPLE_CONFIG = """
 params {
@@ -63,7 +80,53 @@ params {
 }
 """
 
-def test_parse_experiment_config():
+
+class FakeRunner:
+    """In-memory PipelineRunner stub for testing start/stop without spawning OS processes."""
+
+    def __init__(self, return_code: int = 0) -> None:
+        self.commands: list[list[str]] = []
+        self.cwds: list[Path] = []
+        self.interrupted: list[int] = []
+        self.return_code = return_code
+        self.release_event = asyncio.Event()
+
+    async def spawn(self, cmd: list[str], cwd: Path) -> SubprocessHandle:
+        self.commands.append(cmd)
+        self.cwds.append(cwd)
+
+        mock_proc = MagicMock()
+        mock_proc.pid = 99999
+        mock_proc.stdout = AsyncMock()
+        mock_proc.stdout.readline = AsyncMock(return_value=b"")
+        mock_proc.stderr = AsyncMock()
+        mock_proc.stderr.readline = AsyncMock(return_value=b"")
+
+        async def _wait() -> int:
+            await self.release_event.wait()
+            return self.return_code
+
+        mock_proc.wait = _wait
+        return mock_proc  # type: ignore[return-value]
+
+    def interrupt(self, process: SubprocessHandle) -> None:
+        self.interrupted.append(process.pid)
+        self.release_event.set()
+
+
+def make_test_settings(tmp_path: Path, port: int | None = 8000) -> WorkspaceSettings:
+    workspace = tmp_path / "Analysis_Run"
+    (workspace / "config").mkdir(parents=True)
+    return WorkspaceSettings(
+        pipeline_dir=Path(__file__).resolve().parent.parent,
+        workspace_dir=workspace,
+        static_dir=Path(__file__).resolve().parent / "static",
+        port=port,
+        user_config_dir=tmp_path / ".config",
+    )
+
+
+def test_parse_experiment_config() -> None:
     model = parse_experiment_config(SAMPLE_CONFIG)
     assert model.email == "test.user@umassmed.edu"
     assert model.experiment == "exp_test_01"
@@ -71,12 +134,55 @@ def test_parse_experiment_config():
     assert model.run_macs2_callpeak is True
     assert model.macs2_broad is True
     assert model.min_replicate_overlap == 3
+    assert model.resource_cpus == 8
+    assert model.resource_memory == "16.GB"
+    assert model.resource_time == "72.h"
     assert len(model.diff_contrasts) == 2
     assert model.diff_contrasts[0].id == "C1"
     assert model.diff_contrasts[1].target == "H3K27me3"
 
 
-def test_roundtrip_serialization():
+def test_parse_and_roundtrip_resource_limits() -> None:
+    cfg_text = SAMPLE_CONFIG + """
+process {
+    resourceLimits = [
+        cpus: 12, // max cores
+        memory: '32 GB',
+        time: 48.h
+    ]
+}
+"""
+    model = parse_experiment_config(cfg_text)
+    assert model.resource_cpus == 12
+    assert model.resource_memory == "32.GB"
+    assert model.resource_time == "48.h"
+
+    serialized = serialize_experiment_config(model)
+    assert "process {" in serialized
+    assert "cpus: 12," in serialized
+    assert "memory: 32.GB," in serialized
+    assert "time: 48.h" in serialized
+
+    reparsed = parse_experiment_config(serialized)
+    assert reparsed.resource_cpus == 12
+    assert reparsed.resource_memory == "32.GB"
+    assert reparsed.resource_time == "48.h"
+
+
+def test_resource_limits_validation_rejects_injection_and_zero() -> None:
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="exp_ok", resource_cpus=0)
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="exp_ok", resource_memory="16.GB; System.exit(0)")
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="exp_ok", resource_memory="0.GB")
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="exp_ok", resource_time="72.h\nprintln 'hi'")
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="exp_ok", resource_time="0.h")
+
+
+def test_roundtrip_serialization() -> None:
     model = parse_experiment_config(SAMPLE_CONFIG)
     serialized = serialize_experiment_config(model)
     reparsed = parse_experiment_config(serialized)
@@ -86,78 +192,106 @@ def test_roundtrip_serialization():
     assert reparsed.macs2_qvalue == model.macs2_qvalue
 
 
+def test_parser_handles_double_slash_in_strings_scientific_float_and_reordered_contrasts() -> None:
+    cfg_text = """
+    params {
+        experiment = "exp_edge_01"
+        input_dir = "/mnt/dropbox//run_1" // trailing comment
+        macs2_qvalue = 1e-4
+        diff_contrasts = [
+            [ target: 'H3K27ac', background: 'WT', id: 'Mut_vs_WT', treatment: 'Mut' ]
+        ]
+    }
+    """
+    model = parse_experiment_config(cfg_text)
+    assert model.input_dir == "/mnt/dropbox//run_1"
+    assert model.macs2_qvalue == 1e-4
+    assert len(model.diff_contrasts) == 1
+    assert model.diff_contrasts[0].id == "Mut_vs_WT"
+    assert model.diff_contrasts[0].target == "H3K27ac"
+
+
+def test_serializer_escapes_groovy_injection_and_validates_experiment() -> None:
+    with pytest.raises(ValueError):
+        ExperimentConfigModel(experiment="../escape")
+
+    model = ExperimentConfigModel(
+        experiment="safe_exp_01",
+        input_dir='/data/"quoted"/${System.exit(0)}',
+        diff_contrasts=[ContrastModel(id="A'B", treatment="T1", background="B1", target="H3K4me3")],
+    )
+    serialized = serialize_experiment_config(model)
+    assert '\\"quoted\\"' in serialized
+    assert "\\${System.exit(0)}" in serialized
+    assert "id: 'A\\'B'" in serialized
+    # Whitelisted Nextflow variables remain unescaped
+    assert "${launchDir}/results/${params.experiment}" in serialized
+
+
+def test_task_tracker_instances_do_not_share_state() -> None:
+    t1 = TaskTracker()
+    t2 = TaskTracker()
+    t1.upsert_from_stream_line("[ab/123456] Submitted process > CUTANDRUN:FASTQC (s1)")
+    assert len(t1.tasks) == 1
+    assert len(t2.tasks) == 0
+
+
 @pytest.mark.anyio
-async def test_pipeline_webhook_and_status():
-    from app import receive_pipeline_webhook, get_pipeline_status, state
+async def test_pipeline_webhook_and_status(tmp_path: Path) -> None:
+    app = create_app(settings=make_test_settings(tmp_path), runner=FakeRunner())
+    service = app.state.container.pipeline_service
 
-    # Reset state
-    state.tasks.clear()
-    state.run_name = None
+    await service.handle_webhook({"event": "started", "runName": "clever_curie"})
+    assert service.tracker.run_name == "clever_curie"
 
-    # 1. Pipeline started event
-    start_payload = {
-        "event": "started",
-        "runName": "clever_curie",
-        "utcTime": "2026-11-10T12:00:00Z",
-    }
-    await receive_pipeline_webhook(start_payload)
-    assert state.run_name == "clever_curie"
+    await service.handle_webhook(
+        {
+            "event": "process_submitted",
+            "runName": "clever_curie",
+            "trace": {
+                "task_id": 1,
+                "name": "CUTANDRUN:PLOT_PEAK_COUNTS (summary)",
+                "process": "CUTANDRUN:PLOT_PEAK_COUNTS",
+                "tag": "summary",
+                "hash": "ab/123456",
+                "status": "SUBMITTED",
+            },
+        }
+    )
+    assert "ab/123456" in service.tracker.tasks
+    assert service.tracker.tasks["ab/123456"]["process_short"] == "PLOT_PEAK_COUNTS"
+    assert service.tracker.stats["total"] == 1
+    assert service.tracker.stats["submitted"] == 1
+    assert service.tracker.stats["completed"] == 0
 
-    # 2. Task submitted
-    sub_payload = {
-        "event": "process_submitted",
-        "runName": "clever_curie",
-        "trace": {
-            "task_id": 1,
-            "name": "CUTANDRUN:PLOT_PEAK_COUNTS (summary)",
-            "process": "CUTANDRUN:PLOT_PEAK_COUNTS",
-            "tag": "summary",
-            "hash": "ab/123456",
-            "status": "SUBMITTED",
-        },
-    }
-    await receive_pipeline_webhook(sub_payload)
-    assert "ab/123456" in state.tasks
-    assert state.tasks["ab/123456"]["process_short"] == "PLOT_PEAK_COUNTS"
-    assert state.stats["total"] == 1
-    assert state.stats["submitted"] == 1
-    assert state.stats["completed"] == 0
-
-    # 3. Task completed
-    comp_payload = {
-        "event": "process_completed",
-        "runName": "clever_curie",
-        "trace": {
-            "task_id": 1,
-            "name": "CUTANDRUN:PLOT_PEAK_COUNTS (summary)",
-            "process": "CUTANDRUN:PLOT_PEAK_COUNTS",
-            "tag": "summary",
-            "hash": "ab/123456",
-            "status": "COMPLETED",
-            "exit": 0,
-            "realtime": 1500,
-        },
-    }
-    await receive_pipeline_webhook(comp_payload)
-    assert state.tasks["ab/123456"]["status"] == "COMPLETED"
-    assert state.stats["completed"] == 1
-    assert state.stats["percent"] == 100.0
-
-    # 4. Status endpoint
-    status_resp = await get_pipeline_status()
+    await service.handle_webhook(
+        {
+            "event": "process_completed",
+            "runName": "clever_curie",
+            "trace": {
+                "task_id": 1,
+                "name": "CUTANDRUN:PLOT_PEAK_COUNTS (summary)",
+                "process": "CUTANDRUN:PLOT_PEAK_COUNTS",
+                "tag": "summary",
+                "hash": "ab/123456",
+                "status": "COMPLETED",
+                "exit": 0,
+                "realtime": 1500,
+            },
+        }
+    )
+    status_resp = service.get_status()
     assert status_resp["run_name"] == "clever_curie"
     assert len(status_resp["tasks"]) == 1
     assert status_resp["stats"]["completed"] == 1
+    assert status_resp["stats"]["percent"] == 100.0
 
 
 @pytest.mark.anyio
-async def test_cached_tasks_handling():
-    from app import receive_pipeline_webhook, get_pipeline_status, state, PROCESS_STREAM_RE, update_stats
+async def test_cached_tasks_handling(tmp_path: Path) -> None:
+    app = create_app(settings=make_test_settings(tmp_path), runner=FakeRunner())
+    service = app.state.container.pipeline_service
 
-    state.tasks.clear()
-    state.run_name = None
-
-    # Test regex matching for cached lines
     log_line = "[d0/96014c] Cached process > CUTANDRUN:PLOT_PEAK_COUNTS (peak_counts_summary)"
     m = PROCESS_STREAM_RE.search(log_line)
     assert m is not None
@@ -167,7 +301,6 @@ async def test_cached_tasks_handling():
     assert proc_full == "CUTANDRUN:PLOT_PEAK_COUNTS"
     assert tag == "peak_counts_summary"
 
-    # Simulate completed event with cachedCount from Nextflow
     completed_payload = {
         "event": "completed",
         "runName": "wise_perlman",
@@ -200,25 +333,20 @@ async def test_cached_tasks_handling():
         },
     }
 
-    await receive_pipeline_webhook(completed_payload)
-    assert state.stats["cached"] >= 2
-    assert state.stats["total"] == 8
-    assert state.stats["percent"] == 100.0
-
-    status = await get_pipeline_status()
+    await service.handle_webhook(completed_payload)
+    status = service.get_status()
     assert status["stats"]["cached"] >= 2
+    assert status["stats"]["total"] == 8
+    assert status["stats"]["percent"] == 100.0
     assert len(status["tasks"]) >= 2
     assert status["tasks"][0]["status"] == "CACHED"
 
 
 @pytest.mark.anyio
-async def test_mixed_cached_and_submitted_no_collision():
-    from app import receive_pipeline_webhook, get_pipeline_status, state, PROCESS_STREAM_RE
+async def test_mixed_cached_and_submitted_no_collision(tmp_path: Path) -> None:
+    app = create_app(settings=make_test_settings(tmp_path), runner=FakeRunner())
+    service = app.state.container.pipeline_service
 
-    state.tasks.clear()
-    state.run_name = None
-
-    # 1. Five cached processes stream in
     cached_lines = [
         "[38/8e17bc] Cached process > CUTANDRUN:PLOT_ANNOTATED_SUMMARY (H3K4me3)",
         "[b2/2102b3] Cached process > CUTANDRUN:DEEPTOOLS_METAPEAK (H3K27me3)",
@@ -227,176 +355,347 @@ async def test_mixed_cached_and_submitted_no_collision():
         "[c0/1a91a2] Cached process > CUTANDRUN:PLOT_ANNOTATED_SUMMARY (H3K27me3)",
     ]
     for line in cached_lines:
-        m = PROCESS_STREAM_RE.search(line)
-        assert m is not None
-        h, act, p, tag = m.groups()
-        state.tasks[h] = {
-            "task_id": h,
-            "key": h,
-            "name": f"{p} ({tag})",
-            "process": p,
-            "tag": tag,
-            "hash": h,
-            "status": "CACHED",
-        }
+        service.tracker.upsert_from_stream_line(line)
 
-    # 2. Three new tasks are submitted by Nextflow with task_id 1, 2, 3
     submitted_traces = [
         {"task_id": 1, "hash": "26/f6a79c", "name": "VOLCANO_1", "status": "COMPLETED"},
         {"task_id": 2, "hash": "4c/9471dd", "name": "VOLCANO_2", "status": "COMPLETED"},
         {"task_id": 3, "hash": "28/25c816", "name": "VOLCANO_3", "status": "COMPLETED"},
     ]
     for tr in submitted_traces:
-        await receive_pipeline_webhook({"event": "process_completed", "trace": tr})
+        await service.handle_webhook({"event": "process_completed", "trace": tr})
 
-    # Verify all 8 tasks are present and b2/2102b3 was NOT overwritten
-    status = await get_pipeline_status()
+    status = service.get_status()
     assert len(status["tasks"]) == 8
-    assert "b2/2102b3" in state.tasks
-    assert state.tasks["b2/2102b3"]["status"] == "CACHED"
-    assert "26/f6a79c" in state.tasks
-    assert state.stats["total"] == 8
-    assert state.stats["cached"] == 5
-    assert state.stats["completed"] == 8
+    assert service.tracker.tasks["b2/2102b3"]["status"] == "CACHED"
+    assert "26/f6a79c" in service.tracker.tasks
+    assert status["stats"]["total"] == 8
+    assert status["stats"]["cached"] == 5
+    assert status["stats"]["completed"] == 8
 
 
 @pytest.mark.anyio
-async def test_running_tasks_with_sentinel_exit_not_failed():
-    from app import receive_pipeline_webhook, get_pipeline_status, state
+async def test_running_tasks_with_sentinel_exit_not_failed(tmp_path: Path) -> None:
+    app = create_app(settings=make_test_settings(tmp_path), runner=FakeRunner())
+    service = app.state.container.pipeline_service
 
-    state.tasks.clear()
-    state.run_name = "test_sentinel_run"
+    await service.handle_webhook(
+        {
+            "event": "process_started",
+            "runName": "test_sentinel_run",
+            "trace": {
+                "task_id": 4,
+                "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
+                "process": "CUTANDRUN:HOMER_FINDPEAKS",
+                "tag": "sample_1",
+                "hash": "b4/d49d17",
+                "status": "RUNNING",
+                "exit": 2147483647,
+            },
+        }
+    )
+    status = service.get_status()
+    assert status["stats"]["total"] == 1
+    assert status["stats"]["running"] == 1
+    assert status["stats"]["failed"] == 0
+    assert service.tracker.tasks["b4/d49d17"]["exit"] is None
 
-    # Nextflow sends process_started with exit: 2147483647 (Integer.MAX_VALUE) for running tasks
-    running_payload = {
-        "event": "process_started",
-        "runName": "test_sentinel_run",
-        "trace": {
-            "task_id": 4,
-            "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
-            "process": "CUTANDRUN:HOMER_FINDPEAKS",
-            "tag": "sample_1",
-            "hash": "b4/d49d17",
-            "status": "RUNNING",
-            "exit": 2147483647,
-        },
-    }
-    await receive_pipeline_webhook(running_payload)
-
-    status = await get_pipeline_status()
-    assert state.stats["total"] == 1
-    assert state.stats["running"] == 1
-    assert state.stats["failed"] == 0, "Running tasks must NOT be counted as failed"
-    assert state.tasks["b4/d49d17"]["exit"] is None
-
-    # When the long-running task finishes, Nextflow sends exit: 0 and status: COMPLETED
-    complete_payload = {
-        "event": "process_completed",
-        "runName": "test_sentinel_run",
-        "trace": {
-            "task_id": 4,
-            "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
-            "process": "CUTANDRUN:HOMER_FINDPEAKS",
-            "tag": "sample_1",
-            "hash": "b4/d49d17",
-            "status": "COMPLETED",
-            "exit": 0,
-        },
-    }
-    await receive_pipeline_webhook(complete_payload)
-
-    status = await get_pipeline_status()
-    assert state.stats["running"] == 0
-    assert state.stats["completed"] == 1
-    assert state.stats["failed"] == 0
-    assert state.tasks["b4/d49d17"]["exit"] == 0
+    await service.handle_webhook(
+        {
+            "event": "process_completed",
+            "runName": "test_sentinel_run",
+            "trace": {
+                "task_id": 4,
+                "name": "CUTANDRUN:HOMER_FINDPEAKS (sample_1)",
+                "process": "CUTANDRUN:HOMER_FINDPEAKS",
+                "tag": "sample_1",
+                "hash": "b4/d49d17",
+                "status": "COMPLETED",
+                "exit": 0,
+            },
+        }
+    )
+    status = service.get_status()
+    assert status["stats"]["running"] == 0
+    assert status["stats"]["completed"] == 1
+    assert status["stats"]["failed"] == 0
+    assert service.tracker.tasks["b4/d49d17"]["exit"] == 0
 
 
 @pytest.mark.anyio
-async def test_start_pipeline_command_args(monkeypatch):
-    from unittest.mock import AsyncMock, MagicMock
-    from app import start_pipeline, PipelineStartPayload, RUN_SH_PATH, state
-    from fastapi import BackgroundTasks
+async def test_start_pipeline_command_args_and_stop_preserves_cancelled(tmp_path: Path) -> None:
+    settings = make_test_settings(tmp_path, port=8123)
+    runner = FakeRunner(return_code=130)
+    app = create_app(settings=settings, runner=runner)
+    container: AppContainer = app.state.container
 
-    captured_cmds = []
-
-    async def mock_subprocess_exec(*cmd, **kwargs):
-        captured_cmds.append(list(cmd))
-        mock_proc = MagicMock()
-        mock_proc.pid = 99999
-        mock_proc.wait = AsyncMock(return_value=0)
-        mock_proc.stdout = AsyncMock()
-        mock_proc.stdout.readline = AsyncMock(return_value=b"")
-        return mock_proc
-
-    monkeypatch.setattr("asyncio.create_subprocess_exec", mock_subprocess_exec)
-    monkeypatch.setattr("app.stream_subprocess_output", AsyncMock())
-
-    # 1. Test resume=True
-    state.status = "idle"
-    state.process = None
-    res = await start_pipeline(PipelineStartPayload(resume=True), BackgroundTasks())
+    # 1. Start with resume=True
+    res = await container.pipeline_service.start(resume=True)
     assert res["status"] == "started"
-    assert "start_time" in res
     assert res["start_time"] is not None
-    assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "true"]
+    assert runner.commands[-1][:3] == ["bash", str(settings.run_sh_path), "true"]
+    assert "127.0.0.1:8123/api/pipeline/webhook" in settings.weblog_config_path.read_text(encoding="utf-8")
 
-    # 2. Test resume=False
-    state.status = "idle"
-    state.process = None
-    res = await start_pipeline(PipelineStartPayload(resume=False), BackgroundTasks())
-    assert res["status"] == "started"
-    assert "start_time" in res
-    assert res["start_time"] is not None
-    assert captured_cmds[-1][0:3] == ["bash", str(RUN_SH_PATH), "false"]
+    # 2. Stop preserves "cancelled" even after process exits with non-zero rc
+    stop_res = await container.pipeline_service.stop()
+    assert stop_res["status"] == "stopping"
+    assert runner.interrupted == [99999]
+    assert container.pipeline_service.stream_task is not None
+    await container.pipeline_service.stream_task
+    assert container.tracker.status == "cancelled"
+
+    # 3. Start with resume=False
+    runner.release_event.set()
+    res2 = await container.pipeline_service.start(resume=False)
+    assert res2["status"] == "started"
+    assert runner.commands[-1][:3] == ["bash", str(settings.run_sh_path), "false"]
+    assert container.pipeline_service.stream_task is not None
+    await container.pipeline_service.stream_task
+    assert container.tracker.status == "failed"
 
 
 @pytest.mark.anyio
-async def test_pipeline_timing_lifecycle():
-    import time
-    from app import receive_pipeline_webhook, get_pipeline_status, state
+async def test_pipeline_timing_lifecycle(tmp_path: Path) -> None:
+    app = create_app(settings=make_test_settings(tmp_path), runner=FakeRunner())
+    service = app.state.container.pipeline_service
 
-    # Reset state
-    state.tasks.clear()
-    state.run_name = None
-    state.start_time = None
-    state.end_time = None
+    await service.handle_webhook({"event": "started", "runName": "timing_test_run"})
+    assert service.tracker.start_time is not None
+    assert service.tracker.end_time is None
 
-    # Pipeline started webhook
-    await receive_pipeline_webhook({"event": "started", "runName": "timing_test_run"})
-    assert state.start_time is not None
-    assert state.end_time is None
-
-    # Status check reflects start_time
-    status = await get_pipeline_status()
-    assert status["start_time"] == state.start_time
+    status = service.get_status()
+    assert status["start_time"] == service.tracker.start_time
     assert status["end_time"] is None
 
-    # Pipeline completed webhook
-    await receive_pipeline_webhook({
-        "event": "completed",
-        "runName": "timing_test_run",
-        "metadata": {"workflow": {"success": True, "stats": {}}}
-    })
-    assert state.end_time is not None
-    assert state.end_time >= state.start_time
+    await service.handle_webhook(
+        {
+            "event": "completed",
+            "runName": "timing_test_run",
+            "metadata": {"workflow": {"success": True, "stats": {}}},
+        }
+    )
+    assert service.tracker.end_time is not None
+    assert service.tracker.end_time >= service.tracker.start_time
 
-    status_done = await get_pipeline_status()
-    assert status_done["start_time"] == state.start_time
-    assert status_done["end_time"] == state.end_time
-
-
-@pytest.mark.anyio
-async def test_index_serves_timer_without_cache():
-    from pathlib import Path
-    from app import get_index
-
-    resp = await get_index()
-    assert "no-store" in resp.headers.get("cache-control", "")
-    html = Path(resp.path).read_text(encoding="utf-8")
-    assert 'id="monitorElapsedTimer"' in html
-    assert 'id="monitorElapsedTime"' in html
+    status_done = service.get_status()
+    assert status_done["end_time"] == service.tracker.end_time
 
 
+def test_http_endpoints_config_samplesheet_preflight_and_results_sandbox(tmp_path: Path) -> None:
+    settings = make_test_settings(tmp_path)
+    settings.config_path.write_text(SAMPLE_CONFIG, encoding="utf-8")
+
+    # Create input_dir with 1 BAM for discover & preflight
+    input_dir = tmp_path / "dropbox_input"
+    bam_dir = input_dir / "06_index_bam"
+    bam_dir.mkdir(parents=True)
+    (bam_dir / "sample_A.bam").write_text("bam", encoding="utf-8")
+
+    # Create results dir AND sibling prefix-collision dir to test traversal protection
+    exp_results = settings.results_base_dir / "exp_test_01" / "15_summary_plots"
+    exp_results.mkdir(parents=True)
+    (exp_results / "01_peak_counts.png").write_bytes(b"\x89PNG\r\n")
+
+    sibling_secret_dir = settings.results_base_dir / "exp_test_01_secret"
+    sibling_secret_dir.mkdir(parents=True)
+    (sibling_secret_dir / "leak.txt").write_text("secret", encoding="utf-8")
+
+    app = create_app(settings=settings, runner=FakeRunner())
+    client = TestClient(app)
+
+    # Index & static assets + security headers
+    idx = client.get("/")
+    assert idx.status_code == 200
+    assert "no-store" in idx.headers.get("cache-control", "")
+    assert idx.headers.get("x-content-type-options") == "nosniff"
+    assert 'id="monitorElapsedTimer"' in idx.text
+    assert 'id="monitorElapsedTime"' in idx.text
+    assert 'id="cfg_resource_cpus"' in idx.text
+    assert 'id="cfg_resource_memory_value"' in idx.text
+    assert 'id="cfg_resource_memory_unit"' in idx.text
+    assert 'id="cfg_resource_time_value"' in idx.text
+    assert 'id="cfg_resource_time_unit"' in idx.text
+    assert client.get("/static/css/styles.css").status_code == 200
+    assert client.get("/static/js/main.js").status_code == 200
+
+    # Config GET/PUT + .bak backup + PATCH contrasts
+    cfg_resp = client.get("/api/config")
+    assert cfg_resp.status_code == 200
+    cfg = cfg_resp.json()["config"]
+    cfg["input_dir"] = str(input_dir)
+    cfg["resource_cpus"] = 16
+    cfg["resource_memory"] = "64.GB"
+    cfg["resource_time"] = "24.h"
+    put_resp = client.put("/api/config", json=cfg)
+    assert put_resp.status_code == 200
+    assert put_resp.json()["config"]["resource_cpus"] == 16
+    assert put_resp.json()["config"]["resource_memory"] == "64.GB"
+    assert put_resp.json()["config"]["resource_time"] == "24.h"
+    assert settings.config_path.with_suffix(".config.bak").exists()
+    saved_text = settings.config_path.read_text(encoding="utf-8")
+    assert "cpus: 16" in saved_text
+    assert "memory: 64.GB" in saved_text
+    assert "time: 24.h" in saved_text
+
+    patch_resp = client.patch(
+        "/api/config/contrasts",
+        json={"diff_contrasts": [{"id": "C_new", "treatment": "T", "background": "B", "target": "H3K4me3"}]},
+    )
+    assert patch_resp.status_code == 200
+    assert len(patch_resp.json()["diff_contrasts"]) == 1
+
+    # Samplesheet GET/PUT/discover
+    disc_resp = client.post("/api/samplesheet/discover")
+    assert disc_resp.status_code == 200
+    assert disc_resp.json()["discovered"] == ["sample_A"]
+
+    ss_put = client.put(
+        "/api/samplesheet",
+        json={"rows": [{"sample_id": "sample_A", "condition": "WT", "target": "H3K4me3", "replicate": "1"}]},
+    )
+    assert ss_put.status_code == 200
+    assert client.get("/api/samplesheet").json()["rows"][0]["sample_id"] == "sample_A"
+
+    # Preflight
+    pf_resp = client.post("/api/preflight")
+    assert pf_resp.status_code == 200
+    assert any(c["name"] == "Input Directory" and c["status"] == "ok" for c in pf_resp.json()["checks"])
+
+    # Results listing & strict path traversal sandboxing
+    files_resp = client.get("/api/results/files")
+    assert files_resp.status_code == 200
+    assert files_resp.json()["exists"] is True
+    assert files_resp.json()["files"][0]["name"] == "01_peak_counts.png"
+
+    ok_file = client.get("/api/results/file/15_summary_plots/01_peak_counts.png")
+    assert ok_file.status_code == 200
+
+    traversal_attempt = client.get("/api/results/file/../exp_test_01_secret/leak.txt")
+    assert traversal_attempt.status_code == 404
 
 
+def test_trace_file_reconciliation_and_sse_stream(tmp_path: Path) -> None:
+    settings = make_test_settings(tmp_path)
+    settings.config_path.write_text(SAMPLE_CONFIG, encoding="utf-8")
+    pipeline_info = settings.results_base_dir / "exp_test_01" / "pipeline_info"
+    pipeline_info.mkdir(parents=True)
+    trace_file = pipeline_info / "execution_trace_2026-11-11.txt"
+    trace_file.write_text(
+        "task_id\thash\tname\tstatus\texit\tduration\trealtime\t%cpu\tpeak_rss\n"
+        "7\tcc/998877\tCUTANDRUN:MACS2 (s1)\tCOMPLETED\t0\t12s\t10s\t98.5%\t512 MB\n",
+        encoding="utf-8",
+    )
+
+    app = create_app(settings=settings, runner=FakeRunner())
+    service = app.state.container.pipeline_service
+    service.tracker.start_time = trace_file.stat().st_mtime - 1
+    service.broadcaster.append_log("hello log\n")
+    service.reconcile_from_trace_file()
+
+    assert "cc/998877" in service.tracker.tasks
+    assert service.tracker.tasks["cc/998877"]["cpu_percent"] == 98.5
+    assert service.tracker.tasks["cc/998877"]["duration"] == "12s"
+    assert service.tracker.tasks["cc/998877"]["exit"] == 0
+
+
+def test_health_lifespan_and_shutdown_endpoints(tmp_path: Path) -> None:
+    import time
+
+    settings = make_test_settings(tmp_path)
+    runner = FakeRunner()
+    shutdown_calls: list[str] = []
+    app = create_app(
+        settings=settings,
+        runner=runner,
+        shutdown_callback=lambda: shutdown_calls.append("shutdown"),
+    )
+
+    with TestClient(app) as client:
+        health = client.get("/api/health")
+        assert health.status_code == 200
+        health_data = health.json()
+        assert health_data["status"] == "ok"
+        assert health_data["workspace_dir"] == str(settings.workspace_dir)
+        assert health_data["pipeline_status"] == "idle"
+
+        # Start pipeline and verify shutdown without force is rejected (409)
+        start_resp = client.post("/api/pipeline/start", json={"resume": True})
+        assert start_resp.status_code == 200
+
+        blocked = client.post("/api/server/shutdown")
+        assert blocked.status_code == 409
+        assert shutdown_calls == []
+
+    # Exiting TestClient triggers lifespan shutdown, interrupting active pipeline
+    assert runner.interrupted == [99999]
+
+    # Force shutdown stops active pipeline and triggers shutdown callback
+    runner2 = FakeRunner()
+    shutdown_calls2: list[str] = []
+    app2 = create_app(
+        settings=settings,
+        runner=runner2,
+        shutdown_callback=lambda: shutdown_calls2.append("shutdown"),
+    )
+    with TestClient(app2) as client2:
+        assert client2.post("/api/pipeline/start", json={"resume": False}).status_code == 200
+        forced = client2.post("/api/server/shutdown", json={"force": True})
+        assert forced.status_code == 200
+        assert forced.json() == {"status": "shutting_down"}
+        time.sleep(0.25)
+
+    assert runner2.interrupted == [99999]
+    assert shutdown_calls2 == ["shutdown"]
+
+
+def test_workspace_switcher_initialization_and_active_run_guard(tmp_path: Path) -> None:
+    settings = make_test_settings(tmp_path)
+    settings.config_path.write_text(SAMPLE_CONFIG, encoding="utf-8")
+    runner = FakeRunner()
+    app = create_app(settings=settings, runner=runner)
+
+    new_exp = tmp_path / "Exp_New_02" / "Analysis_Run"
+
+    with TestClient(app) as client:
+        initial = client.get("/api/workspace")
+        assert initial.status_code == 200
+        init_data = initial.json()
+        assert init_data["current"]["path"] == str(settings.workspace_dir)
+        assert init_data["current"]["has_config"] is True
+
+        # Selecting a non-existent folder without initialize=True returns 404
+        missing = client.post("/api/workspace/select", json={"path": str(new_exp), "initialize": False})
+        assert missing.status_code == 404
+
+        # Initialize and switch into a brand-new Analysis_Run folder
+        switched = client.post(
+            "/api/workspace/select",
+            json={"path": str(new_exp), "initialize": True, "experiment_name": "exp_new_02"},
+        )
+        assert switched.status_code == 200
+        sw_data = switched.json()
+        assert sw_data["current"]["path"] == str(new_exp.resolve())
+        assert sw_data["current"]["has_config"] is True
+        assert sw_data["current"]["has_samplesheet"] is True
+        assert sw_data["current"]["has_run_sh"] is True
+        assert len(sw_data["recent"]) == 2
+
+        # /api/health and /api/config reflect the newly switched workspace
+        assert client.get("/api/health").json()["workspace_dir"] == str(new_exp.resolve())
+        cfg_resp = client.get("/api/config")
+        assert cfg_resp.status_code == 200
+        assert cfg_resp.json()["config"]["experiment"] == "exp_new_02"
+
+        # Switching is blocked while a pipeline run is active
+        assert client.post("/api/pipeline/start", json={"resume": True}).status_code == 200
+        blocked = client.post("/api/workspace/select", json={"path": str(settings.workspace_dir)})
+        assert blocked.status_code == 409
+
+        # Directory browsing lists subdirectories and detects ready experiments
+        browse = client.get("/api/workspace/list-dirs", params={"path": str(tmp_path)})
+        assert browse.status_code == 200
+        dirs = {d["name"]: d for d in browse.json()["directories"]}
+        assert "Exp_New_02" in dirs
+        assert dirs["Analysis_Run"]["has_config"] is True
+
+    assert runner.interrupted == [99999]
