@@ -6,7 +6,7 @@ This guide explains how the CUT&RUN pipeline generates metapeak plots (also know
 
 ## 1. How Metapeak Plots Work in This Pipeline
 
-- Metapeak plotting is implemented in [`nf-cutandrun/modules/local/deeptools_metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf)
+- Metapeak plotting is implemented in [`nf-cutandrun/modules/local/deeptools/metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools/metapeak/main.nf)
 - and configured via [`nf-cutandrun/conf/modules.config`](../nf-cutandrun/conf/modules.config) and [`Analysis_Run/config/experiment.config`](../Analysis_Run/config/experiment.config).
 
 ### Input Files
@@ -51,7 +51,7 @@ Based on [`Analysis_Run/config/samplesheet.csv`](../Analysis_Run/config/samplesh
 - **`H3K27me3` Tornado Plot (`H3K27me3_metapeak_heatmap.pdf`):** Plots signal from `EV_INT_H3K27me3` and `N2_H3K27me3` centered on the regions in `H3K27me3_master_peaks.bed`.
 
 ### Two-Stage `deepTools` Execution
-Inside [`nf-cutandrun/modules/local/deeptools_metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf), two commands run sequentially:
+Inside [`nf-cutandrun/modules/local/deeptools/metapeak/main.nf`](../nf-cutandrun/modules/local/deeptools/metapeak/main.nf), two commands run sequentially:
 1. **`computeMatrix reference-point`** (`ext.args`): Calculates coverage scores per genomic bin across a window (`-b` upstream, `-a` downstream) around each peak's reference point (`center`, `TSS`, or `TES`) and saves a compressed matrix (`<target>_matrix.mat.gz`).
 2. **`plotHeatmap`** (`ext.args2`): Renders the top metapeak summary line plot and the bottom per-peak heatmap (`<target>_metapeak_heatmap.pdf`) from the compressed matrix.
 

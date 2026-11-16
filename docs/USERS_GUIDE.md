@@ -190,7 +190,7 @@ flowchart LR
 ---
 
 ### Step `c` (Option 1): Calling Peaks with MACS2
-- **Module:** [`MACS2_CALLPEAK`](../nf-cutandrun/modules/local/macs2_callpeak/main.nf)
+- **Module:** [`MACS2_CALLPEAK`](../nf-cutandrun/modules/local/macs2/callpeak/main.nf)
 - **Purpose:** Calls narrow (or broad) peaks per sample from indexed paired-end BAM files (`-f BAMPE`) without a background IgG control file by default.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -216,7 +216,7 @@ flowchart LR
 ---
 
 ### Step `c` (Option 2): Calling Peaks with HOMER
-- **Module:** [`HOMER_FINDPEAKS`](../nf-cutandrun/modules/local/homer_findpeaks/main.nf)
+- **Module:** [`HOMER_FINDPEAKS`](../nf-cutandrun/modules/local/homer/findpeaks/main.nf)
 - **Purpose:** Calls narrower transcription factor (`-style factor`) or broader histone (`-style histone`) peaks from each sample's HOMER tag directory using `findPeaks`, and converts the output to standard 6-column BED format via `pos2bed.pl`.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -238,7 +238,7 @@ flowchart LR
 ---
 
 ### Step `d` (Part 1): Merging Replicate Peaks per Condition (`bedtools`)
-- **Module:** [`BEDTOOLS_MERGE_REPLICATES`](../nf-cutandrun/modules/local/bedtools_merge_replicates/main.nf)
+- **Module:** [`BEDTOOLS_MERGE_REPLICATES`](../nf-cutandrun/modules/local/bedtools/merge_replicates/main.nf)
 - **Purpose:** Groups sample peak files by `condition` (from [`Analysis_Run/config/samplesheet.csv`](../Analysis_Run/config/samplesheet.csv)), sorts and merges overlapping intervals using `bedtools`, and retains only peaks called in at least `min_replicate_overlap` replicates (default `2`) to filter out noisy single-replicate blips.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -260,7 +260,7 @@ flowchart LR
 ---
 
 ### Step `d` (Part 2): Creating an Inclusive Master Peak Set per Target/Histone Mark (`bedtools`)
-- **Module:** [`BEDTOOLS_MERGE_MASTER`](../nf-cutandrun/modules/local/bedtools_merge_master/main.nf)
+- **Module:** [`BEDTOOLS_MERGE_MASTER`](../nf-cutandrun/modules/local/bedtools/merge_master/main.nf)
 - **Purpose:** Groups the replicated peak BED files by `target` (e.g., `H3K4me3` across `EV_INT_H3K4me3`, `N2_H3K4me3`, `EV_INT_MC_H3K4me3`; and `H3K27me3` across `EV_INT_H3K27me3`, `N2_H3K27me3`), sorts by genomic coordinate, and inclusively merges overlapping intervals into `<target>_master_peaks.bed` (`H3K4me3_master_peaks.bed` and `H3K27me3_master_peaks.bed`).
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -306,7 +306,7 @@ flowchart LR
 ---
 
 ### Step `e`: Peak-by-Peak Quantification & Annotation (`annotatePeaks.pl`)
-- **Module:** [`HOMER_ANNOTATEPEAKS`](../nf-cutandrun/modules/local/homer_annotatepeaks/main.nf)
+- **Module:** [`HOMER_ANNOTATEPEAKS`](../nf-cutandrun/modules/local/homer/annotatepeaks/main.nf)
 - **Purpose:** Quantifies normalized tag counts (fragments per 10 million mapped) across all samples for a given `target` at each interval in `<target>_master_peaks.bed`, while annotating nearest TSS, gene IDs, and genomic features.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -335,7 +335,7 @@ flowchart LR
 ---
 
 ### Step `f`: Calling Differential Peaks (`getDifferentialPeaksReplicates.pl`)
-- **Module:** [`HOMER_GETDIFFERENTIALPEAKS`](../nf-cutandrun/modules/local/homer_getdifferentialpeaks/main.nf)
+- **Module:** [`HOMER_GETDIFFERENTIALPEAKS`](../nf-cutandrun/modules/local/homer/getdifferentialpeaks/main.nf)
 - **Purpose:** Tests statistical significance (DESeq2/edgeR adjusted p-value / FDR) of fold changes between treatment (`-t`) and background/control (`-b`) conditions across `<target>_master_peaks.bed`.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -360,7 +360,7 @@ flowchart LR
 ---
 
 ### Step `g`: Making Metapeak / Tornado Plots (`deepTools`)
-- **Module:** [`DEEPTOOLS_METAPEAK`](../nf-cutandrun/modules/local/deeptools_metapeak/main.nf)
+- **Module:** [`DEEPTOOLS_METAPEAK`](../nf-cutandrun/modules/local/deeptools/metapeak/main.nf)
 - **Purpose:** Computes signal matrices (`computeMatrix reference-point`) centered on `<target>_master_peaks.bed` across all BigWig tracks for that target (`08_bigwig/${params.bigwig_source}/*.bw`) and renders tornado heatmaps (`plotHeatmap`).
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -394,7 +394,7 @@ flowchart LR
 ---
 
 ### Step `h` (Option 1): Enriched Motif Discovery with HOMER (`findMotifsGenome.pl`)
-- **Module:** [`HOMER_FINDMOTIFSGENOME`](../nf-cutandrun/modules/local/homer_findmotifsgenome/main.nf)
+- **Module:** [`HOMER_FINDMOTIFSGENOME`](../nf-cutandrun/modules/local/homer/findmotifsgenome/main.nf)
 - **Purpose:** Searches for known and *de novo* enriched sequence motifs within `<target>_master_peaks.bed`.
 - **Configuration in `experiment.config`:**
   ```groovy
@@ -414,7 +414,7 @@ flowchart LR
 ---
 
 ### Step `h` (Option 2): Enriched Motif Discovery with MEME Suite (`STREME`)
-- **Module:** [`MEME_STREME`](../nf-cutandrun/modules/local/meme_streme/main.nf)
+- **Module:** [`MEME_STREME`](../nf-cutandrun/modules/local/meme/streme/main.nf)
 - **Purpose:** Finds peak centers via `awk`, expands $\pm 50\text{ bp}$ (`100 bp` windows) with `bedtools slop`, extracts sequences with `bed2fasta`, and runs *de novo* motif discovery using `streme`.
 - **Configuration in `experiment.config`:**
   ```groovy

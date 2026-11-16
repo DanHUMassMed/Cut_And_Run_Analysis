@@ -3,18 +3,18 @@
     IMPORT MODULES / SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { MACS2_CALLPEAK               } from '../modules/local/macs2_callpeak/main'
-include { HOMER_FINDPEAKS              } from '../modules/local/homer_findpeaks/main'
-include { BEDTOOLS_MERGE_REPLICATES    } from '../modules/local/bedtools_merge_replicates/main'
-include { BEDTOOLS_MERGE_MASTER        } from '../modules/local/bedtools_merge_master/main'
-include { HOMER_ANNOTATEPEAKS          } from '../modules/local/homer_annotatepeaks/main'
-include { HOMER_GETDIFFERENTIALPEAKS   } from '../modules/local/homer_getdifferentialpeaks/main'
-include { DEEPTOOLS_METAPEAK           } from '../modules/local/deeptools_metapeak/main'
-include { HOMER_FINDMOTIFSGENOME       } from '../modules/local/homer_findmotifsgenome/main'
-include { MEME_STREME                  } from '../modules/local/meme_streme/main'
-include { PLOT_PEAK_COUNTS             } from '../modules/local/plot_peak_counts/main'
-include { PLOT_ANNOTATED_SUMMARY       } from '../modules/local/plot_annotated_summary/main'
-include { PLOT_DIFFERENTIAL_VOLCANO_MA } from '../modules/local/plot_differential_volcano_ma/main'
+include { MACS2_CALLPEAK               } from '../modules/local/macs2/callpeak/main'
+include { HOMER_FINDPEAKS              } from '../modules/local/homer/findpeaks/main'
+include { BEDTOOLS_MERGE_REPLICATES    } from '../modules/local/bedtools/merge_replicates/main'
+include { BEDTOOLS_MERGE_MASTER        } from '../modules/local/bedtools/merge_master/main'
+include { HOMER_ANNOTATEPEAKS          } from '../modules/local/homer/annotatepeaks/main'
+include { HOMER_GETDIFFERENTIALPEAKS   } from '../modules/local/homer/getdifferentialpeaks/main'
+include { DEEPTOOLS_METAPEAK           } from '../modules/local/deeptools/metapeak/main'
+include { HOMER_FINDMOTIFSGENOME       } from '../modules/local/homer/findmotifsgenome/main'
+include { MEME_STREME                  } from '../modules/local/meme/streme/main'
+include { PLOT_PEAK_COUNTS             } from '../modules/local/python/plot_peak_counts/main'
+include { PLOT_ANNOTATED_SUMMARY       } from '../modules/local/python/plot_annotated_summary/main'
+include { PLOT_DIFFERENTIAL_VOLCANO_MA } from '../modules/local/python/plot_differential_volcano_ma/main'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
