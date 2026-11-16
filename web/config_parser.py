@@ -20,7 +20,6 @@ _ALLOWED_NF_INTERPOLATIONS = frozenset(
         "${projectDir}",
         "${params.experiment}",
         "${params.input_dir}",
-        "${params.bigwig_source}",
         "${params.active_peak_caller}",
         "${params.outdir}",
     }
@@ -270,7 +269,6 @@ params {{
     email                          = "{_escape_groovy_double_quoted(model.email)}"
     experiment                     = "{_escape_groovy_double_quoted(model.experiment)}"
     input_dir                      = "{_escape_groovy_double_quoted(model.input_dir)}"
-    bigwig_source                  = "{_escape_groovy_double_quoted(model.bigwig_source)}"             // 'deepTools' (bamCoverage RPKM) or 'UCSC' (bedGraphToBigWig)
     outdir                         = "{_escape_groovy_double_quoted(model.outdir)}"
     samplesheet                    = "{_escape_groovy_double_quoted(model.samplesheet)}"
 
@@ -310,7 +308,6 @@ params {{
     // =========================================================================
     input_bam                      = "${{params.input_dir}}/06_index_bam/*.bam"
     input_tagdirs                  = "${{params.input_dir}}/07_homer/tag_dir/*"
-    input_bigwig                   = "${{params.input_dir}}/08_bigwig/${{params.bigwig_source}}/*.bw"
     input_sample_peaks             = "${{params.outdir}}/09_peaks/${{params.active_peak_caller}}/*_${{params.active_peak_caller}}_merge_ready_peaks.bed"
     input_replicated_peaks         = "${{params.outdir}}/10_merged_peaks/replicates/*_replicated_peaks.bed"
     input_peaks_bed                = "${{params.outdir}}/10_merged_peaks/master/*_master_peaks.bed"

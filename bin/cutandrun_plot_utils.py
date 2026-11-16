@@ -206,25 +206,64 @@ def save_dual_figure(fig: plt.Figure, out_base: Path, dpi: int = 300) -> tuple[P
 
 
 def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]:
-    """Parse samplesheet.csv into a dictionary keyed by sample_id."""
+    """Parse and validate samplesheet.csv into a dictionary keyed by sample_id."""
     if samplesheet_path is None or not samplesheet_path.exists():
-        return {}
+        raise FileNotFoundError(f"Samplesheet file does not exist: {samplesheet_path}")
+
+    required_cols = ("sample_id", "sample_name", "condition", "target", "replicate")
     records: dict[str, SampleMetadata] = {}
-    with samplesheet_path.open("r", encoding="utf-8") as handle:
+    with samplesheet_path.open("r", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
-        for row in reader:
-            sample_id = (row.get("sample_id") or "").strip()
-            if not sample_id:
+        if not reader.fieldnames:
+            raise ValueError(f"Samplesheet is empty or missing header row: {samplesheet_path}")
+        header_set = {col.strip() for col in reader.fieldnames if col}
+        missing_headers = [col for col in required_cols if col not in header_set]
+        if missing_headers:
+            raise ValueError(
+                f"Samplesheet {samplesheet_path} is missing required column header(s): {', '.join(missing_headers)}"
+            )
+
+        for row_idx, row in enumerate(reader, start=2):
+            cleaned = {k.strip(): (v or "").strip() for k, v in row.items() if k}
+            if not any(cleaned.values()):
                 continue
-            sample_name = (row.get("sample_name") or sample_id).strip()
-            condition = (row.get("condition") or sample_name).strip()
-            target = (row.get("target") or "default").strip()
-            rep_str = (row.get("replicate") or "1").strip()
+
+            missing_fields = [col for col in required_cols if not cleaned.get(col)]
+            if missing_fields:
+                raise ValueError(
+                    f"Samplesheet {samplesheet_path} [Line {row_idx}]: missing required field(s): "
+                    f"{', '.join(missing_fields)}"
+                )
+
+            sample_id = cleaned["sample_id"]
+            sample_name = cleaned["sample_name"]
+            condition = cleaned["condition"]
+            target = cleaned["target"]
+            rep_str = cleaned["replicate"]
+
+            if target.lower() == "default" or condition.lower() == "default":
+                raise ValueError(
+                    f"Samplesheet {samplesheet_path} [Line {row_idx}]: 'default' is not allowed for target or condition"
+                )
+
             try:
                 replicate = int(rep_str)
-            except ValueError:
-                replicate = 1
-            control_id = (row.get("control_id") or "").strip() or None
+            except ValueError as exc:
+                raise ValueError(
+                    f"Samplesheet {samplesheet_path} [Line {row_idx}]: invalid replicate '{rep_str}' "
+                    f"for sample_id '{sample_id}' (must be a positive integer)"
+                ) from exc
+            if replicate < 1:
+                raise ValueError(
+                    f"Samplesheet {samplesheet_path} [Line {row_idx}]: replicate must be >= 1 for sample_id '{sample_id}'"
+                )
+
+            if sample_id in records:
+                raise ValueError(
+                    f"Samplesheet {samplesheet_path} [Line {row_idx}]: duplicate sample_id '{sample_id}'"
+                )
+
+            control_id = cleaned.get("control_id") or None
             records[sample_id] = SampleMetadata(
                 sample_id=sample_id,
                 sample_name=sample_name,
@@ -233,6 +272,9 @@ def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]
                 replicate=replicate,
                 control_id=control_id,
             )
+
+    if not records:
+        raise ValueError(f"Samplesheet contains no valid sample rows: {samplesheet_path}")
     return records
 
 
@@ -314,13 +356,14 @@ def parse_homer_annotated_table(
             sid = extract_sample_id_from_tag_header(col_name)
             tag_col_indices.append(idx)
             sample_ids.append(sid)
-            if sid in samplesheet_map:
-                meta = samplesheet_map[sid]
-                sample_names.append(meta.sample_name)
-                sample_conditions.append(meta.condition)
-            else:
-                sample_names.append(sid)
-                sample_conditions.append(sid)
+            if sid not in samplesheet_map:
+                raise ValueError(
+                    f"Sample ID '{sid}' in annotated table '{table_path.name}' not found in samplesheet.csv. "
+                    f"Available sample_ids: {', '.join(sorted(samplesheet_map))}"
+                )
+            meta = samplesheet_map[sid]
+            sample_names.append(meta.sample_name)
+            sample_conditions.append(meta.condition)
 
         rows: list[HomerAnnotatedPeakRow] = []
         for line in handle:

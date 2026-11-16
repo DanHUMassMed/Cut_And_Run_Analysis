@@ -102,9 +102,11 @@ def collect_peak_records(
     records: list[PeakCountRecord] = []
 
     condition_to_target: dict[str, str] = {}
+    valid_targets: set[str] = set()
     for meta in samplesheet_map.values():
         if meta.target.lower() != "igg":
             condition_to_target[meta.condition] = meta.target
+            valid_targets.add(meta.target)
 
     sample_suffixes = [
         "_macs2_merge_ready_peaks.bed",
@@ -126,18 +128,20 @@ def collect_peak_records(
             seen_paths.add(path.name)
             sample_id = strip_known_suffixes(path.name, sample_suffixes)
             meta = samplesheet_map.get(sample_id)
-            if meta and meta.target.lower() == "igg":
+            if meta is None:
+                raise ValueError(
+                    f"Sample ID '{sample_id}' (extracted from '{path.name}') not found in samplesheet.csv. "
+                    f"Valid sample_ids: {', '.join(sorted(samplesheet_map))}"
+                )
+            if meta.target.lower() == "igg":
                 continue
-            target = meta.target if meta else "default"
-            display_name = meta.sample_name if meta else sample_id
-            condition = meta.condition if meta else sample_id
             records.append(
                 PeakCountRecord(
-                    target=target,
+                    target=meta.target,
                     stage=stage_label,
                     entity_id=sample_id,
-                    display_name=display_name,
-                    condition=condition,
+                    display_name=meta.sample_name,
+                    condition=meta.condition,
                     peak_count=count_bed_intervals(path),
                     source_file=path.name,
                 )
@@ -153,7 +157,12 @@ def collect_peak_records(
         if not path.exists():
             continue
         cond_id = strip_known_suffixes(path.name, ["_replicated_peaks.bed", ".bed"])
-        target = condition_to_target.get(cond_id, "default")
+        if cond_id not in condition_to_target:
+            raise ValueError(
+                f"Condition '{cond_id}' (extracted from '{path.name}') not found in samplesheet.csv. "
+                f"Valid conditions: {', '.join(sorted(condition_to_target))}"
+            )
+        target = condition_to_target[cond_id]
         records.append(
             PeakCountRecord(
                 target=target,
@@ -170,6 +179,11 @@ def collect_peak_records(
         if not path.exists():
             continue
         target_id = strip_known_suffixes(path.name, ["_master_peaks.bed", ".bed"])
+        if target_id not in valid_targets:
+            raise ValueError(
+                f"Target '{target_id}' (extracted from '{path.name}') not found in samplesheet.csv. "
+                f"Valid targets: {', '.join(sorted(valid_targets))}"
+            )
         records.append(
             PeakCountRecord(
                 target=target_id,

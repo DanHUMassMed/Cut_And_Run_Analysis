@@ -31,9 +31,9 @@ process PLOT_DIFFERENTIAL_VOLCANO_MA {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
-    def treatment  = meta.treatment  ?: 'Treatment'
-    def background = meta.background ?: 'Background'
-    def target     = meta.target     ?: ''
+    def treatment  = meta.treatment
+    def background = meta.background
+    def target     = meta.target
     """
     plot_differential_volcano_ma.py \\
         --diff-file ${diff_peaks_txt} \\

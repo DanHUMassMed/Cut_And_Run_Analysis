@@ -15,6 +15,7 @@ include { MEME_STREME                  } from '../modules/local/meme/streme/main
 include { PLOT_PEAK_COUNTS             } from '../modules/local/python/plot_peak_counts/main'
 include { PLOT_ANNOTATED_SUMMARY       } from '../modules/local/python/plot_annotated_summary/main'
 include { PLOT_DIFFERENTIAL_VOLCANO_MA } from '../modules/local/python/plot_differential_volcano_ma/main'
+include { isControlTarget              } from '../lib/utils'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -40,10 +41,10 @@ workflow CUTANDRUN {
     // Filter out negative control (IgG) samples before peak calling & merging
     //
     def ch_target_bam_bai = ch_bam_bai.filter { meta, _bam, _bai ->
-        meta.target?.toLowerCase() != 'igg'
+        !isControlTarget(meta)
     }
     def ch_target_tagdirs = ch_tagdirs.filter { meta, _tagdir ->
-        meta.target?.toLowerCase() != 'igg'
+        !isControlTarget(meta)
     }
 
     //
@@ -92,9 +93,9 @@ workflow CUTANDRUN {
     def ch_replicated_peaks = ch_existing_replicated_peaks
     if (params.run_merge_replicate_peaks) {
         def ch_grouped_condition_peaks = ch_active_sample_peaks
-            .filter { meta, _bed -> meta.target?.toLowerCase() != 'igg' }
+            .filter { meta, _bed -> !isControlTarget(meta) }
             .map { meta, bed ->
-                [ [ id: meta.condition, condition: meta.condition, target: meta.target ?: 'default' ], bed ]
+                [ [ id: meta.condition, condition: meta.condition, target: meta.target ], bed ]
             }
             .groupTuple(by: 0)
 
@@ -115,10 +116,9 @@ workflow CUTANDRUN {
             : ch_replicated_peaks.mix(ch_active_sample_peaks)
 
         def ch_grouped_target_beds = ch_source_for_master
-            .filter { meta, _bed -> meta.target?.toLowerCase() != 'igg' }
+            .filter { meta, _bed -> !isControlTarget(meta) }
             .map { meta, bed ->
-                def target_name = meta.target ?: 'default'
-                [ [ id: target_name, target: target_name ], bed ]
+                [ [ id: meta.target, target: meta.target ], bed ]
             }
             .groupTuple(by: 0)
 
@@ -130,7 +130,7 @@ workflow CUTANDRUN {
     // Key master peaks by target_name: [ val(target_name), val(meta), path(master_bed) ]
     //
     def ch_master_by_target = ch_master_peaks.map { meta, bed ->
-        [ meta.target ?: meta.id, meta, bed ]
+        [ meta.target, meta, bed ]
     }
 
     //
@@ -139,8 +139,8 @@ workflow CUTANDRUN {
     def ch_annotated_peaks = ch_existing_annotated_peaks
     if (params.run_homer_annotatepeaks) {
         def ch_tagdirs_by_target = ch_tagdirs
-            .filter { meta, _tagdir -> meta.target?.toLowerCase() != 'igg' }
-            .map { meta, tagdir -> [ meta.target ?: 'default', tagdir ] }
+            .filter { meta, _tagdir -> !isControlTarget(meta) }
+            .map { meta, tagdir -> [ meta.target, tagdir ] }
             .groupTuple(by: 0)
 
         def ch_annotate_input = ch_master_by_target
@@ -175,7 +175,7 @@ workflow CUTANDRUN {
             }
             .combine(ch_tagdirs_by_condition, by: 0)
             .map { _bg_cond, contrast, treat_tagdirs, bg_tagdirs ->
-                [ contrast.target ?: 'default', contrast, treat_tagdirs, bg_tagdirs ]
+                [ contrast.target, contrast, treat_tagdirs, bg_tagdirs ]
             }
             .combine(ch_master_by_target, by: 0)
             .map { _target, contrast, treat_tagdirs, bg_tagdirs, _master_meta, master_bed ->
@@ -184,7 +184,7 @@ workflow CUTANDRUN {
                         id        : contrast.id,
                         treatment : contrast.treatment,
                         background: contrast.background,
-                        target    : contrast.target ?: 'default'
+                        target    : contrast.target
                     ],
                     treat_tagdirs,
                     bg_tagdirs,
@@ -204,11 +204,11 @@ workflow CUTANDRUN {
     //
     def ch_metapeak_pdf = channel.empty()
     def ch_metapeak_matrix = channel.empty()
-    if (params.run_deeptools_metapeak) {
+    if (params.run_deeptools_metapeak) {        
         def ch_bigwigs_by_target = ch_bigwig
-            .filter { meta, _bw -> meta.target?.toLowerCase() != 'igg' }
+            .filter { meta, _bw -> !isControlTarget(meta) }
             .map { meta, bw ->
-                [ meta.target ?: 'default', [ meta.sample_name ?: meta.id, bw ] ]
+                [ meta.target, [ meta.sample_name, bw ] ]
             }
             .groupTuple(by: 0)
             .map { target, sample_bw_pairs ->
@@ -225,6 +225,7 @@ workflow CUTANDRUN {
             .map { _target, meta, peaks_bed, sample_names, bigwigs ->
                 [ meta + [ sample_names: sample_names ], peaks_bed, bigwigs ]
             }
+            
 
         DEEPTOOLS_METAPEAK(ch_metapeak_input)
         ch_metapeak_matrix = DEEPTOOLS_METAPEAK.out.matrix

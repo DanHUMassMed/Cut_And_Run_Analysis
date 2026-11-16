@@ -37,7 +37,7 @@ process PLOT_ANNOTATED_SUMMARY {
 
     script:
     def args = task.ext.args ?: ''
-    prefix = task.ext.prefix ?: "${meta.target ?: meta.id}"
+    prefix = task.ext.prefix ?: "${meta.target}"
     """
     plot_annotated_features_qc.py \\
         --annotated-peaks ${annotated_peaks_txt} \\
@@ -48,7 +48,7 @@ process PLOT_ANNOTATED_SUMMARY {
     """
 
     stub:
-    prefix = task.ext.prefix ?: "${meta.target ?: meta.id}"
+    prefix = task.ext.prefix ?: "${meta.target}"
     """
     touch ${prefix}_genomic_features.svg
     touch ${prefix}_genomic_features.png
