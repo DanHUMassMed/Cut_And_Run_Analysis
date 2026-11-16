@@ -21,6 +21,7 @@ process MACS2_CALLPEAK {
 
     output:
     tuple val(meta), path("*.{narrowPeak,broadPeak}"), emit: peak
+    tuple val(meta), path("${prefix}_macs2_merge_ready_peaks.bed"), emit: merge_ready_bed
     tuple val(meta), path("*.xls"), emit: xls
     tuple val(meta), path("*_summits.bed"), emit: summits, optional: true
     tuple val(meta), path("*.gappedPeak"), emit: gapped, optional: true
@@ -32,11 +33,15 @@ process MACS2_CALLPEAK {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def peak_ext = args.contains('--broad') ? 'broadPeak' : 'narrowPeak'
     """
     macs2 callpeak \\
         -t ${bam} \\
         -n ${prefix} \\
         ${args}
+
+    awk 'BEGIN{OFS="\\t"} !/^#/ && !/^track/ && !/^browser/ && NF>=3 {print \$1, \$2, \$3}' ${prefix}_peaks.${peak_ext} | \\
+        LC_ALL=C sort -k1,1 -k2,2n > ${prefix}_macs2_merge_ready_peaks.bed
     """
 
     stub:
@@ -47,6 +52,7 @@ process MACS2_CALLPEAK {
     def extra_file = is_broad ? "${prefix}_peaks.gappedPeak" : "${prefix}_summits.bed"
     """
     touch ${prefix}_peaks.${peak_ext}
+    touch ${prefix}_macs2_merge_ready_peaks.bed
     touch ${prefix}_peaks.xls
     touch ${extra_file}
     """

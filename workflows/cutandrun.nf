@@ -52,7 +52,7 @@ workflow CUTANDRUN {
     def ch_macs2_peaks = channel.empty()
     if (params.run_macs2_callpeak) {
         MACS2_CALLPEAK(ch_target_bam_bai)
-        ch_macs2_peaks = MACS2_CALLPEAK.out.peak
+        ch_macs2_peaks = MACS2_CALLPEAK.out.merge_ready_bed
     }
 
     //
@@ -61,21 +61,29 @@ workflow CUTANDRUN {
     def ch_homer_peaks = channel.empty()
     if (params.run_homer_findpeaks) {
         HOMER_FINDPEAKS(ch_target_tagdirs)
-        ch_homer_peaks = HOMER_FINDPEAKS.out.bed
+        ch_homer_peaks = HOMER_FINDPEAKS.out.merge_ready_bed
     }
 
     //
     // Select active per-sample peaks for Step d (MACS2, HOMER, or pre-existing)
     //
+    if (!(params.active_peak_caller in ['macs2', 'homer'])) {
+        error("Invalid params.active_peak_caller='${params.active_peak_caller}'. Must be 'macs2' or 'homer'.")
+    }
+
     def ch_active_sample_peaks = ch_existing_sample_peaks
-    if (params.active_peak_caller == 'homer' && params.run_homer_findpeaks) {
-        ch_active_sample_peaks = ch_homer_peaks
-    } else if (params.active_peak_caller == 'macs2' && params.run_macs2_callpeak) {
-        ch_active_sample_peaks = ch_macs2_peaks
-    } else if (params.run_macs2_callpeak) {
-        ch_active_sample_peaks = ch_macs2_peaks
-    } else if (params.run_homer_findpeaks) {
-        ch_active_sample_peaks = ch_homer_peaks
+    if (params.active_peak_caller == 'homer') {
+        if (params.run_homer_findpeaks) {
+            ch_active_sample_peaks = ch_homer_peaks
+        } else if (params.run_macs2_callpeak) {
+            error("params.active_peak_caller is 'homer', but params.run_homer_findpeaks is false while params.run_macs2_callpeak is true. Enable run_homer_findpeaks, set active_peak_caller = 'macs2', or disable both callers to use pre-existing peaks.")
+        }
+    } else if (params.active_peak_caller == 'macs2') {
+        if (params.run_macs2_callpeak) {
+            ch_active_sample_peaks = ch_macs2_peaks
+        } else if (params.run_homer_findpeaks) {
+            error("params.active_peak_caller is 'macs2', but params.run_macs2_callpeak is false while params.run_homer_findpeaks is true. Enable run_macs2_callpeak, set active_peak_caller = 'homer', or disable both callers to use pre-existing peaks.")
+        }
     }
 
     //

@@ -109,6 +109,9 @@ workflow {
         params.input_sample_peaks,
         samplesheet_map,
         [
+            '_macs2_merge_ready_peaks.bed',
+            '_homer_merge_ready_peaks.bed',
+            '_merge_ready_peaks.bed',
             '_peaks.narrowPeak',
             '_peaks.broadPeak',
             '_peaks.bed',

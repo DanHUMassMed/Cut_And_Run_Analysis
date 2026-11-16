@@ -107,6 +107,9 @@ def collect_peak_records(
             condition_to_target[meta.condition] = meta.target
 
     sample_suffixes = [
+        "_macs2_merge_ready_peaks.bed",
+        "_homer_merge_ready_peaks.bed",
+        "_merge_ready_peaks.bed",
         "_peaks.narrowPeak",
         "_peaks.broadPeak",
         "_peaks.bed",
@@ -337,10 +340,12 @@ def main() -> None:
             master_files.append(p)
         elif name.endswith("_replicated_peaks.bed"):
             replicated_files.append(p)
-        elif name.endswith("_peaks.narrowPeak") or name.endswith("_peaks.broadPeak"):
+        elif name.endswith("_macs2_merge_ready_peaks.bed") or name.endswith("_peaks.narrowPeak") or name.endswith("_peaks.broadPeak"):
             macs2_files.append(p)
-        elif name.endswith("_peaks.bed"):
+        elif name.endswith("_homer_merge_ready_peaks.bed") or name.endswith("_peaks.bed"):
             homer_files.append(p)
+        elif name.endswith("_merge_ready_peaks.bed"):
+            sample_files.append(p)
         else:
             sample_files.append(p)
 

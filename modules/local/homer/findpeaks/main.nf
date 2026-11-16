@@ -22,6 +22,7 @@ process HOMER_FINDPEAKS {
     output:
     tuple val(meta), path("${prefix}_peaks.txt"), emit: txt
     tuple val(meta), path("${prefix}_peaks.bed"), emit: bed
+    tuple val(meta), path("${prefix}_homer_merge_ready_peaks.bed"), emit: merge_ready_bed
     tuple val("${task.process}"), val('homer'), val('4.11'), emit: versions_homer, topic: versions
 
     when:
@@ -37,6 +38,9 @@ process HOMER_FINDPEAKS {
         -o ${prefix}_peaks.txt
 
     pos2bed.pl ${prefix}_peaks.txt > ${prefix}_peaks.bed
+
+    awk 'BEGIN{OFS="\\t"} !/^#/ && !/^track/ && !/^browser/ && NF>=3 {print \$1, \$2, \$3}' ${prefix}_peaks.bed | \\
+        LC_ALL=C sort -k1,1 -k2,2n > ${prefix}_homer_merge_ready_peaks.bed
     """
 
     stub:
@@ -44,6 +48,7 @@ process HOMER_FINDPEAKS {
     """
     touch ${prefix}_peaks.txt
     touch ${prefix}_peaks.bed
+    touch ${prefix}_homer_merge_ready_peaks.bed
     """
 }
 

@@ -311,7 +311,7 @@ params {{
     input_bam                      = "${{params.input_dir}}/06_index_bam/*.bam"
     input_tagdirs                  = "${{params.input_dir}}/07_homer/tag_dir/*"
     input_bigwig                   = "${{params.input_dir}}/08_bigwig/${{params.bigwig_source}}/*.bw"
-    input_sample_peaks             = "${{params.outdir}}/09_peaks/${{params.active_peak_caller}}/*_peaks.{{narrowPeak,broadPeak,bed}}"
+    input_sample_peaks             = "${{params.outdir}}/09_peaks/${{params.active_peak_caller}}/*_${{params.active_peak_caller}}_merge_ready_peaks.bed"
     input_replicated_peaks         = "${{params.outdir}}/10_merged_peaks/replicates/*_replicated_peaks.bed"
     input_peaks_bed                = "${{params.outdir}}/10_merged_peaks/master/*_master_peaks.bed"
     input_annotated_peaks          = "${{params.outdir}}/11_peak_quantification/*_annotated_peaks.txt"

@@ -33,7 +33,7 @@ process BEDTOOLS_MERGE_REPLICATES {
     def bed_list = beds instanceof List ? beds : [beds]
     def effective_min = bed_list.size() < min_overlap ? bed_list.size() : min_overlap
     """
-    awk 'BEGIN{OFS="\\t"} !/^#/ && !/^track/ && !/^browser/ && NF>=3 {print \$1, \$2, \$3, FILENAME}' ${beds} > combined_unmerged.bed
+    awk 'BEGIN{OFS="\\t"} NF>=3 {print \$1, \$2, \$3, FILENAME}' ${beds} > combined_unmerged.bed
 
     if [ -s combined_unmerged.bed ]; then
         bedtools sort -i combined_unmerged.bed | \\
