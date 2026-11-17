@@ -15,6 +15,7 @@ SAMPLESHEET_FIELDNAMES = [
     "sample_name",
     "condition",
     "target",
+    "peak_mode",
     "replicate",
     "control_id",
 ]

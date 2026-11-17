@@ -15,7 +15,8 @@ const STRING_FIELDS = [
   ['cfg_chrom_sizes', 'chrom_sizes', ''],
   ['cfg_macs2_gsize', 'macs2_gsize', 'ce'],
   ['cfg_macs2_format', 'macs2_format', 'BAMPE'],
-  ['cfg_homer_peak_style', 'homer_peak_style', 'factor'],
+  ['cfg_homer_narrow_style', 'homer_narrow_style', 'factor'],
+  ['cfg_homer_broad_style', 'homer_broad_style', 'histone'],
   ['cfg_annotatepeaks_size', 'annotatepeaks_size', 'given'],
   ['cfg_metapeak_reference_point', 'metapeak_reference_point', 'center'],
   ['cfg_heatmap_colormap', 'heatmap_colormap', 'inferno'],
@@ -26,8 +27,14 @@ const STRING_FIELDS = [
 const NUMBER_FIELDS = [
   ['cfg_min_replicate_overlap', 'min_replicate_overlap', 2, 'int'],
   ['cfg_resource_cpus', 'resource_cpus', 8, 'int'],
-  ['cfg_macs2_qvalue', 'macs2_qvalue', 0.01, 'float'],
-  ['cfg_macs2_broad_cutoff', 'macs2_broad_cutoff', 0.1, 'float'],
+  ['cfg_macs2_narrow_pvalue', 'macs2_narrow_pvalue', 1e-5, 'float'],
+  ['cfg_macs2_broad_qvalue', 'macs2_broad_qvalue', 0.01, 'float'],
+  ['cfg_macs2_broad_cutoff', 'macs2_broad_cutoff', 0.05, 'float'],
+  ['cfg_homer_narrow_fold', 'homer_narrow_fold', 2, 'float'],
+  ['cfg_homer_narrow_local_fold', 'homer_narrow_local_fold', 3, 'float'],
+  ['cfg_homer_broad_fold', 'homer_broad_fold', 3, 'float'],
+  ['cfg_homer_broad_local_fold', 'homer_broad_local_fold', 1.5, 'float'],
+  ['cfg_homer_broad_min_dist', 'homer_broad_min_dist', 1000, 'int'],
   ['cfg_metapeak_upstream', 'metapeak_upstream', 2000, 'int'],
   ['cfg_metapeak_downstream', 'metapeak_downstream', 2000, 'int'],
   ['cfg_meme_slop_left', 'meme_slop_left', 50, 'int'],
@@ -79,7 +86,6 @@ const BOOL_FIELDS = [
   ['cfg_run_homer_findmotifs', 'run_homer_findmotifs'],
   ['cfg_run_meme_streme', 'run_meme_streme'],
   ['cfg_run_summary_plots', 'run_summary_plots'],
-  ['cfg_macs2_broad', 'macs2_broad'],
 ];
 
 export async function loadConfig() {

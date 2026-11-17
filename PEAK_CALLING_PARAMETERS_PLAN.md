@@ -86,16 +86,16 @@ Keep the current 6-column `samplesheet.csv` and map `meta.target` (`H3K4me3` -> 
 
 | Mode | Example Target | MACS2 Command (`MACS2_CALLPEAK`) | HOMER Command (`HOMER_FINDPEAKS`) |
 | :--- | :--- | :--- | :--- |
-| **`narrow`** | `H3K4me3`, TFs | `macs2 callpeak -t <bam> -n <id> -g ce -f BAMPE -p 1e-5` | `findPeaks <tagdir> -style factor -F 2 -o <id>_peaks.txt` |
-| **`broad`** | `H3K27me3` | `macs2 callpeak -t <bam> -n <id> -g ce -f BAMPE --broad --broad-cutoff 0.05` | `findPeaks <tagdir> -style histone -F 2 -o <id>_peaks.txt` |
+| **`narrow`** | `H3K4me3`, TFs | `macs2 callpeak -t <bam> -n <id> -g ce -f BAM -p 1e-5` | `findPeaks <tagdir> -style factor -F 2 -o <id>_peaks.txt` |
+| **`broad`** | `H3K27me3` | `macs2 callpeak -t <bam> -n <id> -g ce -f BAM --broad --broad-cutoff 0.05` | `findPeaks <tagdir> -style histone -F 2 -o <id>_peaks.txt` |
 
 ### 3.2 Proposed Parameters in `nextflow.config` & `experiment.config`
-Replace the single global `macs2_broad` / `homer_peak_style` toggles with mode-specific parameters that `conf/modules.config` selects based on `meta.peak_mode`:
+Replace the single global `macs2_broad` / `homer_peak_style` toggles with mode-specific parameters that `conf/modules.config` selects based on `meta.peak_mode`, and change the default `macs2_format` from `'BAMPE'` to `'BAM'`:
 
 ```groovy
     // Step c: MACS2 parameters (dispatched per sample via meta.peak_mode from samplesheet.csv)
     macs2_gsize                    = 'ce'                    // hs, mm, ce, dm, or numeric size
-    macs2_format                   = 'BAMPE'
+    macs2_format                   = 'BAM'                   // Single-end / standard BAM format
     macs2_narrow_pvalue            = 1e-5                    // Strict p-value cutoff for narrow marks in CUT&RUN (set null to use macs2_narrow_qvalue)
     macs2_narrow_qvalue            = 0.01                    // Fallback q-value when macs2_narrow_pvalue is null
     macs2_broad_cutoff             = 0.05                    // --broad-cutoff for broad marks (e.g. H3K27me3)
@@ -160,13 +160,12 @@ Replace the single global `macs2_broad` / `homer_peak_style` toggles with mode-s
 
 ---
 
-## 4. Open Design Question: How Should `control_id` (IgG) Be Handled?
+## 4. Deferred Phase: `control_id` (IgG) Handling
 
-While reviewing how `samplesheet.csv` interacts with peak calling, we also noticed an important question regarding the `control_id` column:
+Addressing `control_id` (IgG) usage during peak calling is **deferred until after the `peak_mode` (`narrow` vs. `broad`) and parameter updates are implemented and verified**:
 - In [docs/Example_Run/config/samplesheet.csv](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/docs/Example_Run/config/samplesheet.csv), `EV_INT_H3K4me3`, `EV_INT_H3K27me3`, and `EV_INT_MC_H3K4me3` specify `control_id = L9254-0001-0003_S143_L004` (`EV_INT_IgG`), while `N2_H3K4me3` and `N2_H3K27me3` have an empty `control_id`.
-- However, [workflows/cutandrun.nf](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/workflows/cutandrun.nf#L43-L66) currently filters out IgG samples (`!isControlTarget(meta)`) and runs `MACS2_CALLPEAK` and `HOMER_FINDPEAKS` **without** passing `-c <control.bam>` or `-i <control_tagdir>`.
-- In CUT&RUN, calling peaks **without** an IgG control (using `-p 1e-5` / `--broad-cutoff 0.05` and `-F 2` as discussed above) is standard practice when IgG libraries are sparse or absent for some conditions (like `N2`), because pairing some conditions with IgG and others without IgG introduces batch/sensitivity asymmetry between `EV_INT` and `N2`.
-- **Suggested Action:** Keep peak calling control-free by default (so `EV_INT` and `N2` are called on an equal footing using the tuned CUT&RUN parameters above), or optionally add a `params.use_igg_control = false` toggle if you ever want `control_id` wired into `-c` / `-i` in future experiments.
+- Currently, [workflows/cutandrun.nf](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/workflows/cutandrun.nf#L43-L66) filters out IgG samples (`!isControlTarget(meta)`) and runs `MACS2_CALLPEAK` and `HOMER_FINDPEAKS` without passing `-c <control.bam>` or `-i <control_tagdir>`.
+- Once the `peak_mode` and `macs2_format = 'BAM'` updates are complete, we will revisit how `control_id` should be handled in a dedicated follow-up step.
 
 ---
 
@@ -185,6 +184,7 @@ When you are ready to apply these changes, here is the ordered implementation pl
 
 ### Step 2: Update Pipeline Configuration (`nextflow.config`, `conf/modules.config`, `experiment.config`)
 1. In [nextflow.config](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/nextflow.config#L47-L56) and [docs/Example_Run/config/experiment.config](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/docs/Example_Run/config/experiment.config#L44-L53):
+   - Set `macs2_format = 'BAM'` (updated from `'BAMPE'`).
    - Add `macs2_narrow_pvalue = 1e-5`, `macs2_narrow_qvalue = 0.01`, `macs2_broad_cutoff = 0.05`.
    - Add `homer_narrow_style = 'factor'`, `homer_broad_style = 'histone'`, `homer_fold_enrichment = 2`, `homer_local_fold = null`.
 2. In [conf/modules.config](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/conf/modules.config#L21-L44):
@@ -194,6 +194,7 @@ When you are ready to apply these changes, here is the ordered implementation pl
 1. **[bin/cutandrun_plot_utils.py](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/bin/cutandrun_plot_utils.py#L57-L67):**
    - Add `peak_mode: str | None = None` to `SampleMetadata` and validate `peak_mode` (`narrow` | `broad`) for non-IgG rows in `load_samplesheet()`.
 2. **Web Control Center ([web/models.py](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/web/models.py), [web/config_parser.py](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/web/config_parser.py), [web/repositories.py](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/web/repositories.py), [web/static/js/samplesheet.js](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/web/static/js/samplesheet.js), [web/static/js/config.js](file:///Users/dan/Code/NextFlow/Arjamand/Cut_And_Run_Analysis/web/static/js/config.js)):**
+   - Change default `macs2_format` to `'BAM'` in `Macs2Settings` / `ExperimentConfigModel` and `web/static/js/config.js`.
    - Add `peak_mode` dropdown (`narrow` / `broad`) to the Samplesheet table in the Web UI (auto-populating `broad` when target contains `H3K27me3`, `H3K9me3`, or `H3K36me3`, and `narrow` otherwise).
    - Update `Macs2Settings` and `HomerSettings` in `web/models.py` and `web/config_parser.py` to expose the narrow/broad thresholds (`macs2_narrow_pvalue`, `macs2_broad_cutoff`, `homer_fold_enrichment`).
    - Run `make test` and `make lint` to verify all backend/frontend tests pass.

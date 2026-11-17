@@ -101,14 +101,26 @@ class Macs2Settings(BaseModel):
 
     macs2_gsize: str = "ce"
     macs2_format: Literal["BAMPE", "BAM", "BED"] = "BAMPE"
+    macs2_nomodel: bool = False
+    macs2_extsize: int = Field(default=147, ge=1)
+    macs2_narrow_pvalue: float | None = Field(default=1e-5, gt=0.0, le=1.0)
+    macs2_narrow_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
+    macs2_broad_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
     macs2_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
     macs2_broad: bool = False
-    macs2_broad_cutoff: float = Field(default=0.1, gt=0.0, le=1.0)
+    macs2_broad_cutoff: float = Field(default=0.05, gt=0.0, le=1.0)
 
 
 class HomerSettings(BaseModel):
     """HOMER findPeaks and annotatePeaks parameters."""
 
+    homer_narrow_style: Literal["factor", "histone"] = "factor"
+    homer_narrow_fold: float = Field(default=2.0, gt=0.0)
+    homer_narrow_local_fold: float | None = Field(default=3.0, ge=0.0)
+    homer_broad_style: Literal["factor", "histone"] = "histone"
+    homer_broad_fold: float = Field(default=3.0, gt=0.0)
+    homer_broad_local_fold: float | None = Field(default=1.5, ge=0.0)
+    homer_broad_min_dist: int | None = Field(default=1000, ge=0)
     homer_peak_style: Literal["factor", "histone"] = "factor"
     annotatepeaks_size: str = "given"
 
@@ -231,10 +243,22 @@ class ExperimentConfigModel(_ResourceLimitsFields):
 
     macs2_gsize: str = "ce"
     macs2_format: Literal["BAMPE", "BAM", "BED"] = "BAMPE"
+    macs2_nomodel: bool = False
+    macs2_extsize: int = Field(default=147, ge=1)
+    macs2_narrow_pvalue: float | None = Field(default=1e-5, gt=0.0, le=1.0)
+    macs2_narrow_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
+    macs2_broad_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
     macs2_qvalue: float = Field(default=0.01, gt=0.0, le=1.0)
     macs2_broad: bool = False
-    macs2_broad_cutoff: float = Field(default=0.1, gt=0.0, le=1.0)
+    macs2_broad_cutoff: float = Field(default=0.05, gt=0.0, le=1.0)
 
+    homer_narrow_style: Literal["factor", "histone"] = "factor"
+    homer_narrow_fold: float = Field(default=2.0, gt=0.0)
+    homer_narrow_local_fold: float | None = Field(default=3.0, ge=0.0)
+    homer_broad_style: Literal["factor", "histone"] = "histone"
+    homer_broad_fold: float = Field(default=3.0, gt=0.0)
+    homer_broad_local_fold: float | None = Field(default=1.5, ge=0.0)
+    homer_broad_min_dist: int | None = Field(default=1000, ge=0)
     homer_peak_style: Literal["factor", "histone"] = "factor"
     annotatepeaks_size: str = "given"
 

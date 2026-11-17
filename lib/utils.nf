@@ -24,6 +24,7 @@ def parseSamplesheetRows(samplesheet_path) {
         'sample_name',
         'condition',
         'target',
+        'peak_mode',
         'replicate',
         'control_id'
     ]
@@ -118,22 +119,27 @@ def validateSamplesheetRows(parsed) {
     def seen_cond_replicate     = [:]
     def seen_target_sample_name = [:]
     def condition_to_target_loc = [:]
+    def target_to_peak_mode_loc = [:]
 
     rows.each { row ->
-        def line_num    = row._line
-        def sample_id   = row.sample_id   ?: ''
-        def sample_name = row.sample_name ?: ''
-        def condition   = row.condition   ?: ''
-        def target      = row.target      ?: ''
-        def rep_str     = row.replicate   ?: ''
-        def control_id  = row.control_id  ?: ''
+        def line_num      = row._line
+        def sample_id     = row.sample_id   ?: ''
+        def sample_name   = row.sample_name ?: ''
+        def condition     = row.condition   ?: ''
+        def target        = row.target      ?: ''
+        def peak_mode_raw = row.peak_mode   ?: ''
+        def peak_mode     = peak_mode_raw.toLowerCase()
+        def rep_str       = row.replicate   ?: ''
+        def control_id    = row.control_id  ?: ''
+        def is_igg        = isControlTarget(target)
 
         def row_missing = []
-        if (!sample_id)   { row_missing.add('sample_id') }
-        if (!sample_name) { row_missing.add('sample_name') }
-        if (!condition)   { row_missing.add('condition') }
-        if (!target)      { row_missing.add('target') }
-        if (!rep_str)     { row_missing.add('replicate') }
+        if (!sample_id)                 { row_missing.add('sample_id') }
+        if (!sample_name)               { row_missing.add('sample_name') }
+        if (!condition)                 { row_missing.add('condition') }
+        if (!target)                    { row_missing.add('target') }
+        if (!is_igg && !peak_mode_raw)  { row_missing.add('peak_mode') }
+        if (!rep_str)                   { row_missing.add('replicate') }
 
         if (row_missing) {
             errors.add("[Line ${line_num}] Missing required value(s) for column(s): ${row_missing.join(', ')}${sample_id ? " (sample_id '${sample_id}')" : ''}.")
@@ -156,6 +162,12 @@ def validateSamplesheetRows(parsed) {
         }
         if (target && target.equalsIgnoreCase('default')) {
             errors.add("[Line ${line_num}] Invalid target '${target}' for sample_id '${sample_id ?: '(missing)'}'. 'default' is reserved; specify an explicit target mark (e.g., H3K4me3, H3K27me3, IgG).")
+        }
+        if (!is_igg && peak_mode_raw && !(peak_mode in ['narrow', 'broad'])) {
+            errors.add("[Line ${line_num}] Invalid peak_mode '${peak_mode_raw}' for sample_id '${sample_id ?: '(missing)'}'. Must be 'narrow' or 'broad' for experimental targets.")
+        }
+        if (is_igg && peak_mode_raw && !(peak_mode in ['narrow', 'broad', 'control'])) {
+            errors.add("[Line ${line_num}] Invalid peak_mode '${peak_mode_raw}' for IgG control sample_id '${sample_id ?: '(missing)'}'. Leave peak_mode empty for IgG rows.")
         }
 
         def replicate = null
@@ -207,12 +219,24 @@ def validateSamplesheetRows(parsed) {
             condition_to_target_loc[condition] = [ target: target, line: line_num ]
         }
 
+        if (!is_igg && target && (peak_mode in ['narrow', 'broad'])) {
+            if (target_to_peak_mode_loc.containsKey(target)) {
+                def prev_pm = target_to_peak_mode_loc[target]
+                if (prev_pm.peak_mode != peak_mode) {
+                    errors.add("[Line ${line_num}] Target '${target}' is assigned conflicting peak_mode values ('${prev_pm.peak_mode}' on Line ${prev_pm.line}, '${peak_mode}' on Line ${line_num}). All samples for target '${target}' must use the same peak_mode.")
+                }
+            } else {
+                target_to_peak_mode_loc[target] = [ peak_mode: peak_mode, line: line_num ]
+            }
+        }
+
         samples[sample_id] = [
             id         : sample_id,
             single_end : false,
             sample_name: sample_name,
             condition  : condition,
             target     : target,
+            peak_mode  : is_igg ? null : peak_mode,
             replicate  : replicate ?: 1,
             control_id : control_id ?: null,
             _line      : line_num
@@ -263,6 +287,11 @@ def validateSamplesheetRows(parsed) {
         condition_to_target[cond] = info.target
     }
 
+    def target_to_peak_mode = [:]
+    target_to_peak_mode_loc.each { tgt, info ->
+        target_to_peak_mode[tgt] = info.peak_mode
+    }
+
     def non_igg_sample_ids = clean_samples.values()
         .findAll { !isControlTarget(it) }
         .collect { it.id } as Set
@@ -279,6 +308,7 @@ def validateSamplesheetRows(parsed) {
         path               : sheet_file.toString(),
         samples            : clean_samples,
         condition_to_target: condition_to_target,
+        target_to_peak_mode: target_to_peak_mode,
         non_igg_sample_ids : non_igg_sample_ids,
         targets            : non_igg_targets,
         all_targets        : clean_samples.values().collect { it.target } as Set,
@@ -413,7 +443,8 @@ def buildConditionMeta(condition_id, sheet_ctx, source_label = 'replicated peak 
     return [
         id       : condition_id,
         condition: condition_id,
-        target   : target_name
+        target   : target_name,
+        peak_mode: sheet_ctx.target_to_peak_mode[target_name]
     ]
 }
 
@@ -422,8 +453,9 @@ def buildTargetMeta(target_name, sheet_ctx, source_label = 'target file') {
         error "Target '${target_name}' (from ${source_label}) not found in samplesheet (${sheet_ctx.path}). Available targets: ${sheet_ctx.targets.sort().join(', ')}"
     }
     return [
-        id    : target_name,
-        target: target_name
+        id       : target_name,
+        target   : target_name,
+        peak_mode: sheet_ctx.target_to_peak_mode[target_name]
     ]
 }
 

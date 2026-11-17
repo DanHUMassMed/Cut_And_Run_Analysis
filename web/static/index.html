@@ -207,7 +207,7 @@
           <div class="advanced-section">
             <div class="advanced-section-header">
               <span class="step-tag">Step c</span>
-              <span>MACS2 Peak Calling Parameters</span>
+              <span>MACS2 Peak Calling Parameters (Dispatched per Sample via Peak Mode)</span>
             </div>
             <div class="form-grid">
               <div class="form-group">
@@ -218,28 +218,25 @@
               <div class="form-group">
                 <label for="cfg_macs2_format">MACS2 Read Format</label>
                 <select id="cfg_macs2_format" name="macs2_format">
+                  <option value="BAM">BAM (Standard BAM)</option>
                   <option value="BAMPE">BAMPE (Paired-End BAM)</option>
-                  <option value="BAM">BAM (Single-End BAM)</option>
                   <option value="BED">BED</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="cfg_macs2_qvalue">MACS2 q-value Threshold</label>
-                <input type="number" id="cfg_macs2_qvalue" name="macs2_qvalue" step="any" min="0.000001" max="1.0" required>
-                <span class="field-hint">Minimum FDR significance cutoff (default: 0.01)</span>
+                <label for="cfg_macs2_narrow_pvalue">MACS2 Narrow p-value Cutoff (-p)</label>
+                <input type="number" id="cfg_macs2_narrow_pvalue" name="macs2_narrow_pvalue" step="any" min="0.0000000001" max="1.0" required>
+                <span class="field-hint">Strict p-value cutoff for narrow marks in CUT&amp;RUN (default: 1e-5)</span>
               </div>
               <div class="form-group">
-                <span style="font-size:0.85rem; font-weight:600; color:#334155;">Broad Peak Calling</span>
-                <label class="checkbox-label" for="cfg_macs2_broad">
-                  <input type="checkbox" id="cfg_macs2_broad" name="macs2_broad">
-                  <span>Enable Broad Peaks (--broad)</span>
-                </label>
-                <span class="field-hint">Recommended for diffuse marks (e.g. H3K27me3)</span>
+                <label for="cfg_macs2_broad_qvalue">MACS2 Broad Seed q-value (-q)</label>
+                <input type="number" id="cfg_macs2_broad_qvalue" name="macs2_broad_qvalue" step="any" min="0.000001" max="1.0" required>
+                <span class="field-hint">Seed peak FDR cutoff when Peak Mode = broad (default: 0.01)</span>
               </div>
               <div class="form-group">
-                <label for="cfg_macs2_broad_cutoff">Broad Peak Cutoff</label>
+                <label for="cfg_macs2_broad_cutoff">MACS2 Broad Peak Cutoff (--broad-cutoff)</label>
                 <input type="number" id="cfg_macs2_broad_cutoff" name="macs2_broad_cutoff" step="any" min="0.000001" max="1.0" required>
-                <span class="field-hint">q-value cutoff for linking broad regions (default: 0.1)</span>
+                <span class="field-hint">Cutoff for linking broad domains when Peak Mode = broad (default: 0.05)</span>
               </div>
             </div>
           </div>
@@ -251,12 +248,45 @@
             </div>
             <div class="form-grid">
               <div class="form-group">
-                <label for="cfg_homer_peak_style">HOMER Peak Style</label>
-                <select id="cfg_homer_peak_style" name="homer_peak_style">
-                  <option value="factor">factor (Transcription Factors / sharp punctate marks)</option>
-                  <option value="histone">histone (Broad histone domains / modifications)</option>
+                <label for="cfg_homer_narrow_style">HOMER Narrow Peak Style</label>
+                <select id="cfg_homer_narrow_style" name="homer_narrow_style">
+                  <option value="factor">factor (Narrow promoter / TF marks, e.g. H3K4me3)</option>
+                  <option value="histone">histone (Broad histone domains)</option>
                 </select>
-                <span class="field-hint">Controls tag cluster sizing &amp; distribution model</span>
+                <span class="field-hint">Used when sample Peak Mode is narrow</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_narrow_fold">HOMER Narrow Fold (-F)</label>
+                <input type="number" id="cfg_homer_narrow_fold" name="homer_narrow_fold" step="any" min="0.1" required>
+                <span class="field-hint">Fold enrichment over control/global (default: 2)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_narrow_local_fold">HOMER Narrow Local Fold (-L)</label>
+                <input type="number" id="cfg_homer_narrow_local_fold" name="homer_narrow_local_fold" step="any" min="0" required>
+                <span class="field-hint">Local background fold filter for narrow marks (default: 3)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_broad_style">HOMER Broad Peak Style</label>
+                <select id="cfg_homer_broad_style" name="homer_broad_style">
+                  <option value="histone">histone (Broad repressive/histone domains, e.g. H3K27me3)</option>
+                  <option value="factor">factor (Narrow promoter / TF marks)</option>
+                </select>
+                <span class="field-hint">Used when sample Peak Mode is broad</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_broad_fold">HOMER Broad Fold (-F)</label>
+                <input type="number" id="cfg_homer_broad_fold" name="homer_broad_fold" step="any" min="0.1" required>
+                <span class="field-hint">Fold enrichment for broad marks (default: 3)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_broad_local_fold">HOMER Broad Local Fold (-L)</label>
+                <input type="number" id="cfg_homer_broad_local_fold" name="homer_broad_local_fold" step="any" min="0" required>
+                <span class="field-hint">Local background fold filter for broad marks (default: 1.5)</span>
+              </div>
+              <div class="form-group">
+                <label for="cfg_homer_broad_min_dist">HOMER Broad Min Distance (-minDist)</label>
+                <input type="number" id="cfg_homer_broad_min_dist" name="homer_broad_min_dist" step="1" min="0" required>
+                <span class="field-hint">Merge broad regions within N bp (default: 1000)</span>
               </div>
               <div class="form-group">
                 <label for="cfg_annotatepeaks_size">HOMER AnnotatePeaks Window Size</label>
@@ -394,6 +424,7 @@
                 <th>Sample Name</th>
                 <th>Condition</th>
                 <th>Target</th>
+                <th>Peak Mode</th>
                 <th>Replicate</th>
                 <th>Control ID (IgG)</th>
                 <th>Action</th>

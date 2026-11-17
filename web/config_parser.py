@@ -323,15 +323,24 @@ params {{
     genome_fasta                   = "{_escape_groovy_double_quoted(model.genome_fasta)}"
     chrom_sizes                    = "{_escape_groovy_double_quoted(model.chrom_sizes)}"
 
-    // Step c: MACS2 parameters
+    // Step c: MACS2 parameters (dispatched per sample via meta.peak_mode from samplesheet.csv)
     macs2_gsize                    = "{_escape_groovy_double_quoted(model.macs2_gsize)}"                    // hs, mm, ce, dm, or numeric size
     macs2_format                   = "{_escape_groovy_double_quoted(model.macs2_format)}"
-    macs2_qvalue                   = {model.macs2_qvalue}
-    macs2_broad                    = {str(model.macs2_broad).lower()}
+    macs2_nomodel                  = {str(model.macs2_nomodel).lower()}
+    macs2_extsize                  = {model.macs2_extsize}
+    macs2_narrow_pvalue            = {model.macs2_narrow_pvalue if model.macs2_narrow_pvalue is not None else "null"}
+    macs2_narrow_qvalue            = {model.macs2_narrow_qvalue}
+    macs2_broad_qvalue             = {model.macs2_broad_qvalue}
     macs2_broad_cutoff             = {model.macs2_broad_cutoff}
 
-    // Step c: HOMER findPeaks parameters
-    homer_peak_style               = "{_escape_groovy_double_quoted(model.homer_peak_style)}"                // 'factor' or 'histone'
+    // Step c: HOMER findPeaks parameters (dispatched per sample via meta.peak_mode from samplesheet.csv)
+    homer_narrow_style             = "{_escape_groovy_double_quoted(model.homer_narrow_style)}"
+    homer_narrow_fold              = {model.homer_narrow_fold}
+    homer_narrow_local_fold        = {model.homer_narrow_local_fold if model.homer_narrow_local_fold is not None else "null"}
+    homer_broad_style              = "{_escape_groovy_double_quoted(model.homer_broad_style)}"
+    homer_broad_fold               = {model.homer_broad_fold}
+    homer_broad_local_fold         = {model.homer_broad_local_fold if model.homer_broad_local_fold is not None else "null"}
+    homer_broad_min_dist           = {model.homer_broad_min_dist if model.homer_broad_min_dist is not None else "null"}
 
     // Step e: HOMER annotatePeaks
     annotatepeaks_size             = "{_escape_groovy_double_quoted(model.annotatepeaks_size)}"

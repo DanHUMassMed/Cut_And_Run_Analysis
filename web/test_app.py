@@ -51,11 +51,20 @@ params {
 
     macs2_gsize                    = "ce"
     macs2_format                   = "BAMPE"
-    macs2_qvalue                   = 0.05
-    macs2_broad                    = true
-    macs2_broad_cutoff             = 0.15
+    macs2_nomodel                  = false
+    macs2_extsize                  = 147
+    macs2_narrow_pvalue            = 1e-5
+    macs2_narrow_qvalue            = 0.05
+    macs2_broad_qvalue             = 0.01
+    macs2_broad_cutoff             = 0.05
 
-    homer_peak_style               = "factor"
+    homer_narrow_style             = "factor"
+    homer_narrow_fold              = 2
+    homer_narrow_local_fold        = 3
+    homer_broad_style              = "histone"
+    homer_broad_fold               = 3
+    homer_broad_local_fold         = 1.5
+    homer_broad_min_dist           = 1000
     annotatepeaks_size             = "given"
 
     diff_contrasts                 = [
@@ -132,7 +141,17 @@ def test_parse_experiment_config() -> None:
     assert model.experiment == "exp_test_01"
     assert model.run_homer_findpeaks is False
     assert model.run_macs2_callpeak is True
-    assert model.macs2_broad is True
+    assert model.macs2_format == "BAMPE"
+    assert model.macs2_narrow_pvalue == 1e-5
+    assert model.macs2_broad_qvalue == 0.01
+    assert model.macs2_broad_cutoff == 0.05
+    assert model.homer_narrow_style == "factor"
+    assert model.homer_narrow_fold == 2.0
+    assert model.homer_narrow_local_fold == 3.0
+    assert model.homer_broad_style == "histone"
+    assert model.homer_broad_fold == 3.0
+    assert model.homer_broad_local_fold == 1.5
+    assert model.homer_broad_min_dist == 1000
     assert model.min_replicate_overlap == 3
     assert model.resource_cpus == 8
     assert model.resource_memory == "16.GB"
@@ -189,7 +208,13 @@ def test_roundtrip_serialization() -> None:
     assert reparsed.email == model.email
     assert reparsed.experiment == model.experiment
     assert reparsed.diff_contrasts == model.diff_contrasts
-    assert reparsed.macs2_qvalue == model.macs2_qvalue
+    assert reparsed.macs2_format == model.macs2_format
+    assert reparsed.macs2_narrow_pvalue == model.macs2_narrow_pvalue
+    assert reparsed.macs2_broad_qvalue == model.macs2_broad_qvalue
+    assert reparsed.macs2_broad_cutoff == model.macs2_broad_cutoff
+    assert reparsed.homer_narrow_local_fold == model.homer_narrow_local_fold
+    assert reparsed.homer_broad_fold == model.homer_broad_fold
+    assert reparsed.homer_broad_min_dist == model.homer_broad_min_dist
 
 
 def test_parser_handles_double_slash_in_strings_scientific_float_and_reordered_contrasts() -> None:
@@ -551,10 +576,22 @@ def test_http_endpoints_config_samplesheet_preflight_and_results_sandbox(tmp_pat
 
     ss_put = client.put(
         "/api/samplesheet",
-        json={"rows": [{"sample_id": "sample_A", "condition": "WT", "target": "H3K4me3", "replicate": "1"}]},
+        json={
+            "rows": [
+                {
+                    "sample_id": "sample_A",
+                    "condition": "WT",
+                    "target": "H3K4me3",
+                    "peak_mode": "narrow",
+                    "replicate": "1",
+                }
+            ]
+        },
     )
     assert ss_put.status_code == 200
-    assert client.get("/api/samplesheet").json()["rows"][0]["sample_id"] == "sample_A"
+    saved_row = client.get("/api/samplesheet").json()["rows"][0]
+    assert saved_row["sample_id"] == "sample_A"
+    assert saved_row["peak_mode"] == "narrow"
 
     # Preflight
     pf_resp = client.post("/api/preflight")

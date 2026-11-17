@@ -95,7 +95,7 @@ workflow CUTANDRUN {
         def ch_grouped_condition_peaks = ch_active_sample_peaks
             .filter { meta, _bed -> !isControlTarget(meta) }
             .map { meta, bed ->
-                [ [ id: meta.condition, condition: meta.condition, target: meta.target ], bed ]
+                [ [ id: meta.condition, condition: meta.condition, target: meta.target, peak_mode: meta.peak_mode ], bed ]
             }
             .groupTuple(by: 0)
 
@@ -118,7 +118,7 @@ workflow CUTANDRUN {
         def ch_grouped_target_beds = ch_source_for_master
             .filter { meta, _bed -> !isControlTarget(meta) }
             .map { meta, bed ->
-                [ [ id: meta.target, target: meta.target ], bed ]
+                [ [ id: meta.target, target: meta.target, peak_mode: meta.peak_mode ], bed ]
             }
             .groupTuple(by: 0)
 

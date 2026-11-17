@@ -63,6 +63,7 @@ class SampleMetadata:
     condition: str
     target: str
     replicate: int
+    peak_mode: str | None = None
     control_id: str | None = None
 
 
@@ -210,14 +211,16 @@ def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]
     if samplesheet_path is None or not samplesheet_path.exists():
         raise FileNotFoundError(f"Samplesheet file does not exist: {samplesheet_path}")
 
+    required_headers = ("sample_id", "sample_name", "condition", "target", "peak_mode", "replicate")
     required_cols = ("sample_id", "sample_name", "condition", "target", "replicate")
     records: dict[str, SampleMetadata] = {}
+    target_to_peak_mode: dict[str, str] = {}
     with samplesheet_path.open("r", encoding="utf-8-sig") as handle:
         reader = csv.DictReader(handle)
         if not reader.fieldnames:
             raise ValueError(f"Samplesheet is empty or missing header row: {samplesheet_path}")
         header_set = {col.strip() for col in reader.fieldnames if col}
-        missing_headers = [col for col in required_cols if col not in header_set]
+        missing_headers = [col for col in required_headers if col not in header_set]
         if missing_headers:
             raise ValueError(
                 f"Samplesheet {samplesheet_path} is missing required column header(s): {', '.join(missing_headers)}"
@@ -228,7 +231,11 @@ def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]
             if not any(cleaned.values()):
                 continue
 
+            target = cleaned.get("target", "")
+            is_igg = target.lower() == "igg"
             missing_fields = [col for col in required_cols if not cleaned.get(col)]
+            if not is_igg and not cleaned.get("peak_mode"):
+                missing_fields.append("peak_mode")
             if missing_fields:
                 raise ValueError(
                     f"Samplesheet {samplesheet_path} [Line {row_idx}]: missing required field(s): "
@@ -238,13 +245,30 @@ def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]
             sample_id = cleaned["sample_id"]
             sample_name = cleaned["sample_name"]
             condition = cleaned["condition"]
-            target = cleaned["target"]
+            peak_mode_raw = cleaned.get("peak_mode", "")
+            peak_mode = peak_mode_raw.lower() if peak_mode_raw else None
             rep_str = cleaned["replicate"]
 
             if target.lower() == "default" or condition.lower() == "default":
                 raise ValueError(
                     f"Samplesheet {samplesheet_path} [Line {row_idx}]: 'default' is not allowed for target or condition"
                 )
+
+            if not is_igg:
+                if peak_mode not in {"narrow", "broad"}:
+                    raise ValueError(
+                        f"Samplesheet {samplesheet_path} [Line {row_idx}]: invalid peak_mode '{peak_mode_raw}' "
+                        f"for sample_id '{sample_id}' (must be 'narrow' or 'broad')"
+                    )
+                prev_mode = target_to_peak_mode.get(target)
+                if prev_mode is not None and prev_mode != peak_mode:
+                    raise ValueError(
+                        f"Samplesheet {samplesheet_path} [Line {row_idx}]: target '{target}' has conflicting "
+                        f"peak_mode values ('{prev_mode}' vs '{peak_mode}')"
+                    )
+                target_to_peak_mode[target] = peak_mode
+            else:
+                peak_mode = None
 
             try:
                 replicate = int(rep_str)
@@ -270,6 +294,7 @@ def load_samplesheet(samplesheet_path: Path | None) -> dict[str, SampleMetadata]
                 condition=condition,
                 target=target,
                 replicate=replicate,
+                peak_mode=peak_mode,
                 control_id=control_id,
             )
 
