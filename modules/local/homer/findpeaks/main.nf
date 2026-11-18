@@ -17,7 +17,7 @@ process HOMER_FINDPEAKS {
     }
 
     input:
-    tuple val(meta), path(tagdir)
+    tuple val(meta), path(tagdir), path(control_tagdir)
 
     output:
     tuple val(meta), path("${prefix}_peaks.txt"), emit: txt
@@ -31,9 +31,11 @@ process HOMER_FINDPEAKS {
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
+    def control_arg = control_tagdir ? "-i ${control_tagdir}" : ''
     """
     findPeaks \\
         ${tagdir} \\
+        ${control_arg} \\
         ${args} \\
         -o ${prefix}_peaks.txt
 

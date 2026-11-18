@@ -368,7 +368,6 @@ def parse_homer_annotated_table(
             )
 
         headers = header_line.split("\t")
-        # Exclude any appended *_per_kb columns if present
         tag_col_indices: list[int] = []
         sample_ids: list[str] = []
         sample_names: list[str] = []
@@ -376,8 +375,6 @@ def parse_homer_annotated_table(
 
         for idx in range(standard_col_count, len(headers)):
             col_name = headers[idx]
-            if col_name.endswith("_per_kb"):
-                continue
             sid = extract_sample_id_from_tag_header(col_name)
             tag_col_indices.append(idx)
             sample_ids.append(sid)

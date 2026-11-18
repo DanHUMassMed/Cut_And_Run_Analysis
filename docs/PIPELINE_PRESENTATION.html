@@ -478,7 +478,7 @@
           <li><strong>Key Outputs in <code>11_peak_quantification/&lt;target&gt;_annotated_peaks.txt</code>:</strong>
             Nearest gene name &amp; description, <code>Distance to TSS</code>, genomic feature class (<code>Promoter-TSS</code>, <code>Exon</code>, <code>Intron</code>, <code>Intergenic</code>), and depth-normalized tag counts (reads per 10M) for every sample across the exact width of each master peak (<code>-size given</code>).
           </li>
-          <li><strong>Optional Width Normalization:</strong> Run <code>bin/normalize_homer_peaks.py</code> to append length-normalized <code>*_per_kb</code> columns when comparing peaks of different widths.</li>
+          <li><strong>Depth vs. Width Normalization:</strong> HOMER normalizes tag counts by sequencing depth (per 10M reads) across each peak's full span; region-width density (<code>tags per kb</code>) is computed automatically in Step <code>i</code> (<code>15_summary_plots/04_signal_distributions/</code>).</li>
         </ul>
       </div>
 

@@ -58,8 +58,8 @@ size: 16:9
 - **Command:** `annotatePeaks.pl <target>_master_peaks.bed ce11 -size given -d <sample1_tagdir> <sample2_tagdir> ...`
 - **What It Does:**
   - Assigns every master peak to its nearest Transcription Start Site (`Distance to TSS`), gene name/description, and genomic feature (`Promoter-TSS`, `Exon`, `Intron`, `TTS`, `Intergenic`).
-  - Quantifies depth-normalized read density (fragments per $10\text{M}$ mapped reads) across each sample's HOMER tag directory (`07_homer/tag_dir/*`).
-  - Includes helper script `bin/normalize_homer_peaks.py` for optional peak-width normalization ($\text{tags per kb}$).
+  - Quantifies sequencing-depth-normalized read counts (fragments per $10\text{M}$ mapped reads) across the full span of each master peak (`-size given`) for every sample's HOMER tag directory (`07_homer/tag_dir/*`).
+  - Region-width density ($\text{tags per kb}$) is calculated automatically downstream by Step `i` (`15_summary_plots/04_signal_distributions/`).
 - **Output:** `11_peak_quantification/<target>_annotated_peaks.txt`
 
 ---

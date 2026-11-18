@@ -9,11 +9,13 @@ include { CUTANDRUN } from './workflows/cutandrun'
 include {
     loadAndValidateSamplesheet
     validateDiffContrasts
+} from './lib/samplesheet'
+include {
     resolveInputFiles
     resolveConditionFiles
     resolveTargetFiles
     resolveContrastFiles
-} from './lib/utils'
+} from './lib/resolvefiles'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -60,6 +62,15 @@ workflow {
     def sheet_ctx    = loadAndValidateSamplesheet(params.samplesheet)
     def contrast_map = validateDiffContrasts(params.diff_contrasts, sheet_ctx)
 
+    // Warn when IgG control subtraction is enabled on a sheet with mixed controlled/uncontrolled samples
+    if (params.use_igg_control && sheet_ctx.referenced_control_ids && sheet_ctx.samples_without_control) {
+        log.warn "params.use_igg_control is true, but ${sheet_ctx.samples_without_control.size()} experimental sample(s) have no control_id and will run control-free: ${sheet_ctx.samples_without_control.sort().join(', ')}"
+    }
+
+    def expected_peak_caller_ids = params.use_igg_control
+        ? (sheet_ctx.non_igg_sample_ids + sheet_ctx.referenced_control_ids)
+        : sheet_ctx.non_igg_sample_ids
+
     //
     // Resolve indexed BAMs from Dropbox
     //
@@ -71,7 +82,7 @@ workflow {
             skipEmpty  : true,
             label      : 'BAM file',
             requireBai : true,
-            expectedIds: sheet_ctx.non_igg_sample_ids
+            expectedIds: expected_peak_caller_ids
         ]
     )
 
@@ -85,7 +96,7 @@ workflow {
         [
             type       : 'dir',
             label      : 'HOMER tag directory',
-            expectedIds: sheet_ctx.non_igg_sample_ids
+            expectedIds: expected_peak_caller_ids
         ]
     )
 

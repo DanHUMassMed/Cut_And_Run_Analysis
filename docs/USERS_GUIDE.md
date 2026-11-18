@@ -324,13 +324,8 @@ flowchart LR
       > <target>_annotated_peaks.txt
   ```
 - **Published Output:** `Analysis_Run/results/<experiment>/11_peak_quantification/<target>_annotated_peaks.txt`
-- **Width-Normalized Tag Helper (`nf-cutandrun/bin/normalize_homer_peaks.py`):**
-  Since HOMER does not normalize tag counts by peak width when `-size given` is used, you can optionally run the included helper script [`nf-cutandrun/bin/normalize_homer_peaks.py`](../nf-cutandrun/bin/normalize_homer_peaks.py) to append `*_per_kb` columns to any `annotatePeaks` output table:
-  ```bash
-  uv run python3 nf-cutandrun/bin/normalize_homer_peaks.py \
-      Analysis_Run/results/cut_run103026/11_peak_quantification/H3K4me3_annotated_peaks.txt \
-      Analysis_Run/results/cut_run103026/11_peak_quantification/H3K4me3_annotated_peaks_per_kb.txt
-  ```
+- **Sequencing-Depth vs. Region-Width Normalization:**
+  By default, `annotatePeaks.pl` normalizes each sample's tag counts for **sequencing depth** (fragments per $10\text{M}$ mapped reads). When `-size given` is used, tags are summed across the exact width of each master peak without dividing by peak length—which is directly comparable across samples for any given peak. For comparing signal density across peaks of different widths, Step `i` (`PLOT_ANNOTATED_SUMMARY`) automatically computes **region-width normalized density** ($\text{tags per kb}$) in `15_summary_plots/04_signal_distributions/`.
 
 ---
 

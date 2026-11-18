@@ -17,7 +17,7 @@ process MACS2_CALLPEAK {
     }
 
     input:
-    tuple val(meta), path(bam), path(bai)
+    tuple val(meta), path(bam), path(bai), path(control_bam), path(control_bai)
 
     output:
     tuple val(meta), path("*.{narrowPeak,broadPeak}"), emit: peak
@@ -34,9 +34,11 @@ process MACS2_CALLPEAK {
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"
     def peak_ext = args.contains('--broad') ? 'broadPeak' : 'narrowPeak'
+    def control_arg = control_bam ? "-c ${control_bam}" : ''
     """
     macs2 callpeak \\
         -t ${bam} \\
+        ${control_arg} \\
         -n ${prefix} \\
         ${args}
 

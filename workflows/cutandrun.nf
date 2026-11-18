@@ -38,13 +38,79 @@ workflow CUTANDRUN {
     main:
 
     //
-    // Filter out negative control (IgG) samples before peak calling & merging
+    // Pair target samples with optional IgG controls (when params.use_igg_control = true)
     //
-    def ch_target_bam_bai = ch_bam_bai.filter { meta, _bam, _bai ->
-        !isControlTarget(meta)
+    // For MACS2 (ch_bam_bai):
+    //   1. Separate IgG negative control BAMs from experimental target BAMs.
+    //   2. Key IgG controls by sample_id so they can be matched to meta.control_id.
+    //   3. If use_igg_control is enabled, branch targets into those with a control_id
+    //      (one-to-many join via .combine so one IgG can serve multiple targets) and those
+    //      without a control_id (which receive empty [] placeholders).
+    //   4. If use_igg_control is disabled, pass empty [] placeholders for all targets.
+    def ch_bam_split = ch_bam_bai.branch { meta, bam, bai ->
+        control: isControlTarget(meta)
+        target:  true
     }
-    def ch_target_tagdirs = ch_tagdirs.filter { meta, _tagdir ->
-        !isControlTarget(meta)
+
+    def ch_control_bam_by_id = ch_bam_split.control
+        .map { meta, bam, bai -> [ meta.id, bam, bai ] }
+
+    def ch_macs2_input
+    if (params.use_igg_control) {
+        def ch_target_bam_branched = ch_bam_split.target.branch { meta, bam, bai ->
+            with_ctrl: meta.control_id != null
+                return [ meta.control_id, meta, bam, bai ]
+            no_ctrl: true
+                return [ meta, bam, bai, [], [] ]
+        }
+
+        // combine(by: 0) pairs each target sample with its matching IgG BAM/BAI by control_id
+        def ch_paired_bam = ch_target_bam_branched.with_ctrl
+            .combine(ch_control_bam_by_id, by: 0)
+            .map { _ctrl_id, meta, bam, bai, ctrl_bam, ctrl_bai ->
+                [ meta, bam, bai, ctrl_bam, ctrl_bai ]
+            }
+
+        ch_macs2_input = ch_paired_bam.mix(ch_target_bam_branched.no_ctrl)
+    } else {
+        ch_macs2_input = ch_bam_split.target
+            .map { meta, bam, bai -> [ meta, bam, bai, [], [] ] }
+    }
+
+    // For HOMER (ch_tagdirs):
+    //   1. Separate IgG negative control tag directories from experimental target tag directories.
+    //   2. Key IgG control tag directories by sample_id to match meta.control_id.
+    //   3. If use_igg_control is enabled, pair targets that specify control_id with their
+    //      matching IgG tagdir via .combine(by: 0); targets without control_id get [].
+    //   4. If use_igg_control is disabled, pass empty [] placeholder for all targets.
+    def ch_tagdir_split = ch_tagdirs.branch { meta, tagdir ->
+        control: isControlTarget(meta)
+        target:  true
+    }
+
+    def ch_control_tagdir_by_id = ch_tagdir_split.control
+        .map { meta, tagdir -> [ meta.id, tagdir ] }
+
+    def ch_homer_input
+    if (params.use_igg_control) {
+        def ch_target_tagdir_branched = ch_tagdir_split.target.branch { meta, tagdir ->
+            with_ctrl: meta.control_id != null
+                return [ meta.control_id, meta, tagdir ]
+            no_ctrl: true
+                return [ meta, tagdir, [] ]
+        }
+
+        // combine(by: 0) pairs each target tagdir with its matching IgG tagdir by control_id
+        def ch_paired_tagdir = ch_target_tagdir_branched.with_ctrl
+            .combine(ch_control_tagdir_by_id, by: 0)
+            .map { _ctrl_id, meta, tagdir, ctrl_tagdir ->
+                [ meta, tagdir, ctrl_tagdir ]
+            }
+
+        ch_homer_input = ch_paired_tagdir.mix(ch_target_tagdir_branched.no_ctrl)
+    } else {
+        ch_homer_input = ch_tagdir_split.target
+            .map { meta, tagdir -> [ meta, tagdir, [] ] }
     }
 
     //
@@ -52,7 +118,7 @@ workflow CUTANDRUN {
     //
     def ch_macs2_peaks = channel.empty()
     if (params.run_macs2_callpeak) {
-        MACS2_CALLPEAK(ch_target_bam_bai)
+        MACS2_CALLPEAK(ch_macs2_input)
         ch_macs2_peaks = MACS2_CALLPEAK.out.merge_ready_bed
     }
 
@@ -61,7 +127,7 @@ workflow CUTANDRUN {
     //
     def ch_homer_peaks = channel.empty()
     if (params.run_homer_findpeaks) {
-        HOMER_FINDPEAKS(ch_target_tagdirs)
+        HOMER_FINDPEAKS(ch_homer_input)
         ch_homer_peaks = HOMER_FINDPEAKS.out.merge_ready_bed
     }
 
