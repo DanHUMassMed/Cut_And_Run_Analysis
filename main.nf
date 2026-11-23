@@ -59,17 +59,18 @@ workflow {
     //
     // Validate samplesheet.csv and differential contrasts upfront
     //
-    def sheet_ctx    = loadAndValidateSamplesheet(params.samplesheet)
-    def contrast_map = validateDiffContrasts(params.diff_contrasts, sheet_ctx)
+    def experiment_config = "${launchDir}/config/experiment.config"
+    def sheet_ctx         = loadAndValidateSamplesheet(params.samplesheet)
+    def contrast_map      = validateDiffContrasts(params.diff_contrasts, sheet_ctx, experiment_config)
 
     // Warn when IgG control subtraction is enabled on a sheet with mixed controlled/uncontrolled samples
     if (params.use_igg_control && sheet_ctx.referenced_control_ids && sheet_ctx.samples_without_control) {
         log.warn "params.use_igg_control is true, but ${sheet_ctx.samples_without_control.size()} experimental sample(s) have no control_id and will run control-free: ${sheet_ctx.samples_without_control.sort().join(', ')}"
     }
 
-    def expected_peak_caller_ids = params.use_igg_control
-        ? (sheet_ctx.non_igg_sample_ids + sheet_ctx.referenced_control_ids)
-        : sheet_ctx.non_igg_sample_ids
+    // Resolve all samples listed in samplesheet.csv (including IgG controls if present)
+    // so QC and reporting are independent of peak-calling config toggles like use_igg_control.
+    def expected_all_ids = sheet_ctx.all_sample_ids
 
     //
     // Resolve indexed BAMs from Dropbox
@@ -79,10 +80,11 @@ workflow {
         sheet_ctx,
         ['.bam'],
         [
-            skipEmpty  : true,
-            label      : 'BAM file',
-            requireBai : true,
-            expectedIds: expected_peak_caller_ids
+            skipEmpty           : true,
+            label               : 'BAM file',
+            requireBai          : true,
+            errorOnUnrecognized : true,
+            expectedIds         : expected_all_ids
         ]
     )
 
@@ -94,9 +96,10 @@ workflow {
         sheet_ctx,
         ['_tagdir'],
         [
-            type       : 'dir',
-            label      : 'HOMER tag directory',
-            expectedIds: expected_peak_caller_ids
+            type                : 'dir',
+            label               : 'HOMER tag directory',
+            errorOnUnrecognized : true,
+            expectedIds         : expected_all_ids
         ]
     )
 
@@ -108,11 +111,20 @@ workflow {
         sheet_ctx,
         ['.bw', '.bigWig'],
         [
-            skipEmpty  : true,
-            label      : 'BigWig file',
-            expectedIds: sheet_ctx.non_igg_sample_ids
+            skipEmpty           : true,
+            label               : 'BigWig file',
+            errorOnUnrecognized : true,
+            expectedIds         : expected_all_ids
         ]
     )
+
+    //
+    // Resolve optional upstream QC logs (graceful fallback if absent on older upstream runs)
+    //
+    def upstream_trimmomatic_logs = files(params.input_trimmomatic_logs, checkIfExists: false)
+    def upstream_bowtie2_logs     = files(params.input_bowtie2_logs, checkIfExists: false)
+    def upstream_picard_dups      = files(params.input_picard_dup, checkIfExists: false)
+    def upstream_bam_stats        = files(params.input_bam_stats, checkIfExists: false)
 
     //
     // Resolve pre-existing per-sample peak files
@@ -186,7 +198,11 @@ workflow {
         ch_existing_replicated_peaks,
         ch_existing_master_peaks,
         ch_existing_annotated_peaks,
-        ch_existing_diff_peaks
+        ch_existing_diff_peaks,
+        upstream_trimmomatic_logs,
+        upstream_bowtie2_logs,
+        upstream_picard_dups,
+        upstream_bam_stats
     )
 
     onComplete:

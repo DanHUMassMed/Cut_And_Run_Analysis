@@ -24,8 +24,6 @@ process HOMER_FINDMOTIFSGENOME {
     tuple val(meta), path("${prefix}_homer_motifs"), emit: motifs_dir
     tuple val("${task.process}"), val('homer'), val('4.9.1'), emit: versions_homer, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

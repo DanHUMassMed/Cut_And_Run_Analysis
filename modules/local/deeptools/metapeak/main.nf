@@ -24,8 +24,6 @@ process DEEPTOOLS_METAPEAK {
     tuple val(meta), path("${prefix}_metapeak_heatmap.pdf"), emit: pdf
     tuple val("${task.process}"), val('deeptools'), eval('computeMatrix --version | sed "s/computeMatrix //g"'), emit: versions_deeptools, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

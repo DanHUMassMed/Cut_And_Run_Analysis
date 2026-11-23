@@ -32,8 +32,6 @@ process PLOT_ANNOTATED_SUMMARY {
     tuple val(meta), path("${prefix}_signal_summary_stats.tsv"),           emit: signal_tsv
     tuple val("${task.process}"), val('matplotlib'), eval('python3 -c "import matplotlib; print(matplotlib.__version__)"'), emit: versions_matplotlib, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

@@ -23,8 +23,6 @@ process BEDTOOLS_MERGE_MASTER {
     tuple val(meta), path("${prefix}_master_peaks.bed"), emit: bed
     tuple val("${task.process}"), val('bedtools'), eval("bedtools --version | sed -e 's/bedtools v//g'"), emit: versions_bedtools, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

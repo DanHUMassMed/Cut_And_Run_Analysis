@@ -25,8 +25,6 @@ process HOMER_FINDPEAKS {
     tuple val(meta), path("${prefix}_homer_merge_ready_peaks.bed"), emit: merge_ready_bed
     tuple val("${task.process}"), val('homer'), val('4.11'), emit: versions_homer, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

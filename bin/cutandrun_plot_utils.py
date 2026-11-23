@@ -548,11 +548,28 @@ def count_bed_intervals(bed_path: Path) -> int:
     return count
 
 
+IGG_COLOR_HEX: str = "#7F7F7F"
+
+
+def is_igg_label(label: str) -> bool:
+    """Return True if a condition, target, or sample label represents an IgG negative control."""
+    tokens = [tok for tok in re.split(r"[^a-z0-9]+", label.strip().lower()) if tok]
+    return "igg" in tokens
+
+
 def build_condition_color_map(conditions: Sequence[str]) -> dict[str, str]:
-    """Assign deterministic colorblind-safe hex colors to unique conditions."""
+    """Assign deterministic colorblind-safe hex colors to unique conditions (neutral gray for IgG)."""
     unique_conds: list[str] = []
     for cond in conditions:
         if cond not in unique_conds:
             unique_conds.append(cond)
-    return {cond: PALETTE_HEX[i % len(PALETTE_HEX)] for i, cond in enumerate(unique_conds)}
+    color_map: dict[str, str] = {}
+    palette_idx = 0
+    for cond in unique_conds:
+        if is_igg_label(cond):
+            color_map[cond] = IGG_COLOR_HEX
+        else:
+            color_map[cond] = PALETTE_HEX[palette_idx % len(PALETTE_HEX)]
+            palette_idx += 1
+    return color_map
 

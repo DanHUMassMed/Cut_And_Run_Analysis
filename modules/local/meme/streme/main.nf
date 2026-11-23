@@ -29,8 +29,6 @@ process MEME_STREME {
     tuple val(meta), path("${prefix}_streme_motifs"), emit: motifs_dir
     tuple val("${task.process}"), val('meme'), eval('streme -version'), emit: versions_meme, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''

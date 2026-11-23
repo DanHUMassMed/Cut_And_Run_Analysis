@@ -27,9 +27,6 @@ process MACS2_CALLPEAK {
     tuple val(meta), path("*.gappedPeak"), emit: gapped, optional: true
     tuple val("${task.process}"), val('macs2'), eval("macs2 --version | sed 's/macs2 //'"), emit: versions_macs2, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
-
     script:
     def args = task.ext.args ?: ''
     prefix = task.ext.prefix ?: "${meta.id}"

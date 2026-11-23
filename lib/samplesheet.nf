@@ -287,6 +287,12 @@ def validateSamplesheetRows(parsed) {
         .findAll { !isControlTarget(it) }
         .collect { it.id } as Set
 
+    def control_sample_ids = clean_samples.values()
+        .findAll { isControlTarget(it) }
+        .collect { it.id } as Set
+
+    def all_sample_ids = clean_samples.keySet() as Set
+
     def referenced_control_ids = clean_samples.values()
         .findAll { !isControlTarget(it) && it.control_id }
         .collect { it.control_id } as Set
@@ -309,6 +315,8 @@ def validateSamplesheetRows(parsed) {
         condition_to_target    : condition_to_target,
         target_to_peak_mode    : target_to_peak_mode,
         non_igg_sample_ids     : non_igg_sample_ids,
+        control_sample_ids     : control_sample_ids,
+        all_sample_ids         : all_sample_ids,
         referenced_control_ids : referenced_control_ids,
         samples_without_control: samples_without_control,
         targets                : non_igg_targets,
@@ -323,11 +331,12 @@ def loadAndValidateSamplesheet(samplesheet_path) {
     return validateSamplesheetRows(parsed)
 }
 
-def validateDiffContrasts(diff_contrasts, sheet_ctx) {
+def validateDiffContrasts(diff_contrasts, sheet_ctx, config_path = null) {
     if (!diff_contrasts) {
         return [:]
     }
 
+    def source_path   = config_path ?: "${launchDir}/config/experiment.config"
     def safe_id_re    = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
     def errors        = []
     def seen_ids      = [:]
@@ -396,7 +405,7 @@ def validateDiffContrasts(diff_contrasts, sheet_ctx) {
     if (errors) {
         error(formatValidationError(
             'DIFFERENTIAL CONTRASTS VALIDATION FAILED (params.diff_contrasts)',
-            sheet_ctx.path,
+            source_path,
             errors
         ))
     }

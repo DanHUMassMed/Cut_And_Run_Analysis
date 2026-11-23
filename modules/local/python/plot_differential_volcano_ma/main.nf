@@ -25,8 +25,6 @@ process PLOT_DIFFERENTIAL_VOLCANO_MA {
     tuple val(meta), path("${prefix}_top_differential_genes.tsv"), emit: tsv
     tuple val("${task.process}"), val('matplotlib'), eval('python3 -c "import matplotlib; print(matplotlib.__version__)"'), emit: versions_matplotlib, topic: versions
 
-    when:
-    task.ext.when == null || task.ext.when
 
     script:
     def args = task.ext.args ?: ''
